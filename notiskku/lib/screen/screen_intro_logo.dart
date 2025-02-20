@@ -28,21 +28,28 @@ class _ScreenLogoIntroState extends State<ScreenLogoIntro> {
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
           children: [
-            Image.asset(
-              'assets/images/whitelogo_fix.png',
-              width: 288.w, // 반응형 너비
-              height: 160.h, // 반응형 높이
-              fit: BoxFit.contain,
+            SizedBox(
+              width: 195.w,
+              child: Image.asset(
+                'assets/images/whitelogo_fix.png',
+                width: 110.w, // 반응형 너비
+                height: 130.h, // 반응형 높이
+                fit: BoxFit.contain,
+              ),
             ),
-            SizedBox(height: 9.h), // 반응형 간격
-
-            Text(
-              'NotiSKKU',
-              style: TextStyle(
-                fontSize: 40.sp, // 반응형 폰트 크기
-                color: Colors.white,
-                fontWeight: FontWeight.normal,
+            SizedBox(
+              width: 195.w,
+              child: Text(
+                'NotiSKKU',
+                style: TextStyle(
+                  fontSize: 44.sp, // 반응형 폰트 크기
+                  // height: 1.0, // 줄 간격 최소화 (간격 완전 제거)
+                  color: Colors.white,
+                  fontFamily: 'Inter',
+                  fontWeight: FontWeight.w400,
+                ),
               ),
             ),
           ],
