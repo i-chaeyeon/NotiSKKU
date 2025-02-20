@@ -13,12 +13,12 @@ class _ScreenLogoIntroState extends State<ScreenLogoIntro> {
   void initState() {
     super.initState();
     // 일정 시간 후에 IntroductionScreen으로 이동
-    Future.delayed(const Duration(seconds: 1), () {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const ScreenIntroOne()),
-      );
-    });
+    // Future.delayed(const Duration(seconds: 1), () {
+    //   Navigator.pushReplacement(
+    //     context,
+    //     MaterialPageRoute(builder: (context) => const ScreenIntroOne()),
+    //   );
+    // });
   }
 
   @override
