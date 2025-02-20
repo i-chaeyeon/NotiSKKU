@@ -30,7 +30,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  # add flutter_screenutil
+  
+  google_fonts: ^6.2.1
+  
   flutter_screenutil: ^5.9.3
   flutter_riverpod: ^2.6.1
 

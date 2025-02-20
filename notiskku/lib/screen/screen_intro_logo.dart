@@ -5,7 +5,7 @@ class ScreenLogoIntro extends StatefulWidget {
   const ScreenLogoIntro({super.key});
 
   @override
-  State<ScreenLogoIntro> createState() => _ScreenLogoIntroState(); 
+  State<ScreenLogoIntro> createState() => _ScreenLogoIntroState();
 }
 
 class _ScreenLogoIntroState extends State<ScreenLogoIntro> {
@@ -16,7 +16,6 @@ class _ScreenLogoIntroState extends State<ScreenLogoIntro> {
     Future.delayed(const Duration(seconds: 1), () {
       Navigator.pushReplacement(
         context,
-        // MaterialPageRoute(builder: (context) => const IntroductionScreen()),
         MaterialPageRoute(builder: (context) => const ScreenIntroOne()),
       );
     });
@@ -24,10 +23,6 @@ class _ScreenLogoIntroState extends State<ScreenLogoIntro> {
 
   @override
   Widget build(BuildContext context) {
-    // Get screen dimensions
-    final double screenWidth = MediaQuery.of(context).size.width;
-    final double screenHeight = MediaQuery.of(context).size.height;
-    
     return Scaffold(
       backgroundColor: const Color(0xff0b5b42),
       body: Center(
@@ -35,18 +30,17 @@ class _ScreenLogoIntroState extends State<ScreenLogoIntro> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Image.asset(
-              //'assets/images/logo.png',
               'assets/images/whitelogo_fix.png',
-              width: screenWidth * 0.8, // Set width as 80% of screen width
-              height: screenHeight * 0.25, // Set height as 25% of screen height
+              width: 288.w, // 반응형 너비
+              height: 160.h, // 반응형 높이
               fit: BoxFit.contain,
             ),
-            const SizedBox(height: 10), // 간격 추가
+            SizedBox(height: 9.h), // 반응형 간격
 
             Text(
               'NotiSKKU',
               style: TextStyle(
-                fontSize: screenWidth * 0.15, // Font size as 15% of screen width
+                fontSize: 40.sp, // 반응형 폰트 크기
                 color: Colors.white,
                 fontWeight: FontWeight.normal,
               ),
