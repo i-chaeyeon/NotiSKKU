@@ -81,9 +81,9 @@ class ScreenIntroThree extends StatelessWidget {
                   children: [
                     _buildIndicatorCircle(color: Colors.grey),
                     SizedBox(width: 26.w),
-                    _buildIndicatorCircle(color: const Color(0xff0b5b42)),
-                    SizedBox(width: 26.w),
                     _buildIndicatorCircle(color: Colors.grey),
+                    SizedBox(width: 26.w),
+                    _buildIndicatorCircle(color: const Color(0xff0b5b42)),
                   ],
                 ),
                 SizedBox(height: 36.h),
