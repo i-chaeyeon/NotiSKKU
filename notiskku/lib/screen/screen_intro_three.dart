@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:notiskku/screen/screen_intro_ready.dart';
 import 'package:notiskku/widget/wide_green.dart';
 import 'package:notiskku/widget/wide_grey.dart';
 
@@ -89,7 +90,20 @@ class ScreenIntroThree extends StatelessWidget {
                 SizedBox(height: 36.h),
                 Padding(
                   padding: EdgeInsets.only(bottom: 12.h),
-                  child: WideGrey(text: '다음에 설정하기', onPressed: () {}),
+                  child: WideGrey(
+                    text: '다음에 설정하기',
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        // MaterialPageRoute(
+                        //   builder: (context) => const StartScreen(),
+                        // ),
+                        MaterialPageRoute(
+                          builder: (context) => const ScreenIntroReady(),
+                        ),
+                      );
+                    },
+                  ),
                 ),
 
                 Padding(
