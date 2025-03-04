@@ -7,7 +7,8 @@ import 'package:notiskku/widget/list/list_major.dart';
 import 'package:notiskku/providers/toggle_settings_provider.dart';
 import 'package:notiskku/providers/major_provider.dart';
 import 'package:notiskku/providers/keyword_provider.dart';
-import 'package:notiskku/widget/button/wide_condition.dart'; 
+import 'package:notiskku/widget/button/wide_condition.dart';
+import 'package:notiskku/screen/screen_intro_alarm.dart';  // 추가된 부분
 
 class ScreenIntroSelect extends ConsumerWidget {
   const ScreenIntroSelect({super.key});
@@ -56,18 +57,21 @@ class ScreenIntroSelect extends ConsumerWidget {
 
           SizedBox(height: 30.h),
 
-          // '설정완료' 버튼 추가
           WideCondition(
             text: '설정완료',
             isEnabled: isButtonEnabled,
             onPressed: isButtonEnabled
                 ? () {
-                    // 여기에 다음 화면 이동 로직 추가 가능
-                    Navigator.pushNamed(context, '/setAlarmScreen'); // 예시로 경로 이동 추가
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const ScreenIntroAlarm(), // 변경된 부분
+                      ),
+                    );
                   }
                 : null,
           ),
-          SizedBox(height: 30.h), // 하단 여백 추가
+          SizedBox(height: 30.h),
         ],
       ),
     );

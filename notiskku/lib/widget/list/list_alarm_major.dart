@@ -2,24 +2,30 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:notiskku/providers/major_provider.dart';
-// import 'package:notiskku/providers/alarm_major_provider.dart';
+import 'package:notiskku/data/major_data.dart';
 
-class AlarmMajorList extends ConsumerWidget {
-  const AlarmMajorList({super.key});
+class ListAlarmMajor extends ConsumerWidget {
+  const ListAlarmMajor({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final majorState = ref.watch(majorProvider);
     final majorNotifier = ref.read(majorProvider.notifier);
 
+    // 저장된 관심 전공만 필터링 (selectedMajors)
+    final filteredMajors = majorState.majors.where((major) {
+      return majorState.selectedMajors.contains(major);
+    }).toList();
+
     return Column(
-      children: majorState.filteredMajors.map((major) {
-        final isSelected = majorState.selectedMajors.contains(major);
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: filteredMajors.map((major) {
+        final isSelected = majorState.alarmMajors.contains(major);
 
         return GestureDetector(
-          onTap: () => majorNotifier.toggleMajor(major),
+          onTap: () => majorNotifier.toggleAlarmMajor(major),
           child: FractionallySizedBox(
-            widthFactor: 0.85,
+            widthFactor: 0.85, // 버튼 너비 동일 유지
             child: Container(
               margin: EdgeInsets.only(bottom: 8.h),
               padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 16.w),
@@ -32,8 +38,8 @@ class AlarmMajorList extends ConsumerWidget {
                   major,
                   style: TextStyle(
                     fontSize: 16.sp,
-                    color: isSelected ? Colors.white : const Color(0xFF979797),
                     fontWeight: FontWeight.bold,
+                    color: isSelected ? Colors.white : const Color(0xFF979797),
                   ),
                 ),
               ),

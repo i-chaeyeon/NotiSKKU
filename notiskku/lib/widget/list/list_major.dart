@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:notiskku/providers/major_provider.dart';
+import 'package:notiskku/widget/dialog/dialog_limit_major.dart';
 import 'package:notiskku/widget/search/search_major.dart';
 
 class ListMajor extends ConsumerWidget {
@@ -12,7 +13,6 @@ class ListMajor extends ConsumerWidget {
     final majorState = ref.watch(majorProvider);
     final majorNotifier = ref.read(majorProvider.notifier);
 
-    // 검색어 기반 필터링
     final filteredMajors = majorState.majors.where((major) {
       return major.toLowerCase().contains(majorState.searchText.toLowerCase());
     }).toList();
@@ -35,8 +35,7 @@ class ListMajor extends ConsumerWidget {
               return GestureDetector(
                 onTap: () {
                   if (!isSelected && majorState.selectedMajors.length >= 2) {
-                    // 선택 제한 초과 경고 표시
-                    _showLimitDialog(context, majorState.selectedMajors);
+                    _showLimitDialog(context, majorState.selectedMajors);  // 변경
                     return;
                   }
                   majorNotifier.toggleMajor(major);
@@ -70,43 +69,10 @@ class ListMajor extends ConsumerWidget {
     );
   }
 
-
-// 추후 위젯 분리 고려 
   void _showLimitDialog(BuildContext context, List<String> selectedMajors) {
     showDialog(
       context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
-          backgroundColor: Colors.white,
-          title: Text(
-            '⚠️ 전공 선택 제한',
-            style: TextStyle(
-              // fontSize: 18.sp,
-              color: const Color(0xFF0B5B42),
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('전공은 최대 두 개까지 선택할 수 있습니다.', style: TextStyle(fontSize: 14.sp)),
-              SizedBox(height: 10.h),
-              Text(
-                "선택한 전공:\n${selectedMajors.join('\n')}",
-                style: TextStyle(fontSize: 13.sp),
-              ),
-            ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: Text('확인', style: TextStyle(fontSize: 16.sp, color: Colors.black)),
-            ),
-          ],
-        );
-      },
+      builder: (context) => DialogLimitMajor(selectedMajors: selectedMajors),
     );
   }
 }
