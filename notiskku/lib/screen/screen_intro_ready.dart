@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:notiskku/screen/screen_main.dart';
-import 'package:notiskku/widget/wide_green.dart';
+import 'package:notiskku/widget/button/wide_green.dart';
 
 class ScreenIntroReady extends StatelessWidget {
   const ScreenIntroReady({super.key});
@@ -46,12 +46,12 @@ class ScreenIntroReady extends StatelessWidget {
               child: WideGreen(
                 text: '나의 공지 보러가기',
                 onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const ScreenMain(),
-                    ),
-                  );
+                  // Navigator.push(
+                  //   context,
+                  //   MaterialPageRoute(
+                  //     builder: (context) => const ScreenMain(),
+                  //   ),
+                  // );
                 },
               ),
             ),

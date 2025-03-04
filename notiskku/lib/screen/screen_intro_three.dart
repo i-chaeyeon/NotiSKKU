@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:notiskku/screen/screen_intro_ready.dart';
-import 'package:notiskku/widget/wide_green.dart';
-import 'package:notiskku/widget/wide_grey.dart';
+import 'package:notiskku/screen/screen_intro_select.dart';
+import 'package:notiskku/widget/button/wide_green.dart';
+import 'package:notiskku/widget/button/wide_grey.dart';
 
 class ScreenIntroThree extends StatelessWidget {
   const ScreenIntroThree({super.key});
@@ -111,10 +112,10 @@ class ScreenIntroThree extends StatelessWidget {
                   child: WideGreen(
                     text: '다음으로',
                     onPressed: () {
-                      // Navigator.push(
-                      //   context,
-                      //   MaterialPageRoute(builder: (context) => const SecondScreen()),
-                      // );
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const ScreenIntroSelect()),
+                      );
                     },
                   ),
                 ),

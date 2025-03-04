@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:notiskku/screen/screen_intro_three.dart';
-import 'package:notiskku/widget/wide_green.dart';
+import 'package:notiskku/widget/button/wide_green.dart';
 
 class ScreenIntroTwo extends StatelessWidget {
   const ScreenIntroTwo({super.key});
