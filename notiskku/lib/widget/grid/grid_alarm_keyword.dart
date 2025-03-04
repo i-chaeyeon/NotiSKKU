@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:notiskku/providers/keyword_provider.dart';
-import 'package:notiskku/data/keyword_data.dart';
 
 class GridAlarmKeyword extends ConsumerWidget {
   const GridAlarmKeyword({super.key});
@@ -12,11 +11,16 @@ class GridAlarmKeyword extends ConsumerWidget {
     final keywordState = ref.watch(keywordProvider);
     final keywordNotifier = ref.read(keywordProvider.notifier);
 
-    final selectedAlarmKeywords = keywordState.alarmKeywords;
+    final selectedKeywords = keywordState.selectedKeywords; // 선택된 키워드
+    final selectedAlarmKeywords = keywordState.alarmKeywords; // 알람 설정된 키워드
 
     // 반응형 버튼 크기 계산
     final buttonWidth = (1.sw - 80.w) / 3;
     final buttonHeight = buttonWidth * (37 / 86);
+
+    if (selectedKeywords.isEmpty) {
+      return const Center(child: Text('선택된 키워드가 없습니다.'));
+    }
 
     return Expanded(
       child: GridView.builder(
@@ -27,13 +31,10 @@ class GridAlarmKeyword extends ConsumerWidget {
           crossAxisSpacing: 19.w,
           mainAxisSpacing: 30.h,
         ),
-        itemCount: keywords.length,
+        itemCount: selectedKeywords.length,
         itemBuilder: (context, index) {
-          final keyword = keywords[index].keyword;
-
-          if (keyword == '없음') return const SizedBox.shrink(); // '없음' 제외
-
-          final isSelected = selectedAlarmKeywords.contains(keyword);
+          final keyword = selectedKeywords[index];
+          final isSelectedForAlarm = selectedAlarmKeywords.contains(keyword);
 
           return GestureDetector(
             onTap: () => keywordNotifier.toggleAlarmKeyword(keyword),
@@ -42,9 +43,9 @@ class GridAlarmKeyword extends ConsumerWidget {
               height: buttonHeight,
               padding: EdgeInsets.all(10.w),
               decoration: BoxDecoration(
-                color: isSelected
-                    ? const Color(0xB20B5B42)
-                    : const Color(0x99D9D9D9),
+                color: isSelectedForAlarm
+                    ? const Color(0xB20B5B42) // 알람 설정됨
+                    : const Color(0x99D9D9D9), // 알람 설정 안됨
                 borderRadius: BorderRadius.circular(20.r),
               ),
               child: Center(
@@ -52,7 +53,7 @@ class GridAlarmKeyword extends ConsumerWidget {
                   keyword,
                   style: TextStyle(
                     fontSize: 14.sp,
-                    color: isSelected ? Colors.white : const Color(0xFF979797),
+                    color: isSelectedForAlarm ? Colors.white : const Color(0xFF979797),
                     fontWeight: FontWeight.w700,
                   ),
                 ),
