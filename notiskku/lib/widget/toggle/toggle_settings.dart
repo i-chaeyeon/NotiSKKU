@@ -1,59 +1,40 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:notiskku/providers/toggle_settings_provider.dart';
 
-class ToggleSettings extends StatefulWidget {
-  const ToggleSettings({
-    super.key,
-    required this.currentIndex,
-    required this.onIndexChanged,
-  });
-
-  final int currentIndex;
-  final ValueChanged<int> onIndexChanged;
+class ToggleSettings extends ConsumerWidget {
+  const ToggleSettings({super.key});
 
   @override
-  State<ToggleSettings> createState() => _ToggleSettingsState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final toggleIndex = ref.watch(toggleIndexProvider);
 
-class _ToggleSettingsState extends State<ToggleSettings> {
-  late int _selectedIndex;
-
-  @override
-  void initState() {
-    super.initState();
-    _selectedIndex = widget.currentIndex;
-  }
-
-  @override
-  Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        _buildButton(0, "학과", 0.4.sw), // 화면 너비의 40%로 버튼 크기 설정
-        SizedBox(width: 12.w), // 버튼 사이 간격을 반응형으로 조정
-        _buildButton(1, "키워드", 0.4.sw), // 화면 너비의 40%로 버튼 크기 설정
+        _buildButton(ref, 0, "학과", 0.4.sw),
+        SizedBox(width: 12.w),
+        _buildButton(ref, 1, "키워드", 0.4.sw),
       ],
     );
   }
 
-  Widget _buildButton(int index, String text, double buttonWidth) {
-    bool isSelected = _selectedIndex == index;
+  Widget _buildButton(WidgetRef ref, int index, String text, double buttonWidth) {
+    final isSelected = ref.watch(toggleIndexProvider) == index;
 
     return GestureDetector(
       onTap: () {
-        setState(() {
-          _selectedIndex = index;
-        });
-        widget.onIndexChanged(index);
+        ref.read(toggleIndexProvider.notifier).state = index;
       },
       child: Container(
-        width: buttonWidth, // 반응형 너비 설정
-        padding: EdgeInsets.symmetric(vertical: 10.h), // 반응형 패딩
+        width: buttonWidth,
+        padding: EdgeInsets.symmetric(vertical: 10.h),
         decoration: BoxDecoration(
           border: Border(
             bottom: BorderSide(
               color: isSelected ? const Color(0xFF0B5B42) : const Color(0xFF979797),
-              width: isSelected ? 2.5.h : 1.h, // 반응형 테두리 두께
+              width: isSelected ? 2.5.h : 1.h,
             ),
           ),
         ),
@@ -61,7 +42,7 @@ class _ToggleSettingsState extends State<ToggleSettings> {
           child: Text(
             text,
             style: TextStyle(
-              fontSize: 20.sp, // 반응형 폰트 크기
+              fontSize: 20.sp,
               fontWeight: isSelected ? FontWeight.w800 : FontWeight.w300,
               color: isSelected ? const Color(0xFF0B5B42) : const Color(0xFF979797),
             ),

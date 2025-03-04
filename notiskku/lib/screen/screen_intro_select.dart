@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:notiskku/widget/grid/grid_keywords.dart';
 import 'package:notiskku/widget/toggle/toggle_settings.dart';
+import 'package:notiskku/widget/list/list_major.dart';
+import 'package:notiskku/providers/toggle_settings_provider.dart';
+import 'package:notiskku/providers/major_provider.dart';
+import 'package:notiskku/providers/keyword_provider.dart';
 
-class ScreenIntroSelect extends StatefulWidget {
+class ScreenIntroSelect extends ConsumerWidget {
   const ScreenIntroSelect({super.key});
 
   @override
-  State<ScreenIntroSelect> createState() => _ScreenIntroSelectState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final toggleIndex = ref.watch(toggleIndexProvider);
+    final majorState = ref.watch(majorProvider);
+    final keywordState = ref.watch(keywordProvider);
 
-class _ScreenIntroSelectState extends State<ScreenIntroSelect> {
-
-  int _currentIndex = 0;
-  List<String> selectedMajor = []; // 선택된 전공을 저장할 리스트
-  List<String> selectedKeyword = []; // 선택된 키워드를 저장할 리스트
-
-  @override
-  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       body: Column(
@@ -26,53 +26,38 @@ class _ScreenIntroSelectState extends State<ScreenIntroSelect> {
           Align(
             alignment: Alignment.centerLeft,
             child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 40.w), // 반응형 가로 여백
+              padding: EdgeInsets.symmetric(horizontal: 40.w),
               child: Text(
                 '관심 학과와 키워드를 선택해주세요😀\n(학과는 최대 2개까지 가능)',
-                textAlign: TextAlign.left, // 텍스트 왼쪽 정렬
+                textAlign: TextAlign.left,
                 style: TextStyle(
                   color: Colors.black.withOpacity(0.9),
-                  fontSize: 14.sp, // 반응형 폰트 크기
+                  fontSize: 14.sp,
                   fontFamily: 'GmarketSans',
                   fontWeight: FontWeight.w500,
                 ),
               ),
             ),
           ),
-          SizedBox(height: 10.h), // 반응형 간격
-          ToggleSettings(
-            currentIndex: _currentIndex,
-            onIndexChanged: (newIndex) {
-              setState(() {
-                _currentIndex = newIndex;
-              });
-            },
+          SizedBox(height: 10.h),
+
+          // 토글 버튼 (학과/키워드 전환)
+          const ToggleSettings(), // 여기도 currentIndex, onIndexChanged 제거
+          SizedBox(height: 10.h),
+
+          // 전공/키워드 선택 화면
+          Expanded(
+            child: toggleIndex == 0
+                ? const ListMajor()   // 학과 선택 화면 (riverpod 연동)
+                : const GridKeywords() // 키워드 선택 화면 (riverpod 연동)
           ),
-          SizedBox(height: 10.h), // 반응형 간격
-          // Expanded(
-          //   // 남은 공간 최대한 활용
-          //   // child: _currentIndex == 0
-          //   //     ? MajorList(
-          //   //         selectedMajor: selectedMajor,
-          //   //         onSelectedMajorChanged: (majors) {
-          //   //           setState(() {
-          //   //             selectedMajor = majors; // 선택된 전공 업데이트
-          //   //           });
-          //   //         },
-          //   //       )
-          //   //     : KeywordsGrid(
-          //   //         selectedKeyword: selectedKeyword,
-          //   //         onselectedKeywordChanged: (keywords) {
-          //   //           setState(() {
-          //   //             selectedKeyword = keywords; // 선택된 키워드 업데이트
-          //   //           });
-          //   //         },
-          //   //       ),
-          // ),
-          SizedBox(height: 30.h), // 반응형 여백
+
+          SizedBox(height: 30.h),
+
+          // 완료 버튼 자리 (필요 시 나중에 추가 가능)
           // SetupCompleteButton(
-          //   selectedMajor: selectedMajor,
-          //   selectedKeyword: selectedKeyword,
+          //   selectedMajor: majorState.selectedMajors,
+          //   selectedKeyword: keywordState.selectedKeywords,
           // ),
         ],
       ),
