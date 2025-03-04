@@ -76,7 +76,7 @@ class GridKeywords extends ConsumerWidget {
   }
 }
 
-// ✅ GridKeywords 안에만 쓰는 private 위젯으로 정의
+// GridKeywords 안에만 쓰는 private 위젯으로 정의
 class _DoNotSelectButton extends StatelessWidget {
   final bool isSelected;
   final VoidCallback onPressed;

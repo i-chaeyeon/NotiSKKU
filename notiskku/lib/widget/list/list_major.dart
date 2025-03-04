@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:notiskku/providers/major_provider.dart';
-import 'package:notiskku/widget/search/search_major.dart'; // 검색 위젯 추가
+import 'package:notiskku/widget/search/search_major.dart';
 
 class ListMajor extends ConsumerWidget {
   const ListMajor({super.key});
@@ -19,13 +19,11 @@ class ListMajor extends ConsumerWidget {
 
     return Column(
       children: [
-        // 검색창 추가 (반응형 여백 포함)
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 30.w, vertical: 10.h),
           child: const SearchMajor(),
         ),
 
-        // 전공 리스트
         Expanded(
           child: ListView.builder(
             padding: EdgeInsets.symmetric(horizontal: 30.w, vertical: 10.h),
@@ -36,6 +34,11 @@ class ListMajor extends ConsumerWidget {
 
               return GestureDetector(
                 onTap: () {
+                  if (!isSelected && majorState.selectedMajors.length >= 2) {
+                    // 선택 제한 초과 경고 표시
+                    _showLimitDialog(context, majorState.selectedMajors);
+                    return;
+                  }
                   majorNotifier.toggleMajor(major);
                 },
                 child: Container(
@@ -64,6 +67,46 @@ class ListMajor extends ConsumerWidget {
           ),
         ),
       ],
+    );
+  }
+
+
+// 추후 위젯 분리 고려 
+  void _showLimitDialog(BuildContext context, List<String> selectedMajors) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
+          backgroundColor: Colors.white,
+          title: Text(
+            '⚠️ 전공 선택 제한',
+            style: TextStyle(
+              // fontSize: 18.sp,
+              color: const Color(0xFF0B5B42),
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('전공은 최대 두 개까지 선택할 수 있습니다.', style: TextStyle(fontSize: 14.sp)),
+              SizedBox(height: 10.h),
+              Text(
+                "선택한 전공:\n${selectedMajors.join('\n')}",
+                style: TextStyle(fontSize: 13.sp),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text('확인', style: TextStyle(fontSize: 16.sp, color: Colors.black)),
+            ),
+          ],
+        );
+      },
     );
   }
 }
