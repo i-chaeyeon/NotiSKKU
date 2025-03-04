@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:notiskku/widget/grid/grid_keywords.dart';
-import 'package:notiskku/widget/toggle/toggle_settings.dart';
+import 'package:notiskku/widget/bar/bar_settings.dart';
 import 'package:notiskku/widget/list/list_major.dart';
 import 'package:notiskku/providers/toggle_settings_provider.dart';
 import 'package:notiskku/providers/major_provider.dart';
@@ -46,7 +46,7 @@ class ScreenIntroSelect extends ConsumerWidget {
           ),
           SizedBox(height: 10.h),
 
-          const ToggleSettings(),
+          const BarSettings.BarSettings(),
           SizedBox(height: 10.h),
 
           Expanded(
