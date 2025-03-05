@@ -3,7 +3,7 @@ import 'package:notiskku/models/notice.dart';
 import 'package:notiskku/notice_functions/launch_url.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:notiskku/providers/starred_provider.dart';
-//import 'package:notiskku/screens/edit_keyword.dart';
+// import 'package:notiskku/screens/edit_keyword.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:notiskku/notice_functions/fetch_notice.dart';
 
@@ -78,12 +78,12 @@ class _ScreenMainKeywordState extends ConsumerState<ScreenMainKeyword> {
                   children: [
                     GestureDetector(
                       onTap: () {
-                        //Navigator.push(
-                          //context,
-                          //MaterialPageRoute(builder: (context) => const StartScreen()),
-                          //MaterialPageRoute(
-                           //   builder: (context) => const EditKeyword()),
-                        //);
+                        // Navigator.push(
+                        //   context,
+                        //   //MaterialPageRoute(builder: (context) => const StartScreen()),
+                        //   MaterialPageRoute(
+                        //       builder: (context) => const EditKeyword()),
+                        // );
                       },
                       child: const Text(
                         '편집',

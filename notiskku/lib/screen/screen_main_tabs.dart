@@ -2,11 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:notiskku/tabs/screen_main_keyword.dart';
 import 'package:notiskku/tabs/screen_main_notice.dart';
-// import 'package:notiskku/tabs/first_page.dart';
-// import 'package:notiskku/tabs/second_page.dart';
-// import 'package:notiskku/tabs/third_page.dart';
-// import 'package:notiskku/tabs/fourth_page.dart';
-// import 'package:notiskku/tabs/fifth_page.dart';
+import 'package:notiskku/tabs/screen_main_box.dart';
+import 'package:notiskku/tabs/screen_main_calender.dart';
+import 'package:notiskku/tabs/screen_main_others.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -41,18 +39,18 @@ class _ScreenMainTabsState extends State<ScreenMainTabs> {
   final List<Widget> _pages = const [
     ScreenMainNotice(),
     ScreenMainKeyword(),
-    //ThirdPage(),
-    //FourthPage(),
-    //FifthPage(),
+    ScreenMainBox(),
+    ScreenMainCalender(),
+    ScreenMainOthers(),
   ];
 
   // 하단 네비게이션 아이템 정의
   List<BottomNavigationBarItem> get _navItems => [
         _buildNavItem('assets/images/notice_fix.png', '공지사항'),
         _buildNavItem('assets/images/keyword_fix.png', '키워드'),
-        //_buildNavItem('assets/images/bogwan_fix.png', '공지함'),
-        //_buildNavItem('assets/images/calendar_fix.png', '학사일정'),
-        //_buildNavItem('assets/images/more_fix.png', '더보기'),
+        _buildNavItem('assets/images/bogwan_fix.png', '공지함'),
+        _buildNavItem('assets/images/calendar_fix.png', '학사일정'),
+        _buildNavItem('assets/images/more_fix.png', '더보기'),
       ];
 
   // 아이템 구성 메서드
