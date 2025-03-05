@@ -4,54 +4,69 @@ import 'package:notiskku/notice_functions/fetch_notice.dart';
 import 'package:notiskku/providers/major_provider.dart';
 import 'package:notiskku/providers/notice_category_provider.dart';
 
-// ✅ 공지사항 데이터 제공 프로바이더
+// 공지 리스트 Provider
 final noticeListProvider = FutureProvider<List<Notice>>((ref) async {
-  final majorState = ref.watch(majorProvider);
-  final categoryIndex = ref.watch(noticeSubCategoryProvider);
-  final topTabIndex = ref.watch(noticeCategoryProvider);
+  final selectedMajors = ref.watch(majorProvider).selectedMajors;
+  final mainCategoryIndex = ref.watch(noticeMainCategoryProvider);
+  final subCategoryIndex = ref.watch(noticeSubCategoryProvider);
 
-  final majorOrDepartment = majorState.selectedMajors.isNotEmpty
-      ? majorState.selectedMajors[0]
-      : '';
+  final majorOrDepartment = selectedMajors.isNotEmpty ? selectedMajors.first : '';
+  final url = _getCategoryUrl(mainCategoryIndex, subCategoryIndex, majorOrDepartment);
 
-  return NoticeService().fetchNotices(
-    getCategoryUrl(topTabIndex, categoryIndex, majorOrDepartment),
-  );
+  return NoticeService().fetchNotices(url);
 });
 
-// ✅ 카테고리 URL 생성 로직
-String getCategoryUrl(int topTabIndex, int subCategoryIndex, String majorOrDepartment) {
+/// ✅ URL 구성 로직 (위의 getCategoryUrl 리팩토링)
+String _getCategoryUrl(int mainIndex, int subIndex, String majorOrDepartment) {
   if (majorOrDepartment == '소프트웨어학과') {
-    if (topTabIndex == 2) {
-      return _getDepartmentNoticeUrl(subCategoryIndex);
-    } else if (topTabIndex == 1) {
-      return _getCollegeNoticeUrl(subCategoryIndex);
+    if (mainIndex == 2) {
+      // 학과 공지
+      return _getSoftwareDeptUrl(subIndex);
+    } else if (mainIndex == 1) {
+      // 단과대학 공지
+      return _getSoftwareCollegeUrl(subIndex);
     }
   }
-  return _getSchoolNoticeUrl(subCategoryIndex);
+
+  // 기본 학교 공지
+  return _getSchoolUrl(subIndex);
 }
 
-// 각 카테고리별 URL 매핑 예시 (필요에 맞게 커스텀)
-String _getDepartmentNoticeUrl(int index) {
-  return [
-    'https://cse.skku.edu/cse/notice.do?mode=list',
-    'https://cse.skku.edu/cse/notice.do?mode=list&srCategoryId1=1582',
-    // 나머지 추가 가능
-  ][index];
+/// 소프트웨어학과 - 학과 공지 URL
+String _getSoftwareDeptUrl(int index) {
+  const base = 'https://cse.skku.edu/cse/notice.do?mode=list';
+  const params = [
+    '',
+    '&srCategoryId1=1582', '&srCategoryId1=1583', '&srCategoryId1=1584',
+    '&srCategoryId1=1585', '&srCategoryId1=1586', '&srCategoryId1=1587',
+    '&srCategoryId1=1588',
+  ];
+  return base + (params[index] ?? '');
 }
 
-String _getCollegeNoticeUrl(int index) {
-  return [
-    'https://sw.skku.edu/sw/notice.do?mode=list',
-    'https://sw.skku.edu/sw/notice.do?mode=list&srCategoryId1=1582',
-    // 나머지 추가 가능
-  ][index];
+/// 소프트웨어학과 - 단과대학 공지 URL
+String _getSoftwareCollegeUrl(int index) {
+  const base = 'https://sw.skku.edu/sw/notice.do?mode=list';
+  const params = [
+    '',
+    '&srCategoryId1=1582', '&srCategoryId1=1583', '&srCategoryId1=1584',
+    '&srCategoryId1=1585', '&srCategoryId1=1586', '&srCategoryId1=1587',
+    '&srCategoryId1=1588', '&srCategoryId1=1589',
+  ];
+  return base + (params[index] ?? '');
 }
 
-String _getSchoolNoticeUrl(int index) {
-  return [
+/// 학교 전체 공지 URL
+String _getSchoolUrl(int index) {
+  const urls = [
     'https://www.skku.edu/skku/campus/skk_comm/notice01.do',
     'https://www.skku.edu/skku/campus/skk_comm/notice02.do',
-    // 나머지 추가 가능
-  ][index];
+    'https://www.skku.edu/skku/campus/skk_comm/notice03.do',
+    'https://www.skku.edu/skku/campus/skk_comm/notice04.do',
+    'https://www.skku.edu/skku/campus/skk_comm/notice05.do',
+    'https://www.skku.edu/skku/campus/skk_comm/notice06.do',
+    'https://www.skku.edu/skku/campus/skk_comm/notice07.do',
+    'https://www.skku.edu/skku/campus/skk_comm/notice08.do',
+  ];
+  return urls[index];
 }
