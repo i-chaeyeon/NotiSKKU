@@ -39,9 +39,9 @@ class _ScreenMainTabsState extends State<ScreenMainTabs> {
   final List<Widget> _pages = const [
     ScreenMainNotice(),
     ScreenMainKeyword(),
-    ThirdPage(),
-    FourthPage(),
-    FifthPage(),
+    ScreenMainBox(),
+    ScreenMainCalender(),
+    ScreenMainOthers(),
   ];
 
   // 하단 네비게이션 아이템 정의

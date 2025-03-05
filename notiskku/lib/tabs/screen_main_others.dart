@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:notiskku/notice_functions/launch_url.dart'; // LaunchUrlService import 추가
 import 'package:url_launcher/url_launcher.dart';
 
-class FifthPage extends StatelessWidget {
-  const FifthPage({super.key});
+class ScreenMainOthers extends StatelessWidget {
+  const ScreenMainOthers({super.key});
 
   Future<void> _openSettings() async {
     if (Platform.isAndroid) {
@@ -245,7 +245,7 @@ class FifthPage extends StatelessWidget {
         children: [
           SizedBox(height: 15),
           Image.asset(
-            'assets/images/fix.png',
+            'assets/images/to_be_implemented_fix.png',
             width: 80,
             height: 80,
             color: Colors.grey[400],

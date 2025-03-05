@@ -5,16 +5,16 @@ import 'package:notiskku/notice_functions/launch_url.dart';
 import 'package:notiskku/providers/starred_provider.dart';
 import 'dart:convert';
 
-class ThirdPage extends ConsumerStatefulWidget {
-  const ThirdPage({super.key});
+class ScreenMainBox extends ConsumerStatefulWidget {
+  const ScreenMainBox({super.key});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() {
-    return _ThirdPageState();
+    return _ScreenMainBoxState();
   }
 }
 
-class _ThirdPageState extends ConsumerState<ThirdPage> {
+class _ScreenMainBoxState extends ConsumerState<ScreenMainBox> {
   bool editMode = false;
   final LaunchUrlService launchUrlService = LaunchUrlService();
 
