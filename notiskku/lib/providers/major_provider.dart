@@ -3,11 +3,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:notiskku/data/major_data.dart';
 import 'package:notiskku/services/preference_services.dart';
 
-// 공통 State 정의
+// 📌 전공 선택 상태 관리 클래스
 class MajorState {
-  final List<String> selectedMajors;   // 일반 전공 선택
-  final List<String> alarmMajors;      // 알림용 전공 선택
-  final List<String> majors;           // 전체 전공 리스트
+  final List<String> selectedMajors;  // 일반 전공 선택
+  final List<String> alarmMajors;     // 알림용 전공 선택
+  final List<String> majors;          // 전체 전공 리스트
   final String searchText;
 
   const MajorState({
@@ -32,44 +32,11 @@ class MajorState {
   }
 }
 
-// Notifier 정의
+// 📌 전공 선택 관리 Notifier
 class MajorNotifier extends StateNotifier<MajorState> {
   MajorNotifier() : super(MajorState(majors: major.map((e) => e.major).toList())) {
     _loadSelectedMajors();
     _loadAlarmMajors();
-  }
-
-  // 🔔 일반 전공 선택 관리
-  void toggleMajor(String majorName) {
-    final currentMajors = List<String>.from(state.selectedMajors);
-
-    if (currentMajors.contains(majorName)) {
-      currentMajors.remove(majorName);
-    } else if (currentMajors.length < 2) {
-      currentMajors.add(majorName);
-    }
-
-    state = state.copyWith(selectedMajors: currentMajors);
-    _saveSelectedMajors();
-  }
-
-  // 🔔 알림용 전공 선택 관리
-  void toggleAlarmMajor(String majorName) {
-    final currentAlarms = List<String>.from(state.alarmMajors);
-
-    if (currentAlarms.contains(majorName)) {
-      currentAlarms.remove(majorName);
-    } else {
-      currentAlarms.add(majorName);
-    }
-
-    state = state.copyWith(alarmMajors: currentAlarms);
-    _saveAlarmMajors();
-  }
-
-  // 🔎 검색어 업데이트
-  void updateSearchText(String text) {
-    state = state.copyWith(searchText: text);
   }
 
   // 📥 저장된 일반 전공 불러오기
@@ -85,6 +52,35 @@ class MajorNotifier extends StateNotifier<MajorState> {
     state = state.copyWith(alarmMajors: savedAlarms);
   }
 
+  // 🔔 일반 전공 선택 관리
+  void toggleMajor(String majorName) {
+    final currentMajors = List<String>.from(state.selectedMajors);
+    if (currentMajors.contains(majorName)) {
+      currentMajors.remove(majorName);
+    } else if (currentMajors.length < 2) {
+      currentMajors.add(majorName);
+    }
+    state = state.copyWith(selectedMajors: currentMajors);
+    _saveSelectedMajors();
+  }
+
+  // 🔔 알림용 전공 선택 관리
+  void toggleAlarmMajor(String majorName) {
+    final currentAlarms = List<String>.from(state.alarmMajors);
+    if (currentAlarms.contains(majorName)) {
+      currentAlarms.remove(majorName);
+    } else {
+      currentAlarms.add(majorName);
+    }
+    state = state.copyWith(alarmMajors: currentAlarms);
+    _saveAlarmMajors();
+  }
+
+  // 🔎 검색어 업데이트
+  void updateSearchText(String text) {
+    state = state.copyWith(searchText: text);
+  }
+
   // 💾 일반 전공 저장
   Future<void> _saveSelectedMajors() async {
     await saveSelectedMajors(state.selectedMajors);
@@ -97,7 +93,7 @@ class MajorNotifier extends StateNotifier<MajorState> {
   }
 }
 
-// Provider 등록
+// 📌 Provider 등록
 final majorProvider = StateNotifierProvider<MajorNotifier, MajorState>((ref) {
   return MajorNotifier();
 });

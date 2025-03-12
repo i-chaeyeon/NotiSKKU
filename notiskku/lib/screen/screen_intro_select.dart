@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:notiskku/widget/grid/grid_keywords.dart';
 import 'package:notiskku/widget/bar/bar_settings.dart';
 import 'package:notiskku/widget/list/list_major.dart';
-import 'package:notiskku/providers/bar_settings_provider.dart';
+import 'package:notiskku/providers/bar_providers.dart';
 import 'package:notiskku/providers/major_provider.dart';
 import 'package:notiskku/providers/keyword_provider.dart';
 import 'package:notiskku/widget/button/wide_condition.dart';
