@@ -5,6 +5,7 @@ import 'package:notiskku/screen/screen_intro_select.dart';
 import 'package:notiskku/widget/button/wide_green.dart';
 import 'package:notiskku/widget/button/wide_grey.dart';
 
+// 중요한 소식, 내가 먼저! 띠링~ 필요한 알림만 받을 수 있어요. 
 class ScreenIntroThree extends StatelessWidget {
   const ScreenIntroThree({super.key});
 
@@ -32,6 +33,7 @@ class ScreenIntroThree extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 24.sp,
                             fontFamily: 'GmarketSans',
+                            color: Colors.black
                           ),
                           children: [
                             TextSpan(text: '중요한 소식, 내가 먼저!'),
@@ -91,16 +93,13 @@ class ScreenIntroThree extends StatelessWidget {
                 SizedBox(height: 36.h),
                 Padding(
                   padding: EdgeInsets.only(bottom: 12.h),
-                  child: WideGrey(
+                  child: WideGrey( 
                     text: '다음에 설정하기',
                     onPressed: () {
                       Navigator.push(
                         context,
-                        // MaterialPageRoute(
-                        //   builder: (context) => const StartScreen(),
-                        // ),
                         MaterialPageRoute(
-                          builder: (context) => const ScreenIntroReady(),
+                          builder: (context) => const ScreenIntroReady(), // 이제 준비가 완료되었습니다!
                         ),
                       );
                     },
@@ -127,7 +126,7 @@ class ScreenIntroThree extends StatelessWidget {
     );
   }
 
-  // Indicator Circle 생성 메서드
+  // ○ ○ ● indicator
   Widget _buildIndicatorCircle({required Color color}) {
     return Container(
       width: 10.w, // 반응형 크기

@@ -3,6 +3,7 @@ import 'package:notiskku/models/notice.dart';
 import 'package:notiskku/notice_functions/launch_url.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:notiskku/providers/starred_provider.dart';
+import 'package:notiskku/widget/list/list_key_notices.dart';
 // import 'package:notiskku/screens/edit_keyword.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:notiskku/notice_functions/fetch_notice.dart';
@@ -163,53 +164,7 @@ class _ScreenMainKeywordState extends ConsumerState<ScreenMainKeyword> {
                   final notices = snapshot.data!;
                   isStarred = List.generate(notices.length, (index) => false);
 
-                  return ListView.builder(
-                    itemCount: notices.length,
-                    itemBuilder: (context, index) {
-                      final notice = notices[index];
-                      final isStarred = ref.watch(starredProvider);
-
-                      return Column(
-                        children: [
-                          ListTile(
-                            title: Text(
-                              notice.title,
-                              style:
-                                  TextStyle(fontSize: 15, color: Colors.black),
-                            ),
-                            subtitle:
-                                Text('${notice.date} | 조회수: ${notice.views}'),
-                            trailing: GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  ref
-                                      .read(starredProvider.notifier)
-                                      .toggleNotice(notice);
-                                });
-                              },
-                              child: Image.asset(
-                                isStarred.any((n) => n.url == notice.url)
-                                    ? 'assets/images/fullstar_fix.png'
-                                    : 'assets/images/emptystar_fix.png',
-                                width: 26,
-                                height: 26,
-                              ),
-                            ),
-                            onTap: () async {
-                              await launchUrlService.launchURL(
-                                  notice.url); // LaunchUrlService를 사용하여 URL 열기
-                            },
-                          ),
-                          const Divider(
-                            color: Colors.grey,
-                            thickness: 1,
-                            indent: 16,
-                            endIndent: 16,
-                          ),
-                        ],
-                      );
-                    },
-                  );
+                  return ListKeyNotices(notices: notices);
                 }
               },
             ),

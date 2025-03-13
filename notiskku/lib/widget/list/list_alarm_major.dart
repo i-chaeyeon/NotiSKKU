@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:notiskku/providers/major_provider.dart';
-import 'package:notiskku/data/major_data.dart';
+
 
 class ListAlarmMajor extends ConsumerWidget {
   const ListAlarmMajor({super.key});
@@ -27,8 +27,10 @@ class ListAlarmMajor extends ConsumerWidget {
           child: FractionallySizedBox(
             widthFactor: 0.85, // 버튼 너비 동일 유지
             child: Container(
-              margin: EdgeInsets.only(bottom: 8.h),
-              padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 16.w),
+              width: 294.w,
+              height: 36.h,
+              margin: EdgeInsets.only(bottom: 13.h),
+              padding: EdgeInsets.symmetric(vertical: 7.h,),
               decoration: BoxDecoration(
                 color: isSelected ? const Color(0xB20B5B42) : const Color(0x99D9D9D9),
                 borderRadius: BorderRadius.circular(20.r),
@@ -37,7 +39,7 @@ class ListAlarmMajor extends ConsumerWidget {
                 child: Text(
                   major,
                   style: TextStyle(
-                    fontSize: 16.sp,
+                    fontSize: 19.sp,
                     fontWeight: FontWeight.bold,
                     color: isSelected ? Colors.white : const Color(0xFF979797),
                   ),

@@ -22,11 +22,12 @@ class _SearchMajorState extends ConsumerState<SearchMajor> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 30.w),
+      width: 278.w,
+      height: 44.h,
       padding: EdgeInsets.symmetric(horizontal: 15.w),
       decoration: BoxDecoration(
         border: Border.all(color: const Color(0xFF0B5B42), width: 2.5.w),
-        borderRadius: BorderRadius.circular(15.r),
+        borderRadius: BorderRadius.circular(10.r),
       ),
       child: Row(
         children: [
@@ -37,7 +38,10 @@ class _SearchMajorState extends ConsumerState<SearchMajor> {
               style: TextStyle(fontSize: 18.sp),
               decoration: InputDecoration(
                 hintText: '검색어를 입력하세요.',
-                hintStyle: TextStyle(fontSize: 18.sp, color: const Color(0xFFD9D9D9)),
+                hintStyle: TextStyle(
+                  fontSize: 18.sp,
+                  color: const Color(0xFFD9D9D9),
+                ),
                 counterText: '',
                 border: InputBorder.none,
               ),
@@ -51,7 +55,11 @@ class _SearchMajorState extends ConsumerState<SearchMajor> {
               _controller.clear();
               ref.read(majorProvider.notifier).updateSearchText('');
             },
-            child: Icon(Icons.search, size: 37.w, color: const Color(0xFF0B5B42)),
+            child: Icon(
+              Icons.search,
+              size: 37.w,
+              color: const Color(0xFF0B5B42),
+            ),
           ),
         ],
       ),

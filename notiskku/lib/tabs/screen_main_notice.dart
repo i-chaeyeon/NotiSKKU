@@ -50,6 +50,7 @@ class NoticeAppBar extends ConsumerWidget implements PreferredSizeWidget {
     return AppBar(
       backgroundColor: Colors.white,
       elevation: 0,
+      scrolledUnderElevation: 0,
       leading: Padding(
         padding: const EdgeInsets.all(10.0),
         child: Image.asset('assets/images/greenlogo_fix.png', width: 40),

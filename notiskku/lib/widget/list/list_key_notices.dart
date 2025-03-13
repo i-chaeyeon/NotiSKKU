@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:notiskku/models/notice.dart';
 import 'package:notiskku/widget/notice_tile.dart';
 
-class ListNotices extends StatelessWidget {
+class ListKeyNotices extends StatelessWidget {
   final List<Notice> notices;
   
 
-  const ListNotices({Key? key, required this.notices}) : super(key: key);
+  const ListKeyNotices({Key? key, required this.notices}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -18,5 +18,4 @@ class ListNotices extends StatelessWidget {
     );
   }
 }
-
 
