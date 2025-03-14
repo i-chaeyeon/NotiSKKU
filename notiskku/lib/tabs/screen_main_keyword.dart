@@ -1,57 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:notiskku/models/notice.dart';
-import 'package:notiskku/notice_functions/launch_url.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:notiskku/providers/starred_provider.dart';
-import 'package:notiskku/widget/list/list_key_notices.dart';
-// import 'package:notiskku/screens/edit_keyword.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:notiskku/notice_functions/fetch_notice.dart';
+import 'package:notiskku/providers/list_key_notices_provider.dart';
+import 'package:notiskku/widget/bar/bar_keywords.dart';
+import 'package:notiskku/widget/list/list_notices.dart';
 
-class ScreenMainKeyword extends ConsumerStatefulWidget {
-  const ScreenMainKeyword({Key? key}) : super(key: key);
+class ScreenMainKeyword extends ConsumerWidget {
+  const ScreenMainKeyword({super.key});
 
   @override
-  _ScreenMainKeywordState createState() => _ScreenMainKeywordState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final noticeAsync = ref.watch(ListKeyNoticesProvider);
 
-class _ScreenMainKeywordState extends ConsumerState<ScreenMainKeyword> {
-  int selectedCategoryIndex = 0;
-  List<String> categories = [];
-  List<bool> isStarred = [];
-  bool isEditing = false;
-
-  final NoticeService noticeService = NoticeService(); // NoticeService 인스턴스 생성
-  late Future<List<Notice>> noticesFuture; // Future로 공지사항 리스트를 관리
-  final LaunchUrlService launchUrlService =
-      LaunchUrlService(); // LaunchUrlService 인스턴스 생성
-
-  @override
-  void initState() {
-    super.initState();
-    _loadKeywords();
-    noticesFuture =
-        noticeService.fetchNotices(_getCategoryUrl(0)); // fetchNotices 호출
-  }
-
-  Future<void> _loadKeywords() async {
-    final prefs = await SharedPreferences.getInstance();
-    setState(() {
-      categories =
-          prefs.getStringList('selectedKeywords') ?? ['Default Keyword'];
-    });
-  }
-
-  String _getCategoryUrl(int index) {
-    return 'https://www.skku.edu/skku/campus/skk_comm/notice01.do';
-  }
-
-  @override
-  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
+        scrolledUnderElevation: 0,
         leading: Padding(
           padding: const EdgeInsets.all(10.0),
           child: Image.asset('assets/images/greenlogo_fix.png', width: 40),
@@ -59,114 +23,29 @@ class _ScreenMainKeywordState extends ConsumerState<ScreenMainKeyword> {
         title: const Text(
           '키워드',
           style: TextStyle(
-            fontSize: 25,
+            fontSize: 20,
             fontWeight: FontWeight.bold,
             color: Colors.black,
           ),
         ),
-        centerTitle: true, // 타이틀 중앙 정렬
+        centerTitle: true,
       ),
       backgroundColor: Colors.white,
       body: Column(
         children: [
-          Container(
-            color: Colors.white,
-            padding: const EdgeInsets.all(10.0),
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    GestureDetector(
-                      onTap: () {
-                        // Navigator.push(
-                        //   context,
-                        //   //MaterialPageRoute(builder: (context) => const StartScreen()),
-                        //   MaterialPageRoute(
-                        //       builder: (context) => const EditKeyword()),
-                        // );
-                      },
-                      child: const Text(
-                        '편집',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.grey,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 10),
-                Row(
-                  children: [
-                    Expanded(
-                      child: SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Row(
-                          children: List.generate(
-                              categories
-                                  .where(
-                                      (category) => category != '없음') // '없음' 제외
-                                  .toList()
-                                  .length, (index) {
-                            return Padding(
-                              padding: const EdgeInsets.only(right: 10),
-                              child: GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    selectedCategoryIndex = index;
-                                    noticesFuture = noticeService.fetchNotices(
-                                        _getCategoryUrl(0)); // fetchNotices 호출
-                                  });
-                                },
-                                child: Container(
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: 33, vertical: 4),
-                                  decoration: BoxDecoration(
-                                    color: selectedCategoryIndex == index
-                                        ? Color(0xB20B5B42)
-                                        : Color(0x99D9D9D9),
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  child: Text(
-                                    categories[index],
-                                    style: TextStyle(
-                                      color: selectedCategoryIndex == index
-                                          ? Colors.white
-                                          : Colors.black,
-                                      fontSize: 15,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            );
-                          }),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
+          // 키워드 선택 바
+          BarKeywords(
+            onKeywordSelected: (selectedKeyword) {
+              ref.invalidate(ListKeyNoticesProvider); // 선택 시 새로고침
+            },
           ),
           Expanded(
-            child: FutureBuilder<List<Notice>>(
-              future: noticesFuture,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(child: CircularProgressIndicator());
-                } else if (snapshot.hasError) {
-                  return Center(child: Text('Failed to load notices'));
-                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                  return Center(child: Text('No notices available'));
-                } else {
-                  final notices = snapshot.data!;
-                  isStarred = List.generate(notices.length, (index) => false);
-
-                  return ListKeyNotices(notices: notices);
-                }
-              },
+            child: noticeAsync.when(
+              data: (notices) => ListNotices(notices: notices),
+              loading: () => const Center(child: CircularProgressIndicator()),
+              error:
+                  (error, stack) =>
+                      const Center(child: Text('Failed to load notices')),
             ),
           ),
         ],

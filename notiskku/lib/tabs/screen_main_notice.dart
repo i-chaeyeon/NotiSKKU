@@ -44,9 +44,10 @@ class _NoticeAppBar extends ConsumerWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final majorState = ref.watch(majorProvider);
-    final selectedMajorsText = majorState.selectedMajors.isNotEmpty
-        ? majorState.selectedMajors.join(', ')
-        : '학과를 선택하세요';
+    final selectedMajorsText =
+        majorState.selectedMajors.isNotEmpty
+            ? majorState.selectedMajors.join(', ')
+            : '학과를 선택하세요';
 
     return AppBar(
       backgroundColor: Colors.white,
@@ -58,7 +59,11 @@ class _NoticeAppBar extends ConsumerWidget implements PreferredSizeWidget {
       ),
       title: Text(
         selectedMajorsText,
-        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black),
+        style: const TextStyle(
+          fontSize: 18,
+          fontWeight: FontWeight.bold,
+          color: Colors.black,
+        ),
         overflow: TextOverflow.ellipsis,
       ),
       centerTitle: true,

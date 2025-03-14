@@ -4,19 +4,16 @@ import 'package:notiskku/widget/notice_tile.dart';
 
 class ListNotices extends StatelessWidget {
   final List<Notice> notices;
-  
 
-  const ListNotices({Key? key, required this.notices}) : super(key: key);
+  const ListNotices({super.key, required this.notices});
 
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
       itemCount: notices.length,
       itemBuilder: (context, index) {
-        return NoticeTile(notice: notices[index], );
+        return NoticeTile(notice: notices[index]);
       },
     );
   }
 }
-
-

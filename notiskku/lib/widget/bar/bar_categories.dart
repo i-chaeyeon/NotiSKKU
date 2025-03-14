@@ -9,7 +9,14 @@ class BarCategories extends ConsumerWidget {
   const BarCategories({super.key});
 
   static const categories = [
-    '전체', '학사', '입학', '취업', '채용/모집', '장학', '행사/세미나', '일반'
+    '전체',
+    '학사',
+    '입학',
+    '취업',
+    '채용/모집',
+    '장학',
+    '행사/세미나',
+    '일반',
   ];
 
   @override
@@ -25,7 +32,7 @@ class BarCategories extends ConsumerWidget {
             child: Row(
               children: List.generate(categories.length, (index) {
                 return Padding(
-                  padding: EdgeInsets.only(left: 5.w), // 
+                  padding: EdgeInsets.only(left: 5.w), //
                   child: GestureDetector(
                     onTap: () {
                       // 선택된 카테고리 변경
@@ -33,31 +40,37 @@ class BarCategories extends ConsumerWidget {
 
                       // 현재 선택된 학과 가져오기
                       final majorState = ref.read(majorProvider);
-                      final majorOrDepartment = majorState.selectedMajors.isNotEmpty
-                          ? majorState.selectedMajors[0]
-                          : '';
+                      final majorOrDepartment =
+                          majorState.selectedMajors.isNotEmpty
+                              ? majorState.selectedMajors[0]
+                              : '';
 
                       // 공지 리스트 강제 새로고침 (FutureProvider 다시 실행)
                       ref.invalidate(listNoticesProvider);
                     },
                     child: Padding(
-                      padding: EdgeInsets.only(top: 3.w), 
+                      padding: EdgeInsets.only(top: 3.w),
                       child: Container(
-                        padding: EdgeInsets.symmetric(horizontal: 25.w, vertical: 6.h), // 🔹 패딩 조정
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 25.w,
+                          vertical: 6.h,
+                        ), // 패딩 조정
                         decoration: BoxDecoration(
-                          color: selectedIndex == index
-                              ? const Color(0xB20B5B42) 
-                              : const Color(0x99D9D9D9), 
-                          borderRadius: BorderRadius.circular(20.r), 
+                          color:
+                              selectedIndex == index
+                                  ? const Color(0xB20B5B42)
+                                  : const Color(0x99D9D9D9),
+                          borderRadius: BorderRadius.circular(20.r),
                         ),
                         child: Text(
                           categories[index],
                           style: TextStyle(
-                            color: selectedIndex == index
-                                ? Colors.white
-                                : Colors.black, 
-                            fontSize: 13.sp, 
-                            fontWeight:FontWeight.w400, 
+                            color:
+                                selectedIndex == index
+                                    ? Colors.white
+                                    : const Color(0xFF979797),
+                            fontSize: 13.sp,
+                            fontWeight: FontWeight.w400,
                           ),
                         ),
                       ),
@@ -70,7 +83,11 @@ class BarCategories extends ConsumerWidget {
         ),
         Align(
           alignment: Alignment.centerRight,
-          child: Icon(Icons.arrow_forward_ios, color: Colors.grey, size: 14.w), // 🔹 반응형 아이콘 크기
+          child: Icon(
+            Icons.arrow_forward_ios,
+            color: Colors.grey,
+            size: 14.w,
+          ), 
         ),
       ],
     );

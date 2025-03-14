@@ -2,8 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:notiskku/models/notice.dart';
 import 'package:notiskku/notice_functions/fetch_notice.dart';
 import 'package:notiskku/providers/major_provider.dart'; // 과 선택 정보 가져옴
-import 'package:notiskku/providers/bar_providers.dart'; // 학과|단과대학|학과, 전체|학사|입학|취업|... 선택 정보 가져옴옴
-
+import 'package:notiskku/providers/bar_providers.dart'; // 학과|단과대학|학과, 전체|학사|입학|취업|... 선택 정보 가져옴
 
 // 공지 데이터 제공을 위한 FutureProvider
 final listNoticesProvider = FutureProvider<List<Notice>>((ref) async {
@@ -18,7 +17,7 @@ final listNoticesProvider = FutureProvider<List<Notice>>((ref) async {
   );
 });
 
-// 카테고리별 URL 반환 함수 수정
+// 카테고리별 URL 반환 함수 수정 (추후 수정 필요 !!)
 String _getCategoryUrl(int index, String majorOrDepartment) {
   // 소프트웨어학과의 경우 특정 URL 반환
   if (majorOrDepartment == '소프트웨어학과') {
