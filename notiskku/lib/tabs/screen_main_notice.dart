@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:notiskku/providers/major_provider.dart';
-import 'package:notiskku/providers/notice_list_provider.dart';
+import 'package:notiskku/providers/list_notices_provider.dart';
 import 'package:notiskku/widget/bar/bar_categories.dart';
 import 'package:notiskku/widget/bar/bar_notices.dart';
 import 'package:notiskku/widget/list/list_notices.dart';
@@ -11,16 +11,17 @@ class ScreenMainNotice extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final noticeAsync = ref.watch(noticeListProvider);
+    final noticeAsync = ref.watch(listNoticesProvider);
 
     return Scaffold(
-      appBar: const NoticeAppBar(),
+      appBar: const _NoticeAppBar(),
       backgroundColor: Colors.white,
       body: Column(
         children: [
           const BarNotices(),
-          const SizedBox(height: 10),
+          const SizedBox(height: 6),
           const BarCategories(),
+          const SizedBox(height: 10),
           Expanded(
             child: noticeAsync.when(
               data: (notices) => ListNotices(notices: notices),
@@ -37,8 +38,8 @@ class ScreenMainNotice extends ConsumerWidget {
   }
 }
 
-class NoticeAppBar extends ConsumerWidget implements PreferredSizeWidget {
-  const NoticeAppBar({Key? key}) : super(key: key);
+class _NoticeAppBar extends ConsumerWidget implements PreferredSizeWidget {
+  const _NoticeAppBar({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

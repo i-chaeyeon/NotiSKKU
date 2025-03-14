@@ -13,7 +13,7 @@ class ListNotices extends StatelessWidget {
     return ListView.builder(
       itemCount: notices.length,
       itemBuilder: (context, index) {
-        return NoticeTile(notice: notices[index]);
+        return NoticeTile(notice: notices[index], );
       },
     );
   }

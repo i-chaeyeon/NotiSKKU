@@ -1,13 +1,14 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:notiskku/models/notice.dart';
 import 'package:notiskku/notice_functions/fetch_notice.dart';
-import 'package:notiskku/providers/bar_providers.dart';
-import 'package:notiskku/providers/major_provider.dart';
+import 'package:notiskku/providers/major_provider.dart'; // 과 선택 정보 가져옴
+import 'package:notiskku/providers/bar_providers.dart'; // 학과|단과대학|학과, 전체|학사|입학|취업|... 선택 정보 가져옴옴
+
 
 // 공지 데이터 제공을 위한 FutureProvider
-final noticeListProvider = FutureProvider<List<Notice>>((ref) async {
+final listNoticesProvider = FutureProvider<List<Notice>>((ref) async {
   final majorState = ref.watch(majorProvider);
-  final categoryIndex = ref.watch(barCategoriesProvider); // ✅ 선택된 카테고리 인덱스 가져오기
+  final categoryIndex = ref.watch(barCategoriesProvider); // 선택된 카테고리 인덱스 가져오기
 
   final selectedMajors = majorState.selectedMajors;
   final majorOrDepartment = selectedMajors.isNotEmpty ? selectedMajors[0] : '';
@@ -17,11 +18,11 @@ final noticeListProvider = FutureProvider<List<Notice>>((ref) async {
   );
 });
 
-// ✅ 카테고리별 URL 반환 함수 수정
+// 카테고리별 URL 반환 함수 수정
 String _getCategoryUrl(int index, String majorOrDepartment) {
-  // 🔹 소프트웨어학과의 경우 특정 URL 반환
+  // 소프트웨어학과의 경우 특정 URL 반환
   if (majorOrDepartment == '소프트웨어학과') {
-    if (index == 2) {  // ✅ selectedCategoryIndex → index 변경
+    if (index == 2) {  // selectedCategoryIndex → index 변경
       switch (index) {
         case 1: return 'https://cse.skku.edu/cse/notice.do?mode=list&srCategoryId1=1582';
         case 2: return 'https://cse.skku.edu/cse/notice.do?mode=list&srCategoryId1=1583';
@@ -32,7 +33,7 @@ String _getCategoryUrl(int index, String majorOrDepartment) {
         case 7: return 'https://cse.skku.edu/cse/notice.do?mode=list&srCategoryId1=1588';
         default: return 'https://cse.skku.edu/cse/notice.do?mode=list';
       }
-    } else if (index == 1) { // ✅ selectedCategoryIndex → index 변경
+    } else if (index == 1) { // selectedCategoryIndex → index 변경
       switch (index) {
         case 1: return 'https://sw.skku.edu/sw/notice.do?mode=list&srCategoryId1=1582';
         case 2: return 'https://sw.skku.edu/sw/notice.do?mode=list&srCategoryId1=1583';
@@ -47,8 +48,8 @@ String _getCategoryUrl(int index, String majorOrDepartment) {
     }
   }
 
-  // 🔹 일반 학과의 경우 (학교 선택 포함)
-  if (index == 0 || index == 1 || index == 2) { // ✅ selectedCategoryIndex → index 변경
+  // 일반 학과의 경우 (학교 선택 포함)
+  if (index == 0 || index == 1 || index == 2) { // selectedCategoryIndex → index 변경
     switch (index) {
       case 1: return 'https://www.skku.edu/skku/campus/skk_comm/notice02.do';
       case 2: return 'https://www.skku.edu/skku/campus/skk_comm/notice03.do';
