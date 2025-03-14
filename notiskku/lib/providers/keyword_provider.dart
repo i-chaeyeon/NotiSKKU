@@ -46,7 +46,7 @@ class KeywordNotifier extends StateNotifier<KeywordState> {
   // 저장된 selectedKeywords 불러오기 
   Future<void> _loadSelectedKeywords() async {
     final savedKeywords = await getSelectedKeywords() ?? [];
-    final isDoNotSelect = savedKeywords.contains('없음');
+    final isDoNotSelect = savedKeywords.contains('없음'); 
 
     state = state.copyWith(
       selectedKeywords: savedKeywords,

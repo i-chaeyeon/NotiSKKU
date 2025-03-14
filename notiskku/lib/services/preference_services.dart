@@ -1,5 +1,4 @@
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:notiskku/models/notice.dart';
 
 // 선택 전공 목록 저장
 Future<void> saveSelectedMajors(List<String> majors) async {

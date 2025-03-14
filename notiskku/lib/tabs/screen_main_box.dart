@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:notiskku/models/notice.dart';
 import 'package:notiskku/notice_functions/launch_url.dart';
 import 'package:notiskku/providers/starred_provider.dart';
-import 'dart:convert';
 
 class ScreenMainBox extends ConsumerStatefulWidget {
   const ScreenMainBox({super.key});

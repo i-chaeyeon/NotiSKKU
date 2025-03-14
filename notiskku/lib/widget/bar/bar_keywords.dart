@@ -42,7 +42,7 @@ class _BarKeywordsState extends State<BarKeywords> {
             child: Text(
               '키워드 별 보기',
               style: TextStyle(
-                fontSize: 17.sp,
+                fontSize: 16.sp,
                 // fontFamily: 'Inter',
                 fontWeight: FontWeight.w600,
               ),

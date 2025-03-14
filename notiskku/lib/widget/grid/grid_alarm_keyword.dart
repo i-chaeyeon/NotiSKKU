@@ -41,21 +41,24 @@ class GridAlarmKeyword extends ConsumerWidget {
               decoration: BoxDecoration(
                 color:
                     isSelectedForAlarm
-                        ? const Color(0xB20B5B42) // 알람 설정됨
-                        : const Color(0x99D9D9D9), // 알람 설정 안됨
+                        ? const Color(0xB20B5B42)
+                        : const Color(0x99D9D9D9),
                 borderRadius: BorderRadius.circular(20.r),
               ),
               child: Center(
-                child: Text(
-                  keyword,
-                  textAlign: TextAlign.center, 
-                  style: TextStyle(
-                    fontSize: 19.sp,
-                    color:
-                        isSelectedForAlarm
-                            ? Colors.white
-                            : const Color(0xFF979797),
-                    fontWeight: FontWeight.w700,
+                child: FittedBox(
+                  fit: BoxFit.scaleDown, // 글자가 너무 크면 자동으로 축소
+                  child: Text(
+                    keyword,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 19.sp, 
+                      color:
+                          isSelectedForAlarm
+                              ? Colors.white
+                              : const Color(0xFF979797),
+                      fontWeight: FontWeight.w700,
+                    ),
                   ),
                 ),
               ),

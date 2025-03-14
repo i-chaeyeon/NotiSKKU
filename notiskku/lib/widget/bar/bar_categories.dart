@@ -44,7 +44,6 @@ class BarCategories extends ConsumerWidget {
                           majorState.selectedMajors.isNotEmpty
                               ? majorState.selectedMajors[0]
                               : '';
-
                       // 공지 리스트 강제 새로고침 (FutureProvider 다시 실행)
                       ref.invalidate(listNoticesProvider);
                     },

@@ -36,7 +36,9 @@ class ListAlarmMajor extends ConsumerWidget {
                 borderRadius: BorderRadius.circular(20.r),
               ),
               child: Center(
-                child: Text(
+                child: FittedBox(
+                  fit: BoxFit.scaleDown, // 글자가 너무 크면 자동으로 축소
+                  child: Text(
                   major,
                   style: TextStyle(
                     fontSize: 19.sp,
@@ -44,6 +46,8 @@ class ListAlarmMajor extends ConsumerWidget {
                     color: isSelected ? Colors.white : const Color(0xFF979797),
                   ),
                 ),
+                ),
+                
               ),
             ),
           ),
