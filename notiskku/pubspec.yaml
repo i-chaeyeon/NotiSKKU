@@ -90,6 +90,8 @@ flutter:
     - assets/images/fourth_fix.png
     - assets/images/greenlogo_fix.png
     - assets/images/whitelogo_fix.png
+    - assets/images/erase.png
+    - assets/images/green_search.png
 
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg

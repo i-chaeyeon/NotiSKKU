@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:notiskku/providers/major_provider.dart';
 import 'package:notiskku/providers/list_notices_provider.dart';
+import 'package:notiskku/tabs/screen_main_search.dart';
 import 'package:notiskku/widget/bar/bar_categories.dart';
 import 'package:notiskku/widget/bar/bar_notices.dart';
 import 'package:notiskku/widget/list/list_notices.dart';
@@ -66,6 +68,22 @@ class _NoticeAppBar extends ConsumerWidget implements PreferredSizeWidget {
         ),
         overflow: TextOverflow.ellipsis,
       ),
+      actions: [
+          Padding(
+            padding: const EdgeInsets.all(15.0),
+            child: GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ScreenMainSearch(),
+                  ),
+                );
+              },
+              child: Image.asset('assets/images/search_fix.png', width: 30),
+            ),
+          ),
+        ],
       centerTitle: true,
     );
   }

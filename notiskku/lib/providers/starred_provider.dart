@@ -3,6 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:notiskku/models/notice.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+final starredProvider = StateNotifierProvider<StarredNotifier, List<Notice>>((ref) {
+  return StarredNotifier();
+});
+
 class StarredNotifier extends StateNotifier<List<Notice>> {
   StarredNotifier() : super([]) {
     _loadStarredNotices();
@@ -39,6 +43,3 @@ class StarredNotifier extends StateNotifier<List<Notice>> {
   }
 }
 
-final starredProvider = StateNotifierProvider<StarredNotifier, List<Notice>>((ref) {
-  return StarredNotifier();
-});

@@ -37,7 +37,7 @@ class GridAlarmKeyword extends ConsumerWidget {
             child: Container(
               width: 86.w,
               height: 37.h,
-              padding: EdgeInsets.all(6.w),
+              padding: EdgeInsets.symmetric(vertical: 6.h),
               decoration: BoxDecoration(
                 color:
                     isSelectedForAlarm
@@ -52,7 +52,7 @@ class GridAlarmKeyword extends ConsumerWidget {
                     keyword,
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                      fontSize: 19.sp, 
+                      fontSize: 19.sp,
                       color:
                           isSelectedForAlarm
                               ? Colors.white

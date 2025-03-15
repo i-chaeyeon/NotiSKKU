@@ -47,7 +47,7 @@ class GridKeywords extends ConsumerWidget {
                 child: Container(
                   width: 86.w,
                   height: 37.h,
-                  padding: EdgeInsets.all(6.w), // 내부 패딩 조정
+                  padding: EdgeInsets.symmetric(vertical: 6.h), // 내부 패딩 조정
                   decoration: BoxDecoration(
                     color:
                         isSelected
