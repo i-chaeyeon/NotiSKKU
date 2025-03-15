@@ -20,10 +20,10 @@ class ScreenMainNotice extends ConsumerWidget {
       backgroundColor: Colors.white,
       body: Column(
         children: [
-          const BarNotices(),
-          const SizedBox(height: 6),
-          const BarCategories(),
-          const SizedBox(height: 10),
+          BarNotices(),
+          SizedBox(height: 6.h),
+          BarCategories(),
+          SizedBox(height: 10.h),
           Expanded(
             child: noticeAsync.when(
               data: (notices) => ListNotices(notices: notices),
@@ -56,13 +56,13 @@ class _NoticeAppBar extends ConsumerWidget implements PreferredSizeWidget {
       elevation: 0,
       scrolledUnderElevation: 0,
       leading: Padding(
-        padding: const EdgeInsets.all(10.0),
+        padding: EdgeInsets.all(10.0),
         child: Image.asset('assets/images/greenlogo_fix.png', width: 40),
       ),
       title: Text(
         selectedMajorsText,
-        style: const TextStyle(
-          fontSize: 18,
+        style: TextStyle(
+          fontSize: 18.sp,
           fontWeight: FontWeight.bold,
           color: Colors.black,
         ),
@@ -70,7 +70,7 @@ class _NoticeAppBar extends ConsumerWidget implements PreferredSizeWidget {
       ),
       actions: [
           Padding(
-            padding: const EdgeInsets.all(15.0),
+            padding: EdgeInsets.all(15.0),
             child: GestureDetector(
               onTap: () {
                 Navigator.push(

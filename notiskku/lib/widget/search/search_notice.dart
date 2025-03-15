@@ -4,9 +4,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:notiskku/providers/recent_search_provider.dart';
 
 class SearchNotice extends ConsumerStatefulWidget {
-  const SearchNotice({super.key, required this.onSearchChanged});
+  final Function(String, bool) onSearch; //검색 실행 후 상태를 부모위젯젯에게 전달
 
-  final ValueChanged<String> onSearchChanged;
+  const SearchNotice({super.key, required this.onSearch});
 
   @override
   _SearchNoticeState createState() {
@@ -24,11 +24,26 @@ class _SearchNoticeState extends ConsumerState<SearchNotice> {
     super.dispose();
   }
 
+  // 사용자가 검색어를 입력할 때 실행되는 함수
   void _onTextChanged(String value) {
     setState(() {
       isSearchEnabled = value.isNotEmpty;
     });
-    widget.onSearchChanged(value);
+    // 검색창이 비어있으면 `isSearched = false`로 값 변경경
+    if (value.isEmpty) {
+      widget.onSearch('', false);
+    }
+  }
+
+  // 검색을 실행하는 함수
+  void _onSearch() {
+    if (!isSearchEnabled) return;
+    final searchText = _titleController.text.trim();
+    if (searchText.isNotEmpty) {
+      ref.read(recentSearchProvider.notifier).searchWord(searchText);
+      widget.onSearch(searchText, true); // 검색 실행 상태 전달 !!
+      FocusScope.of(context).unfocus(); // 키보드 닫기
+    }
   }
 
   @override
@@ -58,12 +73,8 @@ class _SearchNoticeState extends ConsumerState<SearchNotice> {
                   counterText: '',
                   border: InputBorder.none,
                 ),
-                onChanged: _onTextChanged, // 텍스트 변경 감지
-                onSubmitted: (value) {
-                  if (isSearchEnabled) {
-                    ref.read(recentSearchProvider.notifier).searchWord(value);
-                  }
-                },
+                onChanged: _onTextChanged, // 입력 시 검색 버튼 활성화
+                onSubmitted: (value) => _onSearch(), // Enter 키 입력 시 검색 실행
               ),
             ),
             Row(
@@ -81,19 +92,10 @@ class _SearchNoticeState extends ConsumerState<SearchNotice> {
                     splashRadius: 10.w, // 터치 효과 반경 설정
                   ),
                 ),
-                SizedBox(width: 3.w),
                 Align(
                   alignment: Alignment.centerRight,
-                  child: GestureDetector(
-                    onTap:
-                        isSearchEnabled
-                            ? () {
-                              FocusScope.of(context).unfocus();
-                              ref
-                                  .read(recentSearchProvider.notifier)
-                                  .searchWord(_titleController.text);
-                            }
-                            : null, // 입력된 내용 없을 경우 비활성화 상태 적용
+                  child: InkWell(
+                    onTap: _onSearch, // 검색 버튼 클릭 시 실행
                     child: Padding(
                       padding: const EdgeInsets.all(9.0),
                       child: Image.asset(
@@ -103,25 +105,6 @@ class _SearchNoticeState extends ConsumerState<SearchNotice> {
                       ),
                     ),
                   ),
-
-                  //   IconButton(
-                  //   onPressed:
-                  //       isSearchEnabled
-                  //           ? () {
-                  //             FocusScope.of(context).unfocus();
-                  //             ref
-                  //                 .read(recentSearchProvider.notifier)
-                  //                 .searchWord(_titleController.text);
-                  //           }
-                  //           : null, // 입력된 내용 없을 경우 비활성화 상태 적용
-                  //   icon: Icon(
-                  //     Icons.search,
-                  //     size: 37.w,
-                  //     color: const Color(0xFF0B5B42),
-                  //   ),
-                  //   padding: EdgeInsets.zero,
-                  //   splashRadius: 25.w,
-                  // ),
                 ),
               ],
             ),

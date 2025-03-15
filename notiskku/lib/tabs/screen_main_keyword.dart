@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:notiskku/providers/list_key_notices_provider.dart';
 import 'package:notiskku/widget/bar/bar_keywords.dart';
@@ -17,13 +18,13 @@ class ScreenMainKeyword extends ConsumerWidget {
         elevation: 0,
         scrolledUnderElevation: 0,
         leading: Padding(
-          padding: const EdgeInsets.all(10.0),
+          padding: EdgeInsets.all(10.0),
           child: Image.asset('assets/images/greenlogo_fix.png', width: 40),
         ),
-        title: const Text(
+        title: Text(
           '키워드',
           style: TextStyle(
-            fontSize: 20,
+            fontSize: 20.sp,
             fontWeight: FontWeight.bold,
             color: Colors.black,
           ),

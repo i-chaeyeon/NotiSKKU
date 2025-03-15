@@ -21,7 +21,6 @@ class _ListRecentSearchState extends ConsumerState<ListRecentSearch> {
         padding: EdgeInsets.symmetric(horizontal: 20.w),
         itemBuilder: (BuildContext context, int index) {
           final reversedIndex = searchedWords.length - 1 - index;
-
           return Container(
             padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
             margin: EdgeInsets.symmetric(vertical: 4.h),
