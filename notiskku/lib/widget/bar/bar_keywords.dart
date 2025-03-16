@@ -98,7 +98,7 @@ class _BarKeywordsState extends State<BarKeywords> {
                                           ? Colors.white
                                           : const Color(0xFF979797),
                                   fontSize: 14.sp, 
-                                  fontWeight: FontWeight.w700,
+                                  fontWeight: selectedKeywordIndex == index ? FontWeight.w600 : FontWeight.w400,
                                 ),
                               ),
                             ),
