@@ -40,6 +40,7 @@ class ScreenMainKeyword extends ConsumerWidget {
               ref.invalidate(ListKeyNoticesProvider); // 선택 시 새로고침
             },
           ),
+          SizedBox(height: 10.h),
           Expanded(
             child: noticeAsync.when(
               data: (notices) => ListNotices(notices: notices),

@@ -5,7 +5,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class BarKeywords extends StatefulWidget {
   final Function(String) onKeywordSelected;
-  
 
   const BarKeywords({Key? key, required this.onKeywordSelected})
     : super(key: key);
@@ -29,8 +28,7 @@ class _BarKeywordsState extends State<BarKeywords> {
   Future<void> _loadKeywords() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
-      keywords =
-          prefs.getStringList('selectedKeywords') ?? ['Default Keyword'];
+      keywords = prefs.getStringList('selectedKeywords') ?? ['Default Keyword'];
     });
   }
 
@@ -52,70 +50,65 @@ class _BarKeywordsState extends State<BarKeywords> {
             ),
           ),
         ),
-        Container(
-          color: Colors.white,
-          padding: EdgeInsets.symmetric(
-            horizontal: 10.w,
-            vertical: 8.h,
-          ), 
-          child: Row(
-            children: [
-              Expanded(
-                child: SingleChildScrollView(
-                  controller: _scrollController,
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    children: List.generate(
-                      keywords
-                          .where((category) => category != '없음')
-                          .toList()
-                          .length,
-                      (index) {
-                        return Padding(
-                          padding: EdgeInsets.only(right: 8.w), // 간격 줄이기
-                          child: GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                selectedKeywordIndex = index;
-                              });
-                              widget.onKeywordSelected(keywords[index]);
-                            },
-                            child: Container(
-                              padding: EdgeInsets.symmetric(
-                                horizontal: 25.w,
-                                vertical: 6.h,
-                              ),
-                              decoration: BoxDecoration(
+        SizedBox(height: 3.h),
+        Row(
+          children: [
+            Expanded(
+              child: SingleChildScrollView(
+                controller: _scrollController,
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: List.generate(
+                    keywords
+                        .where((category) => category != '없음')
+                        .toList()
+                        .length,
+                    (index) {
+                      return Padding(
+                        padding: EdgeInsets.only(left: 7.w), // 간격 줄이기
+                        child: GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              selectedKeywordIndex = index;
+                            });
+                            widget.onKeywordSelected(keywords[index]);
+                          },
+                          child: Container(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 25.w,
+                              vertical: 6.h,
+                            ),
+                            decoration: BoxDecoration(
+                              color:
+                                  selectedKeywordIndex == index
+                                      ? const Color(0xB20B5B42)
+                                      : const Color(0x99D9D9D9),
+                              borderRadius: BorderRadius.circular(20.r),
+                            ),
+                            child: Text(
+                              keywords[index],
+                              style: TextStyle(
                                 color:
                                     selectedKeywordIndex == index
-                                        ? const Color(0xB20B5B42)
-                                        : const Color(0x99D9D9D9),
-                                borderRadius: BorderRadius.circular(
-                                  20.r,
-                                ), 
-                              ),
-                              child: Text(
-                                keywords[index],
-                                style: TextStyle(
-                                  color:
-                                      selectedKeywordIndex == index
-                                          ? Colors.white
-                                          : const Color(0xFF979797),
-                                  fontSize: 14.sp, 
-                                  fontWeight: selectedKeywordIndex == index ? FontWeight.w600 : FontWeight.w400,
-                                ),
+                                        ? Colors.white
+                                        : const Color(0xFF979797),
+                                fontSize: 14.sp,
+                                fontWeight:
+                                    selectedKeywordIndex == index
+                                        ? FontWeight.w600
+                                        : FontWeight.w400,
                               ),
                             ),
                           ),
-                        );
-                      },
-                    ),
+                        ),
+                      );
+                    },
                   ),
                 ),
               ),
-              SideScroll(scrollController: _scrollController),
-            ],
-          ),
+            ),
+            SideScroll(scrollController: _scrollController),
+          ],
         ),
       ],
     );

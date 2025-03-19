@@ -41,7 +41,7 @@ class _BarCategoriesState extends ConsumerState<BarCategories> {
             child: Row(
               children: List.generate(BarCategories.categories.length, (index) {
                 return Padding(
-                  padding: EdgeInsets.only(left: 5.w), //
+                  padding: EdgeInsets.only(left: 7.w), //
                   child: GestureDetector(
                     onTap: () {
                       // 선택된 카테고리 변경
