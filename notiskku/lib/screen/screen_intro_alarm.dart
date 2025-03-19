@@ -11,7 +11,8 @@ import 'package:notiskku/widget/dialog/dialog_no_alarm.dart';
 
 // 알림 받을 학과와 키워드를 선택해주세요
 class ScreenIntroAlarm extends ConsumerWidget {
-  const ScreenIntroAlarm({super.key});
+  const ScreenIntroAlarm({super.key, this.isFromOthers = false});
+  final bool isFromOthers;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -99,10 +100,20 @@ class ScreenIntroAlarm extends ConsumerWidget {
   }
 
   void _goToNext(BuildContext context) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => const ScreenIntroReady()),
-    );
+    // Navigator.push(
+    //   context,
+    //   MaterialPageRoute(builder: (context) => const ScreenIntroReady()),
+    // );
+    if (isFromOthers) {
+      // screen_main_others에서 진입한 경우: 이전 화면으로 돌아감.
+      Navigator.pop(context);
+    } else {
+      // 초기 시작 시: ScreenIntroReady로 이동.
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const ScreenIntroReady()),
+      );
+    }
   }
 
   void _showNoAlarmDialog(BuildContext context) {
