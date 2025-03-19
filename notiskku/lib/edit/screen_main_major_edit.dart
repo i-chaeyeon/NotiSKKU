@@ -41,24 +41,28 @@ class ScreenMainMajorEdit extends ConsumerWidget {
           Text(
             '관심 학과를 선택해주세요\n(학과는 최대 2개까지 가능)',
             textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 14.sp, color: Colors.black),
+            style: TextStyle(
+              fontSize: 14.sp,
+              color: Colors.black,
+            ),
           ),
           SizedBox(height: 10.h),
           // 검색창 + 학과 리스트
-          Expanded(child: ListMajor()),
+          Expanded(
+            child: ListMajor(),
+          ),
           // 설정 완료 버튼
           Container(
             width: double.infinity,
             margin: EdgeInsets.only(left: 20.w, right: 20.w, bottom: 20.h),
             child: ElevatedButton(
-              onPressed:
-                  isButtonEnabled
-                      ? () {
-                        // TODO: 여기서 "설정 완료" 시 필요한 로직 수행
-                        // 예: Navigator.pop(context); 등
-                        Navigator.pop(context);
-                      }
-                      : null, // false일 경우 버튼 비활성화
+              onPressed: isButtonEnabled
+                  ? () {
+                      // TODO: 여기서 "설정 완료" 시 필요한 로직 수행
+                      // 예: Navigator.pop(context); 등
+                      Navigator.pop(context);
+                    }
+                  : null, // false일 경우 버튼 비활성화
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF0B5B42),
                 disabledBackgroundColor: Colors.grey,
@@ -70,7 +74,10 @@ class ScreenMainMajorEdit extends ConsumerWidget {
                 padding: EdgeInsets.symmetric(vertical: 15.h),
                 child: Text(
                   '설정 완료',
-                  style: TextStyle(fontSize: 16.sp, color: Colors.white),
+                  style: TextStyle(
+                    fontSize: 16.sp,
+                    color: Colors.white,
+                  ),
                 ),
               ),
             ),

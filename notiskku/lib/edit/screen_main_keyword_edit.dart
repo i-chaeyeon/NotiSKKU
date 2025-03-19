@@ -9,8 +9,7 @@ class ScreenMainKeywordEdit extends ConsumerStatefulWidget {
   const ScreenMainKeywordEdit({Key? key}) : super(key: key);
 
   @override
-  ConsumerState<ScreenMainKeywordEdit> createState() =>
-      _ScreenMainKeywordEditState();
+  ConsumerState<ScreenMainKeywordEdit> createState() => _ScreenMainKeywordEditState();
 }
 
 class _ScreenMainKeywordEditState extends ConsumerState<ScreenMainKeywordEdit> {
@@ -27,8 +26,7 @@ class _ScreenMainKeywordEditState extends ConsumerState<ScreenMainKeywordEdit> {
   Widget build(BuildContext context) {
     final keywordState = ref.watch(keywordProvider);
     // "설정 완료" 버튼 활성화 조건 (예시로 선택된 키워드가 있거나 '선택하지 않음'이면 활성화)
-    final isButtonEnabled =
-        keywordState.selectedKeywords.isNotEmpty || keywordState.isDoNotSelect;
+    final isButtonEnabled = keywordState.selectedKeywords.isNotEmpty || keywordState.isDoNotSelect;
 
     return Scaffold(
       appBar: AppBar(
@@ -73,19 +71,20 @@ class _ScreenMainKeywordEditState extends ConsumerState<ScreenMainKeywordEdit> {
           ),
           // 필요하다면 '선택하지 않음' 옵션 등 추가 가능 (별도 위젯으로 분리 가능)
           // 키워드 목록 위젯
-          Expanded(child: ListKeyword(searchText: _searchText)),
+          Expanded(
+            child: ListKeyword(searchText: _searchText),
+          ),
           // 하단 "설정 완료" 버튼
           Container(
             width: double.infinity,
             margin: EdgeInsets.only(left: 20.w, right: 20.w, bottom: 20.h),
             child: ElevatedButton(
-              onPressed:
-                  isButtonEnabled
-                      ? () {
-                        // "설정 완료" 시 필요한 로직 (예: 선택된 키워드 저장, 이전 화면 복귀)
-                        Navigator.pop(context);
-                      }
-                      : null,
+              onPressed: isButtonEnabled
+                  ? () {
+                      // "설정 완료" 시 필요한 로직 (예: 선택된 키워드 저장, 이전 화면 복귀)
+                      Navigator.pop(context);
+                    }
+                  : null,
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF0B5B42),
                 disabledBackgroundColor: Colors.grey,
