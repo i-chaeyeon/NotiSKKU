@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:notiskku/notice_functions/launch_url.dart';
 import 'package:notiskku/providers/starred_provider.dart';
+import 'package:notiskku/tabs/screen_main_box_edit.dart';
 
 class ScreenMainBox extends ConsumerStatefulWidget {
   const ScreenMainBox({super.key});
@@ -42,16 +43,16 @@ class _ScreenMainBoxState extends ConsumerState<ScreenMainBox> {
             padding: const EdgeInsets.all(10.0),
             child: GestureDetector(
               onTap: () {
-                setState(() {
-                  editMode = true;
-                });
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const ScreenMainBoxEdit(),
+                  ),
+                );
               },
               child: const Text(
                 '편집',
-                style: TextStyle(
-                  fontSize: 18,
-                  color: Colors.black,
-                ),
+                style: TextStyle(fontSize: 18, color: Colors.black),
               ),
             ),
           ),
@@ -64,40 +65,43 @@ class _ScreenMainBoxState extends ConsumerState<ScreenMainBox> {
           children: [
             const SizedBox(height: 10),
             Expanded(
-              child: starredNotices.isEmpty
-                  ? const Center(
-                      child: Text(
-                        '저장된 공지가 없습니다',
-                        style: TextStyle(fontSize: 18, color: Colors.grey),
-                      ),
-                    )
-                  : ListView.builder(
-                      itemCount: starredNotices.length,
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      itemBuilder: (BuildContext context, int index) {
-                        final reversedIndex = starredNotices.length - 1 - index;
-                        final starredNotice = starredNotices[reversedIndex];
+              child:
+                  starredNotices.isEmpty
+                      ? const Center(
+                        child: Text(
+                          '저장된 공지가 없습니다',
+                          style: TextStyle(fontSize: 18, color: Colors.grey),
+                        ),
+                      )
+                      : ListView.builder(
+                        itemCount: starredNotices.length,
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        itemBuilder: (BuildContext context, int index) {
+                          final reversedIndex =
+                              starredNotices.length - 1 - index;
+                          final starredNotice = starredNotices[reversedIndex];
 
-                        return Column(
-                          children: [
-                            ListTile(
-                              title: Text(
-                                starredNotice.title, // 공지 제목 표시
-                                style: const TextStyle(
-                                    fontSize: 15, color: Colors.black),
+                          return Column(
+                            children: [
+                              ListTile(
+                                title: Text(
+                                  starredNotice.title, // 공지 제목 표시
+                                  style: const TextStyle(
+                                    fontSize: 15,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                                onTap: () async {
+                                  await launchUrlService.launchURL(
+                                    starredNotice.url,
+                                  );
+                                },
                               ),
-                              onTap: () async {
-                                await launchUrlService.launchURL(starredNotice.url);
-                              },
-                            ),
-                            const Divider(
-                              color: Colors.grey,
-                              thickness: 1,
-                            ),
-                          ],
-                        );
-                      },
-                    ),
+                              const Divider(color: Colors.grey, thickness: 1),
+                            ],
+                          );
+                        },
+                      ),
             ),
           ],
         ),
