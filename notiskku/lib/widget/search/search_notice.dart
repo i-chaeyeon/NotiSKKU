@@ -29,7 +29,7 @@ class _SearchNoticeState extends ConsumerState<SearchNotice> {
     setState(() {
       isSearchEnabled = value.isNotEmpty;
     });
-    // 검색창이 비어있으면 `isSearched = false`로 값 변경경
+    // 검색창이 비어있으면 `isSearched = false`로 값 변경
     if (value.isEmpty) {
       widget.onSearch('', false);
     }

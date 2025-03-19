@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:notiskku/widget/side_scroll.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class BarKeywords extends StatefulWidget {
   final Function(String) onKeywordSelected;
+  
 
   const BarKeywords({Key? key, required this.onKeywordSelected})
     : super(key: key);
@@ -13,6 +15,7 @@ class BarKeywords extends StatefulWidget {
 }
 
 class _BarKeywordsState extends State<BarKeywords> {
+  final ScrollController _scrollController = ScrollController();
   int selectedKeywordIndex = 0;
   List<String> keywords = [];
 
@@ -59,6 +62,7 @@ class _BarKeywordsState extends State<BarKeywords> {
             children: [
               Expanded(
                 child: SingleChildScrollView(
+                  controller: _scrollController,
                   scrollDirection: Axis.horizontal,
                   child: Row(
                     children: List.generate(
@@ -109,6 +113,7 @@ class _BarKeywordsState extends State<BarKeywords> {
                   ),
                 ),
               ),
+              SideScroll(scrollController: _scrollController),
             ],
           ),
         ),
