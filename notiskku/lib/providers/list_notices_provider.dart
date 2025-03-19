@@ -61,6 +61,6 @@ String _getCategoryUrl(int index, String majorOrDepartment) {
     }
   }
 
-  // 기본 URL 반환
+  // 🔹 기본 URL 반환
   return 'https://defaulturl.com';
 }
