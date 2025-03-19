@@ -10,7 +10,10 @@ import 'package:notiskku/widget/button/wide_green.dart';
 import 'package:notiskku/widget/dialog/dialog_no_alarm.dart'; 
 
 class ScreenIntroAlarm extends ConsumerWidget {
-  const ScreenIntroAlarm({super.key});
+  final bool isFromOthers;
+
+  // const ScreenIntroAlarm({super.key});
+  const ScreenIntroAlarm({super.key, this.isFromOthers = false});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -68,11 +71,23 @@ class ScreenIntroAlarm extends ConsumerWidget {
     );
   }
 
+  // void _goToNext(BuildContext context) {
+  //   Navigator.push(
+  //     context,
+  //     MaterialPageRoute(builder: (context) => const ScreenIntroReady()),
+  //   );
+  // }
   void _goToNext(BuildContext context) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => const ScreenIntroReady()),
-    );
+    if (isFromOthers) {
+      // screen_main_others에서 진입한 경우: 이전 화면으로 돌아감.
+      Navigator.pop(context);
+    } else {
+      // 초기 시작 시: ScreenIntroReady로 이동.
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const ScreenIntroReady()),
+      );
+    }
   }
 
   void _showNoAlarmDialog(BuildContext context) {
