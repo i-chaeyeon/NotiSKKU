@@ -22,23 +22,27 @@ class WideGrey extends StatelessWidget {
           foregroundColor: Colors.white,
           backgroundColor: const Color(0xFFD9D9D9), // 배경색
           disabledBackgroundColor: Colors.grey, // 비활성화 시 배경색
-          // padding: EdgeInsets.symmetric(vertical: 10.5.h), 
+          // padding: EdgeInsets.symmetric(vertical: 10.5.h),
           // textStyle: TextStyle(
-          //   fontSize: 18.sp, 
+          //   fontSize: 18.sp,
           //   fontWeight: FontWeight.bold,
           // ),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(30.r), // 반응형 둥근 모서리
           ),
         ),
-        child: Center( // 텍스트를 버튼 중앙에 배치
-          child: Text(
-            text,
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 18.sp,
-              fontFamily: 'Inter',
-              fontWeight: FontWeight.w400,
+        child: Center(
+          // 텍스트를 버튼 중앙에 배치
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(
+              text,
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 18.sp,
+                fontFamily: 'Inter',
+                fontWeight: FontWeight.w400,
+              ),
             ),
           ),
         ),

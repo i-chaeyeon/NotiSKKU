@@ -13,9 +13,11 @@ class ListMajor extends ConsumerWidget {
     final majorState = ref.watch(majorProvider);
     final majorNotifier = ref.read(majorProvider.notifier);
 
-    final filteredMajors = majorState.majors.where((major) {
-      return major.toLowerCase().contains(majorState.searchText.toLowerCase());
-    }).toList();
+    // 전공 리스트를 검색어 기준으로 필터링하고 가나다순 정렬
+    final filteredMajors = majorState.majors
+        .where((major) => major.toLowerCase().contains(majorState.searchText.toLowerCase()))
+        .toList()
+      ..sort(); // 가나다순 정렬 적용
 
     return Column(
       children: [
@@ -23,7 +25,6 @@ class ListMajor extends ConsumerWidget {
           padding: EdgeInsets.symmetric(horizontal: 30.w, vertical: 10.h),
           child: const SearchMajor(),
         ),
-
         Expanded(
           child: ListView.builder(
             padding: EdgeInsets.symmetric(horizontal: 30.w, vertical: 10.h),
@@ -35,15 +36,16 @@ class ListMajor extends ConsumerWidget {
               return GestureDetector(
                 onTap: () {
                   if (!isSelected && majorState.selectedMajors.length >= 2) {
-                    _showLimitDialog(context, majorState.selectedMajors);  // 변경
+                    _showLimitDialog(context, majorState.selectedMajors);
                     return;
                   }
-                  majorNotifier.toggleMajor(major);
+                  majorNotifier.toggleSelectedMajor(major);
                 },
                 child: Container(
-                  padding: EdgeInsets.symmetric(vertical: 15.h, horizontal: 20.w),
+                  padding: EdgeInsets.symmetric(vertical: 9.h, horizontal: 20.w),
+                  margin: EdgeInsets.symmetric(horizontal: 20.w),
                   decoration: const BoxDecoration(
-                    border: Border(bottom: BorderSide(color: Color(0xFFD9D9D9), width: 2)),
+                    border: Border(bottom: BorderSide(color: Color(0xFFD9D9D9), width: 1.5)),
                   ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -51,7 +53,7 @@ class ListMajor extends ConsumerWidget {
                       Text(
                         major,
                         style: TextStyle(
-                          fontSize: 16.sp,
+                          fontSize: 19.sp,
                           fontWeight: isSelected ? FontWeight.bold : FontWeight.w400,
                           color: isSelected ? const Color(0xFF0B5B42) : const Color(0xFF979797),
                         ),

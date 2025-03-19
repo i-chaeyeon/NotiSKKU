@@ -22,19 +22,23 @@ class WideCondition extends StatelessWidget {
         onPressed: isEnabled ? onPressed : null,
         style: TextButton.styleFrom(
           foregroundColor: Colors.white,
-          backgroundColor: isEnabled ? const Color(0xFF0B5B42) : const Color(0xFF979797),
+          backgroundColor:
+              isEnabled ? const Color(0xFF0B5B42) : const Color(0xFF979797),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(30.r),
           ),
         ),
         child: Center(
-          child: Text(
-            text,
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 18.sp,
-              fontFamily: 'Inter',
-              fontWeight: FontWeight.w400,
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(
+              text,
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 18.sp,
+                fontFamily: 'Inter',
+                fontWeight: FontWeight.w400,
+              ),
             ),
           ),
         ),

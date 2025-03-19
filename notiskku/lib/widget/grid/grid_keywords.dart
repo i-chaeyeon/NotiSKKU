@@ -12,10 +12,6 @@ class GridKeywords extends ConsumerWidget {
     final keywordState = ref.watch(keywordProvider);
     final keywordNotifier = ref.read(keywordProvider.notifier);
 
-    // 반응형 버튼 크기 계산
-    final buttonWidth = (1.sw - 80.w) / 3;
-    final buttonHeight = buttonWidth * (37 / 86);
-
     return Column(
       children: [
         SizedBox(height: 10.h),
@@ -28,41 +24,51 @@ class GridKeywords extends ConsumerWidget {
             onPressed: () => keywordNotifier.toggleDoNotSelect(),
           ),
         ),
-
-        SizedBox(height: 10.h),
+        SizedBox(height: 25.h),
 
         // 키워드 선택 Grid
         Expanded(
           child: GridView.builder(
-            padding: EdgeInsets.symmetric(horizontal: 30.w),
+            padding: EdgeInsets.symmetric(horizontal: 36.w),
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 3,
-              childAspectRatio: buttonWidth / buttonHeight,
-              crossAxisSpacing: 19.w,
-              mainAxisSpacing: 30.h,
+              crossAxisCount: 3, // 3열
+              childAspectRatio: 86.w / 37.h,
+              crossAxisSpacing: 19.w, // 열 간 간격
+              mainAxisSpacing: 23.h, // 행 간 간격
             ),
             itemCount: keywords.length,
             itemBuilder: (context, index) {
               final keyword = keywords[index].keyword;
-              final isSelected = keywordState.selectedKeywords.contains(keyword);
-
+              final isSelected = keywordState.selectedKeywords.contains(
+                keyword,
+              );
               return GestureDetector(
                 onTap: () => keywordNotifier.toggleKeyword(keyword),
                 child: Container(
-                  width: buttonWidth,
-                  height: buttonHeight,
-                  padding: EdgeInsets.all(10.w),
+                  width: 86.w,
+                  height: 37.h,
+                  padding: EdgeInsets.symmetric(vertical: 6.h), // 내부 패딩 조정
                   decoration: BoxDecoration(
-                    color: isSelected ? const Color(0xB20B5B42) : const Color(0x99D9D9D9),
+                    color:
+                        isSelected
+                            ? const Color(0xB20B5B42)
+                            : const Color(0x99D9D9D9),
                     borderRadius: BorderRadius.circular(20.r),
                   ),
                   child: Center(
-                    child: Text(
-                      keyword,
-                      style: TextStyle(
-                        fontSize: 14.sp,
-                        color: isSelected ? Colors.white : const Color(0xFF979797),
-                        fontWeight: FontWeight.w700,
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown, // 글자가 너무 크면 자동으로 축소
+                      child: Text(
+                        keyword,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 19.sp,
+                          color:
+                              isSelected
+                                  ? Colors.white
+                                  : const Color(0xFF979797),
+                          fontWeight: FontWeight.w700,
+                        ),
                       ),
                     ),
                   ),
@@ -81,33 +87,36 @@ class _DoNotSelectButton extends StatelessWidget {
   final bool isSelected;
   final VoidCallback onPressed;
 
-  const _DoNotSelectButton({
-    required this.isSelected,
-    required this.onPressed,
-  });
+  const _DoNotSelectButton({required this.isSelected, required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
-    final buttonWidth = (1.sw - 80.w) / 3;
-
-    return ElevatedButton(
-      onPressed: onPressed,
-      style: ElevatedButton.styleFrom(
-        elevation: 0,
-        shadowColor: Colors.transparent,
-        backgroundColor: isSelected ? const Color(0xB20B5B42) : const Color(0x99D9D9D9),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(30.r),
+    return SizedBox(
+      width: 282.w,
+      height: 36.h,
+      child: ElevatedButton(
+        onPressed: onPressed,
+        style: ElevatedButton.styleFrom(
+          elevation: 0,
+          shadowColor: Colors.transparent,
+          backgroundColor:
+              isSelected ? const Color(0xB20B5B42) : const Color(0x99D9D9D9),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20.r),
+          ),
         ),
-      ),
-      child: Padding(
-        padding: EdgeInsets.symmetric(vertical: 11.h),
-        child: Text(
-          '선택하지 않음',
-          style: TextStyle(
-            fontSize: buttonWidth * 0.16,
-            color: isSelected ? Colors.white : const Color(0xFF979797),
-            fontWeight: FontWeight.w700,
+        child: Padding(
+          padding: EdgeInsets.symmetric(vertical: 6.h), // 버튼 내부 패딩 조절
+          child: FittedBox(
+            fit: BoxFit.scaleDown, // 글자가 너무 크면 자동으로 축소
+            child: Text(
+              '선택하지 않음',
+              style: TextStyle(
+                fontSize: 19.sp,
+                color: isSelected ? Colors.white : const Color(0xFF979797),
+                fontWeight: FontWeight.w700,
+              ),
+            ),
           ),
         ),
       ),

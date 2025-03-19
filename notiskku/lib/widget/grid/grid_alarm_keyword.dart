@@ -14,10 +14,6 @@ class GridAlarmKeyword extends ConsumerWidget {
     final selectedKeywords = keywordState.selectedKeywords; // 선택된 키워드
     final selectedAlarmKeywords = keywordState.alarmKeywords; // 알람 설정된 키워드
 
-    // 반응형 버튼 크기 계산
-    final buttonWidth = (1.sw - 80.w) / 3;
-    final buttonHeight = buttonWidth * (37 / 86);
-
     if (selectedKeywords.isEmpty) {
       return const Center(child: Text('선택된 키워드가 없습니다.'));
     }
@@ -27,9 +23,9 @@ class GridAlarmKeyword extends ConsumerWidget {
         padding: EdgeInsets.symmetric(horizontal: 30.w),
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 3,
-          childAspectRatio: buttonWidth / buttonHeight,
+          childAspectRatio: 86.w / 37.h,
           crossAxisSpacing: 19.w,
-          mainAxisSpacing: 30.h,
+          mainAxisSpacing: 23.h,
         ),
         itemCount: selectedKeywords.length,
         itemBuilder: (context, index) {
@@ -39,22 +35,30 @@ class GridAlarmKeyword extends ConsumerWidget {
           return GestureDetector(
             onTap: () => keywordNotifier.toggleAlarmKeyword(keyword),
             child: Container(
-              width: buttonWidth,
-              height: buttonHeight,
-              padding: EdgeInsets.all(10.w),
+              width: 86.w,
+              height: 37.h,
+              padding: EdgeInsets.symmetric(vertical: 6.h),
               decoration: BoxDecoration(
-                color: isSelectedForAlarm
-                    ? const Color(0xB20B5B42) // 알람 설정됨
-                    : const Color(0x99D9D9D9), // 알람 설정 안됨
+                color:
+                    isSelectedForAlarm
+                        ? const Color(0xB20B5B42)
+                        : const Color(0x99D9D9D9),
                 borderRadius: BorderRadius.circular(20.r),
               ),
               child: Center(
-                child: Text(
-                  keyword,
-                  style: TextStyle(
-                    fontSize: 14.sp,
-                    color: isSelectedForAlarm ? Colors.white : const Color(0xFF979797),
-                    fontWeight: FontWeight.w700,
+                child: FittedBox(
+                  fit: BoxFit.scaleDown, // 글자가 너무 크면 자동으로 축소
+                  child: Text(
+                    keyword,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 19.sp,
+                      color:
+                          isSelectedForAlarm
+                              ? Colors.white
+                              : const Color(0xFF979797),
+                      fontWeight: FontWeight.w700,
+                    ),
                   ),
                 ),
               ),

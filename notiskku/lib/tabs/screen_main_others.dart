@@ -11,8 +11,8 @@ import 'package:notiskku/widget/see_more/faq_popup.dart';
 import 'package:notiskku/widget/see_more/feedback_popup.dart';
 import 'package:notiskku/widget/see_more/version_notice_popup.dart';
 
-import 'package:notiskku/screen/screen_main_major_edit.dart';
-import 'package:notiskku/screen/screen_main_keyword_edit.dart';
+import 'package:notiskku/edit/screen_main_major_edit.dart';
+import 'package:notiskku/edit/screen_main_keyword_edit.dart';
 
 class ScreenMainOthers extends StatelessWidget {
   const ScreenMainOthers({super.key});

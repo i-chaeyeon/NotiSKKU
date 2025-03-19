@@ -1,13 +1,12 @@
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:notiskku/models/notice.dart';
 
-// 전공 목록 저장
+// 선택 전공 목록 저장
 Future<void> saveSelectedMajors(List<String> majors) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   await prefs.setStringList('selectedMajors', majors);
 }
 
-// 전공 목록 불러오기
+// 선택 전공 목록 불러오기
 Future<List<String>?> getSelectedMajors() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   return prefs.getStringList('selectedMajors');
@@ -19,19 +18,19 @@ Future<void> saveAlarmMajors(List<String> majors) async {
   await prefs.setStringList('alarmMajors', majors);
 }
 
-// 알림 목록 불러오기
+// 알림 전공 목록 불러오기
 Future<List<String>?> getAlarmMajors() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   return prefs.getStringList('alarmMajors');
 }
 
-// 키워드 목록 저장
+// 선택 키워드 목록 저장
 Future<void> saveSelectedKeywords(List<String> keywords) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   await prefs.setStringList(('selectedKeywords'), keywords);
 }
 
-// 키워드 목록 불러오기
+// 선택 키워드 목록 불러오기
 Future<List<String>?> getSelectedKeywords() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   return prefs.getStringList('selectedKeywords');

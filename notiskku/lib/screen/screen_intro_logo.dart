@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:notiskku/screen/screen_intro_one.dart';
 
+// 3초 후 넘어가는 초록색 NotiSKKU 로고 페이지 
 class ScreenLogoIntro extends StatefulWidget {
   const ScreenLogoIntro({super.key});
 
@@ -13,7 +14,7 @@ class _ScreenLogoIntroState extends State<ScreenLogoIntro> {
   @override
   void initState() {
     super.initState();
-    // 일정 시간 후에 IntroductionScreen으로 이동
+    // 일정 시간 후에 ScreenIntroOne으로 이동
     Future.delayed(const Duration(seconds: 1), () {
       Navigator.pushReplacement(
         context,
@@ -46,7 +47,6 @@ class _ScreenLogoIntroState extends State<ScreenLogoIntro> {
                 'NotiSKKU',
                 style: TextStyle(
                   fontSize: 44.sp, // 반응형 폰트 크기
-                  // height: 1.0, // 줄 간격 최소화 (간격 완전 제거)
                   color: Colors.white,
                   fontFamily: 'Inter',
                   fontWeight: FontWeight.w400,

@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:notiskku/screen/screen_intro_three.dart';
 import 'package:notiskku/widget/button/wide_green.dart';
 
+// 공지사항도 내 스타일로! 원하는 소식만 확인할 수 있어요. 
 class ScreenIntroTwo extends StatelessWidget {
   const ScreenIntroTwo({super.key});
 
@@ -30,6 +31,7 @@ class ScreenIntroTwo extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 24.sp,
                             fontFamily: 'GmarketSans',
+                            color: Colors.black
                           ),
                           children: [
                             TextSpan(text: '공지사항도 내 스타일로! '),
@@ -89,7 +91,7 @@ class ScreenIntroTwo extends StatelessWidget {
                   ],
                 ),
                 SizedBox(height: 88.h),
-                Padding(
+                Padding( // WideGreen 버튼, 다음으로 
                   padding: EdgeInsets.only(bottom: 40.h), // 반응형 하단 여백
                   child: WideGreen(
                     text: '다음으로',
@@ -111,7 +113,7 @@ class ScreenIntroTwo extends StatelessWidget {
     );
   }
 
-  // Indicator Circle 생성 메서드
+  // ○ ● ○ indicator 
   Widget _buildIndicatorCircle({required Color color}) {
     return Container(
       width: 10.w, // 반응형 크기

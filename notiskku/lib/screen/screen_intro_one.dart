@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:notiskku/screen/screen_intro_two.dart';
-// import 'package:google_fonts/google_fonts.dart';
 import 'package:notiskku/widget/button/wide_green.dart';
 
+// 성균관대 공지사항 어플 NotiSKKU를 소개합니다! 
 class ScreenIntroOne extends StatelessWidget {
   const ScreenIntroOne({super.key});
 
@@ -34,7 +34,6 @@ class ScreenIntroOne extends StatelessWidget {
                     ),
                   ),
                 ),
-
                 Align(
                   alignment: Alignment.centerLeft,
                   child: Padding(
@@ -75,7 +74,6 @@ class ScreenIntroOne extends StatelessWidget {
                   height: 202.h,
                   fit: BoxFit.contain,
                 ),
-
               ],
             ),
             Column(
@@ -91,9 +89,9 @@ class ScreenIntroOne extends StatelessWidget {
                   ],
                 ),
                 SizedBox(height: 88.h),
-                Padding(
+                Padding( // WideGreen 버튼, 다음으로
                   padding: EdgeInsets.only(bottom: 40.h), // 반응형 하단 여백
-                  child: WideGreen(
+                  child: WideGreen( 
                     text: '다음으로',
                     onPressed: () {
                       Navigator.push(
@@ -113,7 +111,7 @@ class ScreenIntroOne extends StatelessWidget {
     );
   }
 
-  // Helper method to build the indicator circles
+// ● ○ ○ indicator 
   Widget _buildIndicatorCircle({required Color color}) {
     return Container(
       width: 10.w, // 반응형 원 크기

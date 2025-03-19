@@ -7,9 +7,7 @@ class FAQPopup extends StatelessWidget {
   Widget build(BuildContext context) {
     return AlertDialog(
       backgroundColor: Colors.white,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
       contentPadding: const EdgeInsets.symmetric(vertical: 20, horizontal: 24),
       content: ConstrainedBox(
         constraints: BoxConstraints(
@@ -27,11 +25,7 @@ class FAQPopup extends StatelessWidget {
                 color: Color(0xFF0B5B42),
               ),
             ),
-            const Divider(
-              color: Color(0xFF0B5B42),
-              thickness: 3,
-              height: 20,
-            ),
+            const Divider(color: Color(0xFF0B5B42), thickness: 3, height: 20),
             //  콘텐츠 부분
             const SizedBox(height: 15),
             Image.asset(
@@ -43,10 +37,7 @@ class FAQPopup extends StatelessWidget {
             const SizedBox(height: 20),
             const Text(
               '서비스 준비 중입니다',
-              style: TextStyle(
-                color: Colors.grey,
-                fontSize: 18,
-              ),
+              style: TextStyle(color: Colors.grey, fontSize: 18),
             ),
             const SizedBox(height: 20),
             // 확인 버튼

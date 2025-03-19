@@ -19,9 +19,10 @@ class ListKeyword extends ConsumerWidget {
 
     // keyword_data.dart 파일의 키워드 리스트 (Keyword 모델의 keyword 속성만 추출)
     final availableKeywords = keywords.map((k) => k.keyword).toList();
-    final filteredKeywords = availableKeywords.where((kw) {
-      return kw.toLowerCase().contains(searchText.toLowerCase());
-    }).toList();
+    final filteredKeywords =
+        availableKeywords.where((kw) {
+          return kw.toLowerCase().contains(searchText.toLowerCase());
+        }).toList();
 
     return ListView.builder(
       padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
@@ -46,15 +47,23 @@ class ListKeyword extends ConsumerWidget {
                     keyword,
                     style: TextStyle(
                       fontSize: 16.sp,
-                      fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                      color: isSelected ? const Color(0xFF0B5B42) : const Color(0xFF979797),
+                      fontWeight:
+                          isSelected ? FontWeight.bold : FontWeight.normal,
+                      color:
+                          isSelected
+                              ? const Color(0xFF0B5B42)
+                              : const Color(0xFF979797),
                     ),
                   ),
                   Row(
                     children: [
                       // 일반 선택 시 체크 아이콘 표시
                       if (isSelected)
-                        Icon(Icons.check, color: const Color(0xFF0B5B42), size: 20.w),
+                        Icon(
+                          Icons.check,
+                          color: const Color(0xFF0B5B42),
+                          size: 20.w,
+                        ),
                       SizedBox(width: 10.w),
                       // 알림 선택 아이콘 (종 아이콘)
                       GestureDetector(
@@ -63,7 +72,8 @@ class ListKeyword extends ConsumerWidget {
                         },
                         child: Icon(
                           Icons.notifications,
-                          color: isAlarm ? Colors.amber : const Color(0xFF979797),
+                          color:
+                              isAlarm ? Colors.amber : const Color(0xFF979797),
                         ),
                       ),
                     ],
@@ -71,11 +81,7 @@ class ListKeyword extends ConsumerWidget {
                 ],
               ),
             ),
-            Divider(
-              color: const Color(0xFFD9D9D9),
-              thickness: 2,
-              height: 20.h,
-            ),
+            Divider(color: const Color(0xFFD9D9D9), thickness: 2, height: 20.h),
           ],
         );
       },

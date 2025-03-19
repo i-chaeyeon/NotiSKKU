@@ -18,9 +18,7 @@ class FeedbackPopup extends StatelessWidget {
   Widget build(BuildContext context) {
     return AlertDialog(
       backgroundColor: Colors.white,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
       contentPadding: const EdgeInsets.symmetric(vertical: 20, horizontal: 24),
       content: ConstrainedBox(
         constraints: BoxConstraints(
@@ -37,11 +35,7 @@ class FeedbackPopup extends StatelessWidget {
                 color: Color(0xFF0B5B42),
               ),
             ),
-            const Divider(
-              color: Color(0xFF0B5B42),
-              thickness: 3,
-              height: 20,
-            ),
+            const Divider(color: Color(0xFF0B5B42), thickness: 3, height: 20),
             const Text(
               '문의 및 건의는 아래의 카카오톡 오픈채팅을 이용해 주세요.\n답변은 2~3일 정도 소요될 수 있습니다.',
               textAlign: TextAlign.center,
@@ -76,8 +70,7 @@ class FeedbackPopup extends StatelessWidget {
                   ),
                 ),
                 child: const Padding(
-                  padding:
-                      EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                   child: Text(
                     '확인',
                     style: TextStyle(color: Colors.white, fontSize: 16),

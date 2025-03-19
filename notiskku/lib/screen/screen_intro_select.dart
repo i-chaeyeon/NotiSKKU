@@ -4,22 +4,24 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:notiskku/widget/grid/grid_keywords.dart';
 import 'package:notiskku/widget/bar/bar_settings.dart';
 import 'package:notiskku/widget/list/list_major.dart';
-import 'package:notiskku/providers/bar_settings_provider.dart';
+import 'package:notiskku/widget/button/wide_condition.dart';
+import 'package:notiskku/providers/bar_providers.dart';
 import 'package:notiskku/providers/major_provider.dart';
 import 'package:notiskku/providers/keyword_provider.dart';
-import 'package:notiskku/widget/button/wide_condition.dart';
-import 'package:notiskku/screen/screen_intro_alarm.dart';  // 추가된 부분
+import 'package:notiskku/screen/screen_intro_alarm.dart';
 
+// 관심 학과와 키워드를 선택해주세요 
 class ScreenIntroSelect extends ConsumerWidget {
   const ScreenIntroSelect({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final toggleIndex = ref.watch(toggleIndexProvider);
+    // ref.watch로 상태 읽기 
+    final toggleIndex = ref.watch(toggleIndexProvider); 
     final majorState = ref.watch(majorProvider);
     final keywordState = ref.watch(keywordProvider);
 
-    // 버튼 활성화 조건: 학과 1개 이상 + 키워드 1개 이상 선택
+    // '설정완료' 버튼 활성화 조건: 학과 1개 이상 + 키워드 1개 이상 선택
     final isButtonEnabled = majorState.selectedMajors.isNotEmpty && keywordState.selectedKeywords.isNotEmpty;
 
     return Scaffold(
@@ -45,27 +47,24 @@ class ScreenIntroSelect extends ConsumerWidget {
             ),
           ),
           SizedBox(height: 10.h),
-
-          const BarSettings.BarSettings(),
+          const BarSettings.BarSettings(), // 학과|키워드
           SizedBox(height: 10.h),
-
           Expanded(
             child: toggleIndex == 0
-                ? const ListMajor()
-                : const GridKeywords(),
+                ? const ListMajor() // 전체 전공 리스트 보여주기 
+                : const GridKeywords(), // 전체 키워드 그리드 보여주기 
           ),
-
           SizedBox(height: 30.h),
 
           WideCondition(
-            text: '설정완료',
+            text: '설정 완료',
             isEnabled: isButtonEnabled,
             onPressed: isButtonEnabled
                 ? () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const ScreenIntroAlarm(), // 변경된 부분
+                        builder: (context) => const ScreenIntroAlarm(), // 
                       ),
                     );
                   }

@@ -31,7 +31,10 @@ class SearchKeyword extends StatelessWidget {
               style: TextStyle(fontSize: 18.sp),
               decoration: InputDecoration(
                 hintText: '키워드를 입력하세요.',
-                hintStyle: TextStyle(fontSize: 18.sp, color: const Color(0xFFD9D9D9)),
+                hintStyle: TextStyle(
+                  fontSize: 18.sp,
+                  color: const Color(0xFFD9D9D9),
+                ),
                 counterText: '',
                 border: InputBorder.none,
               ),
@@ -40,7 +43,11 @@ class SearchKeyword extends StatelessWidget {
           ),
           GestureDetector(
             onTap: onClear,
-            child: Icon(Icons.search, size: 37.w, color: const Color(0xFF0B5B42)),
+            child: Icon(
+              Icons.search,
+              size: 37.w,
+              color: const Color(0xFF0B5B42),
+            ),
           ),
         ],
       ),

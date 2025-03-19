@@ -1,12 +1,19 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:notiskku/services/preference_services.dart';
 
+// Provider 등록, keyword 관련 정보 관리 
+final keywordProvider = StateNotifierProvider<KeywordNotifier, KeywordState>((
+  ref,
+) {
+  return KeywordNotifier();
+});
+
 // State 정의
 class KeywordState {
-  final List<String> selectedKeywords;  // 일반 키워드
-  final List<String> alarmKeywords;     // 알림용 키워드
-  final bool isDoNotSelect;              // '선택하지 않음' 여부
-  final bool isDoNotSelectAlarm;         // 알림용 '선택하지 않음' 여부
+  final List<String> selectedKeywords; // 선택 키워드 string list로 저장
+  final List<String> alarmKeywords; // 알림 키워드 string list로 저장
+  final bool isDoNotSelect; // '선택하지 않음' 여부 (아무 키워드도 표시하지 않음)
+  final bool isDoNotSelectAlarm; // 알림 '선택하지 않음' 여부 (아무 키워드도 알림 가지 않음음)
 
   const KeywordState({
     this.selectedKeywords = const [],
@@ -36,8 +43,29 @@ class KeywordNotifier extends StateNotifier<KeywordState> {
     _loadSelectedKeywords();
     _loadAlarmKeywords();
   }
+  // 저장된 selectedKeywords 불러오기 
+  Future<void> _loadSelectedKeywords() async {
+    final savedKeywords = await getSelectedKeywords() ?? [];
+    final isDoNotSelect = savedKeywords.contains('없음'); 
 
-  // 📌 일반 키워드 선택/해제 토글
+    state = state.copyWith(
+      selectedKeywords: savedKeywords,
+      isDoNotSelect: isDoNotSelect,
+    );
+  }
+
+  // 저장된 alarmKeywords 불러오기 
+  Future<void> _loadAlarmKeywords() async {
+    final savedKeywords = await getAlarmKeywords() ?? [];
+    final isDoNotSelect = savedKeywords.contains('없음');
+
+    state = state.copyWith(
+      alarmKeywords: savedKeywords,
+      isDoNotSelectAlarm: isDoNotSelect,
+    );
+  }
+
+  // selectedKeywords 추가/제거 관리 
   void toggleKeyword(String keyword) {
     final currentKeywords = List<String>.from(state.selectedKeywords);
 
@@ -55,7 +83,7 @@ class KeywordNotifier extends StateNotifier<KeywordState> {
     _saveSelectedKeywords();
   }
 
-  // 📌 알림 키워드 선택/해제 토글
+  // alarmKeywords 추가/제거 관리 
   void toggleAlarmKeyword(String keyword) {
     final currentKeywords = List<String>.from(state.alarmKeywords);
 
@@ -73,74 +101,35 @@ class KeywordNotifier extends StateNotifier<KeywordState> {
     _saveAlarmKeywords();
   }
 
-  // 📌 일반 '선택하지 않음' 토글
+  // selectedKeywords '선택하지 않음' 토글 관리
   void toggleDoNotSelect() {
     if (state.isDoNotSelect) {
-      state = state.copyWith(
-        selectedKeywords: [],
-        isDoNotSelect: false,
-      );
+      state = state.copyWith(selectedKeywords: [], isDoNotSelect: false);
     } else {
-      state = state.copyWith(
-        selectedKeywords: ['없음'],
-        isDoNotSelect: true,
-      );
+      state = state.copyWith(selectedKeywords: ['없음'], isDoNotSelect: true);
     }
 
     _saveSelectedKeywords();
   }
 
-  // 📌 알림 '선택하지 않음' 토글
+  // alarmKeywords '선택하지 않음' 토글 관리 
   void toggleDoNotSelectAlarm() {
     if (state.isDoNotSelectAlarm) {
-      state = state.copyWith(
-        alarmKeywords: [],
-        isDoNotSelectAlarm: false,
-      );
+      state = state.copyWith(alarmKeywords: [], isDoNotSelectAlarm: false);
     } else {
-      state = state.copyWith(
-        alarmKeywords: ['없음'],
-        isDoNotSelectAlarm: true,
-      );
+      state = state.copyWith(alarmKeywords: ['없음'], isDoNotSelectAlarm: true);
     }
 
     _saveAlarmKeywords();
   }
 
-  // 📥 저장된 일반 키워드 불러오기
-  Future<void> _loadSelectedKeywords() async {
-    final savedKeywords = await getSelectedKeywords() ?? [];
-    final isDoNotSelect = savedKeywords.contains('없음');
-
-    state = state.copyWith(
-      selectedKeywords: savedKeywords,
-      isDoNotSelect: isDoNotSelect,
-    );
-  }
-
-  // 📥 저장된 알림 키워드 불러오기
-  Future<void> _loadAlarmKeywords() async {
-    final savedKeywords = await getAlarmKeywords() ?? [];
-    final isDoNotSelect = savedKeywords.contains('없음');
-
-    state = state.copyWith(
-      alarmKeywords: savedKeywords,
-      isDoNotSelectAlarm: isDoNotSelect,
-    );
-  }
-
-  // 💾 일반 키워드 저장
+  // 로컬 저장소에 selectedKeywords 저장
   Future<void> _saveSelectedKeywords() async {
     await saveSelectedKeywords(state.selectedKeywords);
   }
 
-  // 💾 알림 키워드 저장
+  // 로컬 저장소에 alarmKeywords 저장 
   Future<void> _saveAlarmKeywords() async {
     await saveAlarmKeywords(state.alarmKeywords);
   }
 }
-
-// Provider 등록
-final keywordProvider = StateNotifierProvider<KeywordNotifier, KeywordState>((ref) {
-  return KeywordNotifier();
-});

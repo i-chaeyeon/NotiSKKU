@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:notiskku/providers/bar_settings_provider.dart';
+import 'package:notiskku/providers/bar_providers.dart';
 
 class BarSettings extends ConsumerWidget {
   const BarSettings.BarSettings({super.key});
@@ -13,9 +13,9 @@ class BarSettings extends ConsumerWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        _buildButton(ref, 0, "학과", 0.4.sw),
+        _buildButton(ref, 0, "학과",130.w),
         SizedBox(width: 12.w),
-        _buildButton(ref, 1, "키워드", 0.4.sw),
+        _buildButton(ref, 1, "키워드", 130.w),
       ],
     );
   }
@@ -29,7 +29,7 @@ class BarSettings extends ConsumerWidget {
       },
       child: Container(
         width: buttonWidth,
-        padding: EdgeInsets.symmetric(vertical: 10.h),
+        padding: EdgeInsets.symmetric(vertical: 6.5.h,),
         decoration: BoxDecoration(
           border: Border(
             bottom: BorderSide(

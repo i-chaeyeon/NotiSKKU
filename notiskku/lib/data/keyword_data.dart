@@ -5,7 +5,7 @@ const keywords = [
   Keyword(keyword: '등록금', defined: Defined.developer),
   Keyword(keyword: '수강신청', defined: Defined.developer),
   Keyword(keyword: '공모전', defined: Defined.developer),
-  Keyword(keyword: '학자금', defined: Defined.developer),
+  Keyword(keyword: '장학금', defined: Defined.developer),
   Keyword(keyword: '복학', defined: Defined.developer),
   Keyword(keyword: '성적', defined: Defined.developer),
   Keyword(keyword: '휴학', defined: Defined.developer),
