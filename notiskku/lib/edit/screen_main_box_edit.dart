@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:notiskku/models/notice.dart';
 import 'package:notiskku/notice_functions/launch_url.dart';
 import 'package:notiskku/providers/starred_provider.dart';
@@ -20,25 +21,33 @@ class _ScreenMainBoxEditState extends ConsumerState<ScreenMainBoxEdit> {
   @override
   Widget build(BuildContext context) {
     final starredNotices = ref.watch(starredProvider);
+    final bool isAllSelected =
+        _selectedNotices.length == starredNotices.length &&
+        starredNotices.isNotEmpty;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
+        scrolledUnderElevation: 0,
         leading: GestureDetector(
           onTap: () {
             Navigator.pop(context); // 편집 화면 닫기
           },
-          child: const Center(
+          child: Center(
             child: Text(
               '취소',
-              style: TextStyle(fontSize: 18, color: Colors.black),
+              style: TextStyle(
+                fontSize: 14.sp,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
+              ),
             ),
           ),
         ),
-        title: const Text(
+        title: Text(
           '공지 편집',
           style: TextStyle(
-            fontSize: 25,
+            fontSize: 20.sp,
             fontWeight: FontWeight.bold,
             color: Colors.black,
           ),
@@ -57,11 +66,18 @@ class _ScreenMainBoxEditState extends ConsumerState<ScreenMainBoxEdit> {
                 }
               });
             },
-            child: const Padding(
+            child: Padding(
               padding: EdgeInsets.all(10.0),
               child: Text(
                 '전체선택',
-                style: TextStyle(fontSize: 18, color: Colors.black),
+                style: TextStyle(
+                  fontSize: 14.sp,
+                  fontWeight: FontWeight.bold,
+                  color:
+                      isAllSelected
+                          ? const Color(0xFF0B5B42)
+                          : const Color(0xFF979797),
+                ),
               ),
             ),
           ),
@@ -74,68 +90,30 @@ class _ScreenMainBoxEditState extends ConsumerState<ScreenMainBoxEdit> {
           Expanded(
             child:
                 starredNotices.isEmpty
-                    ? const Center(
+                    ? Center(
                       child: Text(
                         '저장된 공지가 없습니다',
-                        style: TextStyle(fontSize: 18, color: Colors.grey),
+                        style: TextStyle(fontSize: 18.sp, color: Colors.grey),
                       ),
                     )
-                    : ListView.builder(
-                      itemCount: starredNotices.length,
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      itemBuilder: (BuildContext context, int index) {
-                        final reversedIndex = starredNotices.length - 1 - index;
-                        final notice = starredNotices[reversedIndex];
-                        final bool isSelected = _selectedNotices.contains(
-                          notice,
-                        );
-
-                        return Column(
-                          children: [
-                            ListTile(
-                              title: Text(
-                                notice.title,
-                                style: const TextStyle(
-                                  fontSize: 15,
-                                  color: Colors.black,
-                                ),
-                              ),
-                              subtitle: Text(
-                                '${notice.date} | 조회수: ${notice.views}',
-                                style: const TextStyle(
-                                  fontSize: 13,
-                                  color: Colors.grey,
-                                ),
-                              ),
-                              trailing: GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    isSelected
-                                        ? _selectedNotices.remove(notice)
-                                        : _selectedNotices.add(notice);
-                                  });
-                                },
-                                child: Icon(
-                                  isSelected
-                                      ? Icons.check_circle
-                                      : Icons.radio_button_unchecked,
-                                  color:
-                                      isSelected ? Colors.green : Colors.grey,
-                                  size: 26,
-                                ),
-                              ),
-                            ),
-                            const Divider(color: Colors.grey, thickness: 1),
-                          ],
-                        );
+                    : _EditNoticeList(
+                      starredNotices: starredNotices,
+                      selectedNotices: _selectedNotices,
+                      onSelectNotice: (notice) {
+                        setState(() {
+                          _selectedNotices.contains(notice)
+                              ? _selectedNotices.remove(notice)
+                              : _selectedNotices.add(notice);
+                        });
                       },
                     ),
           ),
           Padding(
-            padding: const EdgeInsets.only(bottom: 40),
+            padding: EdgeInsets.only(bottom: 30.h),
             child: SizedBox(
-              width: MediaQuery.of(context).size.width * 0.9,
-              child: ElevatedButton(
+              width: 301.w,
+              height: 43.h,
+              child: TextButton(
                 onPressed:
                     _selectedNotices.isEmpty
                         ? null
@@ -146,19 +124,87 @@ class _ScreenMainBoxEditState extends ConsumerState<ScreenMainBoxEdit> {
                           }
                           Navigator.pop(context); // 편집 화면 닫기
                         },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.red,
-                  minimumSize: const Size(300, 60),
+                style: TextButton.styleFrom(
+                  foregroundColor: Colors.white,
+                  backgroundColor: const Color(0xFFE64343),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30.r), // 반응형 둥근 모서리
+                  ),
                 ),
-                child: const Text(
-                  '삭제',
-                  style: TextStyle(fontSize: 20, color: Colors.white),
+                child: Center(
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text(
+                      '삭제',
+                      style: TextStyle(
+                        fontSize: 18.sp,
+                        color: Colors.white,
+                        fontWeight: FontWeight.w400,
+                        fontFamily: 'Inter',
+                      ),
+                    ),
+                  ),
                 ),
               ),
             ),
           ),
         ],
       ),
+    );
+  }
+}
+
+// notice_tile의 복사본 이용해 수정함, 추후 리팩토링 고려 (위젯 통합 및 재사용용)
+class _EditNoticeList extends StatelessWidget {
+  final List<Notice> starredNotices;
+  final Set<Notice> selectedNotices;
+  final Function(Notice) onSelectNotice;
+
+  const _EditNoticeList({
+    required this.starredNotices,
+    required this.selectedNotices,
+    required this.onSelectNotice,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      itemCount: starredNotices.length,
+      itemBuilder: (BuildContext context, int index) {
+        final reversedIndex = starredNotices.length - 1 - index;
+        final notice = starredNotices[reversedIndex];
+        final bool isSelected = selectedNotices.contains(notice);
+        return Column(
+          children: [
+            ListTile(
+              title: Text(
+                notice.title,
+                style: TextStyle(fontSize: 15.sp, color: Colors.black),
+              ),
+              subtitle: Text(
+                '${notice.date} | 조회수: ${notice.views}',
+                style: TextStyle(fontSize: 14.sp, color: Colors.grey),
+              ),
+              trailing: GestureDetector(
+                onTap: () => onSelectNotice(notice),
+                child: Icon(
+                  isSelected
+                      ? Icons.check_circle
+                      : Icons.radio_button_unchecked,
+                  color: isSelected ? const Color(0xFF0B5B42) : Colors.grey,
+                  size: 26.sp,
+                ),
+              ),
+            ),
+            Divider(
+              color: Colors.grey,
+              thickness: 1.h,
+              indent: 16.w,
+              endIndent: 16.w,
+            ),
+          ],
+        );
+      },
     );
   }
 }
