@@ -4,8 +4,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:notiskku/providers/bar_providers.dart';
 import 'package:notiskku/providers/major_provider.dart';
 import 'package:notiskku/providers/list_notices_provider.dart';
+import 'package:notiskku/widget/side_scroll.dart';
 
-class BarCategories extends ConsumerWidget {
+class BarCategories extends ConsumerStatefulWidget {
   const BarCategories({super.key});
 
   static const categories = [
@@ -20,7 +21,14 @@ class BarCategories extends ConsumerWidget {
   ];
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  _BarCategoriesState createState() => _BarCategoriesState();
+}
+
+class _BarCategoriesState extends ConsumerState<BarCategories> {
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  Widget build(BuildContext context) {
     final selectedIndex = ref.watch(barCategoriesProvider);
     final notifier = ref.read(barCategoriesProvider.notifier);
 
@@ -28,16 +36,16 @@ class BarCategories extends ConsumerWidget {
       children: [
         Expanded(
           child: SingleChildScrollView(
+            controller: _scrollController,
             scrollDirection: Axis.horizontal,
             child: Row(
-              children: List.generate(categories.length, (index) {
+              children: List.generate(BarCategories.categories.length, (index) {
                 return Padding(
-                  padding: EdgeInsets.only(left: 5.w), //
+                  padding: EdgeInsets.only(left: 7.w), //
                   child: GestureDetector(
                     onTap: () {
                       // 선택된 카테고리 변경
                       notifier.state = index;
-
                       // 현재 선택된 학과 가져오기
                       final majorState = ref.read(majorProvider);
                       final majorOrDepartment =
@@ -62,7 +70,7 @@ class BarCategories extends ConsumerWidget {
                           borderRadius: BorderRadius.circular(20.r),
                         ),
                         child: Text(
-                          categories[index],
+                          BarCategories.categories[index],
                           style: TextStyle(
                             color:
                                 selectedIndex == index
@@ -80,14 +88,7 @@ class BarCategories extends ConsumerWidget {
             ),
           ),
         ),
-        Align(
-          alignment: Alignment.centerRight,
-          child: Icon(
-            Icons.arrow_forward_ios,
-            color: Colors.grey,
-            size: 14.w,
-          ), 
-        ),
+        SideScroll(scrollController: _scrollController),
       ],
     );
   }

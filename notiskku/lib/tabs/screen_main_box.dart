@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:notiskku/models/notice.dart';
-import 'package:notiskku/notice_functions/launch_url.dart';
 import 'package:notiskku/providers/starred_provider.dart';
 import 'package:notiskku/edit/screen_main_box_edit.dart';
 import 'package:notiskku/widget/list/list_starred_notices.dart';
-import 'package:notiskku/widget/notice_tile.dart';
+
 
 class ScreenMainBox extends ConsumerStatefulWidget {
   const ScreenMainBox({super.key});
@@ -28,35 +28,41 @@ class _ScreenMainBoxState extends ConsumerState<ScreenMainBox> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
-        leading: editMode
-            ? Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      editMode = false;
-                      _selectedNotices.clear();
-                    });
-                  },
-                  child: const Center(
-                    child: Text(
-                      '취소',
-                      style: TextStyle(fontSize: 18, color: Colors.black),
+        scrolledUnderElevation: 0,
+        leading:
+            editMode
+                ? Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        editMode = false;
+                        _selectedNotices.clear();
+                      });
+                    },
+                    child: Center(
+                      child: Text(
+                        '취소',
+                        style: TextStyle(
+                          fontSize: 18.sp,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                        ),
+                      ),
                     ),
                   ),
+                )
+                : Padding(
+                  padding: EdgeInsets.all(10.0),
+                  child: Image.asset(
+                    'assets/images/greenlogo_fix.png',
+                    width: 40,
+                  ),
                 ),
-              )
-            : Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Image.asset(
-                  'assets/images/greenlogo_fix.png',
-                  width: 40,
-                ),
-              ),
-        title: const Text(
+        title: Text(
           '공지보관함',
           style: TextStyle(
-            fontSize: 25,
+            fontSize: 20.sp,
             fontWeight: FontWeight.bold,
             color: Colors.black,
           ),
@@ -74,9 +80,13 @@ class _ScreenMainBoxState extends ConsumerState<ScreenMainBox> {
                   ),
                 );
               },
-              child: const Text(
+              child: Text(
                 '편집',
-                style: TextStyle(fontSize: 18, color: Colors.black),
+                style: TextStyle(
+                  fontSize: 14.sp,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
               ),
             ),
           ),
@@ -84,13 +94,11 @@ class _ScreenMainBoxState extends ConsumerState<ScreenMainBox> {
       ),
       backgroundColor: Colors.white,
       body: Column(
-          children: [
-            const SizedBox(height: 10),
-            Expanded(
-              child: ListStarredNotices(notices: starredNotices),
-            ),
-          ],
-        ),
+        children: [
+          SizedBox(height: 10.h),
+          Expanded(child: ListStarredNotices(notices: starredNotices)),
+        ],
+      ),
     );
   }
 }

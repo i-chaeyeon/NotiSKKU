@@ -22,7 +22,10 @@ class NoticeTile extends ConsumerWidget {
             notice.title,
             style: TextStyle(fontSize: 15.sp, color: Colors.black),
           ),
-          subtitle: Text('${notice.date} | 조회수: ${notice.views}'),
+          subtitle: Text(
+            '${notice.date} | 조회수: ${notice.views}',
+            style: TextStyle(fontSize: 14.sp, color: Colors.grey),
+          ),
           trailing: GestureDetector(
             onTap: () {
               ref.read(starredProvider.notifier).toggleNotice(notice);
