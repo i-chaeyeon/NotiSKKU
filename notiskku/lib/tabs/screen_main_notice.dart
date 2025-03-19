@@ -50,7 +50,6 @@ class _NoticeAppBar extends ConsumerWidget implements PreferredSizeWidget {
         majorState.selectedMajors.isNotEmpty
             ? majorState.selectedMajors.join(', ')
             : '학과를 선택하세요';
-
     return AppBar(
       backgroundColor: Colors.white,
       elevation: 0,
