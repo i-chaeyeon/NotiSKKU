@@ -14,8 +14,11 @@ class ScreenMainBox extends ConsumerStatefulWidget {
 }
 
 class _ScreenMainBoxState extends ConsumerState<ScreenMainBox> {
-  bool editMode = false;
+  bool editMode = false;             // 편집 모드 여부
   final LaunchUrlService launchUrlService = LaunchUrlService();
+
+  // 편집 모드에서 선택된 공지를 담을 집합
+  final Set<Notice> _selectedNotices = {};
 
   @override
   Widget build(BuildContext context) {
@@ -25,10 +28,33 @@ class _ScreenMainBoxState extends ConsumerState<ScreenMainBox> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
-        leading: Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: Image.asset('assets/images/greenlogo_fix.png', width: 40),
-        ),
+        // 편집 모드 여부에 따라 leading 위젯 변경
+        leading: editMode
+            ? Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      // 편집 모드 종료 & 선택 해제
+                      editMode = false;
+                      _selectedNotices.clear();
+                    });
+                  },
+                  child: const Center(
+                    child: Text(
+                      '취소',
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: Colors.black,
+                      ),
+                    ),
+                  ),
+                ),
+              )
+            : Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Image.asset('assets/images/greenlogo_fix.png', width: 40),
+              ),
         title: const Text(
           '공지보관함',
           style: TextStyle(
@@ -38,6 +64,7 @@ class _ScreenMainBoxState extends ConsumerState<ScreenMainBox> {
           ),
         ),
         centerTitle: true,
+        // 우측 상단 버튼
         actions: [
           Padding(
             padding: const EdgeInsets.all(10.0),
@@ -55,7 +82,6 @@ class _ScreenMainBoxState extends ConsumerState<ScreenMainBox> {
                 style: TextStyle(fontSize: 18, color: Colors.black),
               ),
             ),
-          ),
         ],
       ),
       backgroundColor: Colors.white,

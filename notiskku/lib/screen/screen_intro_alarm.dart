@@ -99,6 +99,12 @@ class ScreenIntroAlarm extends ConsumerWidget {
     );
   }
 
+  // void _goToNext(BuildContext context) {
+  //   Navigator.push(
+  //     context,
+  //     MaterialPageRoute(builder: (context) => const ScreenIntroReady()),
+  //   );
+  // }
   void _goToNext(BuildContext context) {
     // Navigator.push(
     //   context,
