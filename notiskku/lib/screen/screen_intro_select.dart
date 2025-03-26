@@ -61,6 +61,7 @@ class ScreenIntroSelect extends ConsumerWidget {
             isEnabled: isButtonEnabled,
             onPressed: isButtonEnabled
                 ? () {
+                    ref.read(majorProvider.notifier).updateSearchText(''); // 수동 초기화
                     Navigator.push(
                       context,
                       MaterialPageRoute(
