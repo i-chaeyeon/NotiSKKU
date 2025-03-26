@@ -22,10 +22,11 @@ class PopupUi extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(15.r),
       ),
-      contentPadding: EdgeInsets.symmetric(vertical: 20.h, horizontal: 24.w),
+      // contentPadding: EdgeInsets.symmetric(vertical: 20.h, horizontal: 20.w),
+      contentPadding: EdgeInsets.fromLTRB(20.w, 10.h, 20.w, 20.h),
       content: ConstrainedBox(
         constraints: BoxConstraints(
-          maxHeight: 0.65.sh, // 화면 높이의 65%
+          maxHeight: 400.h, // 400px, 640px 화면 기준
         ),
         child: SingleChildScrollView(
           child: Column(
@@ -34,34 +35,40 @@ class PopupUi extends StatelessWidget {
               Text(
                 title,
                 style: TextStyle(
-                  fontSize: 24.sp,
-                  fontWeight: FontWeight.bold,
+                  fontSize: 20.sp,
+                  fontWeight: FontWeight.w600,
                   color: const Color(0xFF0B5B42),
                 ),
               ),
               Divider(
                 color: const Color(0xFF0B5B42),
-                thickness: 3.h,
-                height: 20.h,
+                thickness: 2.h,
+                height: 10.h,
               ),
               SizedBox(height: 10.h),
-              content,
+              content, // 내용 
               SizedBox(height: 20.h),
-              Align(
-                alignment: Alignment.center,
-                child: ElevatedButton(
-                  onPressed: onConfirm,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF0B5B42),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.r),
+              Align( // 확인 버튼 
+                alignment: Alignment.center, 
+                child: SizedBox(
+                  width: 80.w,
+                  height: 27.h,
+                  child: ElevatedButton( // 피그마 80X27 px
+                    onPressed: onConfirm,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF0B5B42),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.r),
+                      ),
                     ),
-                  ),
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
-                    child: Text(
-                      confirmText,
-                      style: TextStyle(color: Colors.white, fontSize: 16.sp),
+                    child: Center(
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Text(
+                          confirmText,
+                          style: TextStyle(color: Colors.white, fontSize: 15.sp),
+                        ),
+                      ),
                     ),
                   ),
                 ),
