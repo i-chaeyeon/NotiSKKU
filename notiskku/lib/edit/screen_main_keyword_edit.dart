@@ -47,13 +47,7 @@ class _ScreenMainKeywordEditState extends ConsumerState<ScreenMainKeywordEdit> {
       body: Column(
         children: [
           SizedBox(height: 10.h),
-          // 안내 문구
-          Text(
-            '관심 키워드를 선택해주세요🙃',
-            textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 14.sp, color: Colors.black),
-          ),
-          SizedBox(height: 10.h),
+          // 안내 문구(종 모양) 제거됨.
           // 검색창 위젯
           SearchKeyword(
             controller: _searchController,
@@ -69,7 +63,6 @@ class _ScreenMainKeywordEditState extends ConsumerState<ScreenMainKeywordEdit> {
               });
             },
           ),
-          // 필요하다면 '선택하지 않음' 옵션 등 추가 가능 (별도 위젯으로 분리 가능)
           // 키워드 목록 위젯
           Expanded(
             child: ListKeyword(searchText: _searchText),
