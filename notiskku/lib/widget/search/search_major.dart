@@ -22,7 +22,7 @@ class _SearchMajorState extends ConsumerState<SearchMajor> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 44.h,
+      height: 40.h,
       child: Container(
         padding: EdgeInsets.only(left: 12.w, right: 5),
         decoration: BoxDecoration(
