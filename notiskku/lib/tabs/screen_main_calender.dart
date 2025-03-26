@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:syncfusion_flutter_calendar/calendar.dart';
+import 'package:notiskku/services/calendar_service.dart'; 
+import 'package:notiskku/data/event_data_source.dart';
 
 class ScreenMainCalender extends StatelessWidget {
   const ScreenMainCalender({super.key});
@@ -7,12 +10,9 @@ class ScreenMainCalender extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false, // 뒤로가기 버튼 제거
         backgroundColor: Colors.white,
         elevation: 0,
-        leading: Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: Image.asset('assets/images/greenlogo_fix.png', width: 40),
-        ),
         title: const Text(
           '학사일정',
           style: TextStyle(
@@ -21,36 +21,35 @@ class ScreenMainCalender extends StatelessWidget {
             color: Colors.black,
           ),
         ),
-        centerTitle: true, // 타이틀 중앙 정렬
+        centerTitle: true,
       ),
       backgroundColor: Colors.white,
-      body: Column(
-        children: [
-          Expanded(
-            child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Image.asset(
-                    'assets/images/to_be_implemented_fix.png',
-                    width: 100, // 원하는 너비 설정
-                    height: 100, // 원하는 높이 설정
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  const Text(
-                    '서비스 준비 중입니다',
-                    style: TextStyle(
-                      color: Colors.grey,
-                      fontSize: 21,
-                    ),
-                  ),
-                ],
+      body: FutureBuilder<List<Appointment>>(  
+        future: loadAppointments(),  // JSON에서 Appointment 리스트 불러오는 함수
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else {
+            final appointments = snapshot.data!;
+            return SfCalendar(
+              view: CalendarView.month,
+              dataSource: EventDataSource(appointments),
+              showNavigationArrow: true,
+              // 월간 뷰 설정
+              monthViewSettings: const MonthViewSettings(
+              // 날짜 칸에는 점(dot) 표시
+                appointmentDisplayMode: MonthAppointmentDisplayMode.indicator,
+                // 하단에 Agenda 표시
+                showAgenda: true,
+                // 기본 Agenda 아이템 높이 조정 가능
+                agendaItemHeight: 60,
+                // 필요하다면 Agenda 스타일이나 높이 등을 더 설정 가능
               ),
-            ),
-          ),
-        ],
+            );
+          }
+        },
       ),
     );
   }
