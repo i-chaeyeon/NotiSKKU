@@ -79,7 +79,7 @@ class _NoticeAppBar extends ConsumerWidget implements PreferredSizeWidget {
                   ),
                 );
               },
-              child: Image.asset('assets/images/search_fix.png', width: 30),
+              child: Image.asset('assets/images/search_fix.png', width: 30.w),
             ),
           ),
         ],
