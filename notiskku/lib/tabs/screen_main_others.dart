@@ -1,15 +1,16 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:notiskku/notice_functions/launch_url.dart'; // LaunchUrlService import 추가
 import 'package:url_launcher/url_launcher.dart';
 
 import 'package:notiskku/screen/screen_intro_alarm.dart';
 
 // 새로 추가된 팝업 파일들 입니당 faq,문의건의,버전 및 공지....
-import 'package:notiskku/widget/see_more/faq_popup.dart';
-import 'package:notiskku/widget/see_more/feedback_popup.dart';
-import 'package:notiskku/widget/see_more/version_notice_popup.dart';
+import 'package:notiskku/widget/popup/faq_popup.dart';
+import 'package:notiskku/widget/popup/feedback_popup.dart';
+import 'package:notiskku/widget/popup/version_notice_popup.dart';
 
 import 'package:notiskku/edit/screen_main_major_edit.dart';
 import 'package:notiskku/edit/screen_main_keyword_edit.dart';
@@ -41,14 +42,15 @@ class ScreenMainOthers extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
+        scrolledUnderElevation: 0,
         leading: Padding(
           padding: const EdgeInsets.all(10.0),
-          child: Image.asset('assets/images/greenlogo_fix.png', width: 40),
+          child: Image.asset('assets/images/greenlogo_fix.png', width: 40.w),
         ),
-        title: const Text(
+        title: Text(
           '더보기',
           style: TextStyle(
-            fontSize: 25,
+            fontSize: 20.sp,
             fontWeight: FontWeight.bold,
             color: Colors.black,
           ),
@@ -141,7 +143,7 @@ class ScreenMainOthers extends StatelessWidget {
       child: Text(
         title,
         style: TextStyle(
-          fontSize: 13,
+          fontSize: 13.sp,
           fontWeight: FontWeight.bold,
           color: Colors.grey[600],
         ),
@@ -159,7 +161,7 @@ class ScreenMainOthers extends StatelessWidget {
     VoidCallback? onTap, // onTap 콜백
   }) {
     return ListTile(
-      title: Text(title, style: const TextStyle(fontSize: 19, color: Colors.black)),
+      title: Text(title, style: TextStyle(fontSize: 19.sp, color: Colors.black)),
       trailing: const Icon(Icons.arrow_forward_ios, color: Colors.black),
       onTap: () {
         if (onTap != null) {

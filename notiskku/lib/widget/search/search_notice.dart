@@ -49,7 +49,7 @@ class _SearchNoticeState extends ConsumerState<SearchNotice> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 44.h,
+      height: 40.h,
       child: Container(
         margin: EdgeInsets.symmetric(horizontal: 20.w),
         padding: EdgeInsets.only(left: 12.w, right: 5.w),

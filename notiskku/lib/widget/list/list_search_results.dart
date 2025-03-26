@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ListSearchResults extends StatefulWidget {
   final String searchText;
@@ -7,7 +6,7 @@ class ListSearchResults extends StatefulWidget {
   const ListSearchResults({super.key, required this.searchText});
 
   @override
-  State<ListSearchResults> createState() => _ListSearchResultsState(); // ✅ 클래스명 수정
+  State<ListSearchResults> createState() => _ListSearchResultsState(); // 클래스명 수정
 }
 
 class _ListSearchResultsState extends State<ListSearchResults> {
@@ -20,7 +19,7 @@ class _ListSearchResultsState extends State<ListSearchResults> {
         itemBuilder: (context, index) {
           return ListTile(
             title: Text('검색 결과 #$index'),
-            subtitle: Text('검색어 "${widget.searchText}"에 대한 결과입니다.'), // ✅ widget.searchText로 수정
+            subtitle: Text('검색어 "${widget.searchText}"에 대한 결과입니다.'), // widget.searchText로 수정
           );
         },
       ),

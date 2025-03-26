@@ -25,13 +25,12 @@ class ListKeyword extends ConsumerWidget {
         }).toList();
 
     return ListView.builder(
-      padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
+      padding: EdgeInsets.symmetric(horizontal: 30.w, vertical: 10.h),
       itemCount: filteredKeywords.length,
       itemBuilder: (context, index) {
         final keyword = filteredKeywords[index];
         final isSelected = keywordState.selectedKeywords.contains(keyword);
-        final isAlarm = keywordState.alarmKeywords.contains(keyword);
-
+        // final isAlarm = keywordState.alarmKeywords.contains(keyword);
         return Column(
           children: [
             GestureDetector(
@@ -39,32 +38,41 @@ class ListKeyword extends ConsumerWidget {
                 // 일반 키워드 선택/해제
                 keywordNotifier.toggleKeyword(keyword);
               },
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  // 키워드 텍스트
-                  Text(
-                    keyword,
-                    style: TextStyle(
-                      fontSize: 16.sp,
-                      fontWeight:
-                          isSelected ? FontWeight.bold : FontWeight.normal,
-                      color:
-                          isSelected
-                              ? const Color(0xFF0B5B42)
-                              : const Color(0xFF979797),
-                    ),
+              child: Container(
+                padding: EdgeInsets.symmetric(vertical: 7.h, horizontal: 10.w),
+                margin: EdgeInsets.symmetric(horizontal: 10.w),
+                decoration: const BoxDecoration(
+                  border: Border(
+                    bottom: BorderSide(color: Color(0xFFD9D9D9), width: 1.5),
                   ),
-                   if (isSelected)
-                    Icon(
-                      Icons.check,
-                      color: const Color(0xFF0B5B42),
-                      size: 20.w,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    // 키워드 텍스트
+                    Text(
+                      keyword,
+                      style: TextStyle(
+                        fontSize: 19.sp,
+                        fontWeight:
+                            isSelected ? FontWeight.bold : FontWeight.w400,
+                        color:
+                            isSelected
+                                ? const Color(0xFF0B5B42)
+                                : const Color(0xFF979797),
+                      ),
                     ),
-                ],
+                    if (isSelected)
+                      Icon(
+                        Icons.check,
+                        color: const Color(0xFF0B5B42),
+                        size: 20.w,
+                      ),
+                  ],
+                ),
               ),
             ),
-            Divider(color: const Color(0xFFD9D9D9), thickness: 2, height: 20.h),
+            // Divider(color: const Color(0xFFD9D9D9), thickness: 2, height: 20.h),
           ],
         );
       },

@@ -42,8 +42,8 @@ class ListMajor extends ConsumerWidget {
                   majorNotifier.toggleSelectedMajor(major);
                 },
                 child: Container(
-                  padding: EdgeInsets.symmetric(vertical: 9.h, horizontal: 20.w),
-                  margin: EdgeInsets.symmetric(horizontal: 20.w),
+                  padding: EdgeInsets.symmetric(vertical: 7.h, horizontal: 10.w),
+                  margin: EdgeInsets.symmetric(horizontal: 10.w),
                   decoration: const BoxDecoration(
                     border: Border(bottom: BorderSide(color: Color(0xFFD9D9D9), width: 1.5)),
                   ),

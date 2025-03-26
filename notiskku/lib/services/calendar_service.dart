@@ -4,12 +4,19 @@ import 'package:flutter/services.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
 Future<List<Appointment>> loadAppointments() async {
-  final String jsonString = await rootBundle.loadString('assets/data/academic_calendar.json');
-  final List<dynamic> jsonData = json.decode(jsonString);
-  
-  return jsonData.map((data) {
-    final String colorString = data['color']; // 예: "#FF0000"
+  final String jsonString =
+      await rootBundle.loadString('assets/data/academic_calendar.json');
+  final Map<String, dynamic> jsonData = json.decode(jsonString);
+
+  final String colorDarkBlue = jsonData['colorDarkBlue']; // "#0B425B"
+  final List<dynamic> events = jsonData['events'];
+
+  return events.map((data) {
+    final String colorString = _resolveColor(data['color'], {
+      'colorDarkBlue': colorDarkBlue,
+    });
     final Color color = _hexToColor(colorString);
+
     return Appointment(
       startTime: DateTime.parse(data['startTime']),
       endTime: DateTime.parse(data['endTime']),
@@ -18,6 +25,10 @@ Future<List<Appointment>> loadAppointments() async {
       color: color,
     );
   }).toList();
+}
+
+String _resolveColor(String colorKey, Map<String, String> colorMap) {
+  return colorMap[colorKey] ?? '#000000'; // 기본값: 검정
 }
 
 Color _hexToColor(String hex) {
