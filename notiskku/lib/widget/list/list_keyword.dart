@@ -55,29 +55,12 @@ class ListKeyword extends ConsumerWidget {
                               : const Color(0xFF979797),
                     ),
                   ),
-                  Row(
-                    children: [
-                      // 일반 선택 시 체크 아이콘 표시
-                      if (isSelected)
-                        Icon(
-                          Icons.check,
-                          color: const Color(0xFF0B5B42),
-                          size: 20.w,
-                        ),
-                      SizedBox(width: 10.w),
-                      // 알림 선택 아이콘 (종 아이콘)
-                      GestureDetector(
-                        onTap: () {
-                          keywordNotifier.toggleAlarmKeyword(keyword);
-                        },
-                        child: Icon(
-                          Icons.notifications,
-                          color:
-                              isAlarm ? Colors.amber : const Color(0xFF979797),
-                        ),
-                      ),
-                    ],
-                  ),
+                   if (isSelected)
+                    Icon(
+                      Icons.check,
+                      color: const Color(0xFF0B5B42),
+                      size: 20.w,
+                    ),
                 ],
               ),
             ),
