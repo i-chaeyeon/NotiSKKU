@@ -3,23 +3,23 @@ import 'package:notiskku/models/keyword.dart';
 import 'package:notiskku/services/preferences_keyword.dart';
 
 class KeywordState {
-  final List<Keyword> keywords;
+  final List<Keyword> selectedKeywords;
   final bool isDoNotSelect;
   final bool isDoNotSelectAlarm;
 
   const KeywordState({
-    this.keywords = const [],
+    this.selectedKeywords = const [],
     this.isDoNotSelect = false,
     this.isDoNotSelectAlarm = false,
   });
 
   KeywordState copyWith({
-    List<Keyword>? keywords,
+    List<Keyword>? selectedKeywords,
     bool? isDoNotSelect,
     bool? isDoNotSelectAlarm,
   }) {
     return KeywordState(
-      keywords: keywords ?? this.keywords,
+      selectedKeywords: selectedKeywords ?? this.selectedKeywords,
       isDoNotSelect: isDoNotSelect ?? this.isDoNotSelect,
       isDoNotSelectAlarm: isDoNotSelectAlarm ?? this.isDoNotSelectAlarm,
     );
@@ -34,12 +34,12 @@ class KeywordNotifier extends StateNotifier<KeywordState> {
   Future<void> _loadSelectedKeywords() async {
     final selectedKeywords = await KeywordPreferences.load();
 
-    state = state.copyWith(keywords: selectedKeywords);
+    state = state.copyWith(selectedKeywords: selectedKeywords);
   }
 
   // selectedKeywords 추가/제거 관리
   void toggleKeyword(Keyword keyword) {
-    final currentKeywords = List<Keyword>.from(state.keywords);
+    final currentKeywords = List<Keyword>.from(state.selectedKeywords);
 
     if (currentKeywords.contains(keyword)) {
       currentKeywords.remove(keyword);
@@ -47,27 +47,30 @@ class KeywordNotifier extends StateNotifier<KeywordState> {
       currentKeywords.add(keyword);
     }
 
-    state = state.copyWith(keywords: currentKeywords);
+    state = state.copyWith(selectedKeywords: currentKeywords);
     KeywordPreferences.save(currentKeywords);
   }
 
   // alarmKeywords 추가/제거 관리
   void toggleAlarm(Keyword keyword) {
     final updatedKeywords =
-        state.keywords.map((k) {
+        state.selectedKeywords.map((k) {
           if (k.keyword == keyword.keyword) {
             return k.copyWith(receiveNotification: !k.receiveNotification);
           }
           return k;
         }).toList();
 
-    state = state.copyWith(keywords: updatedKeywords);
+    state = state.copyWith(selectedKeywords: updatedKeywords);
     KeywordPreferences.save(updatedKeywords);
   }
 
   // selectedKeywords '선택하지 않음' 토글 관리
   void toggleDoNotSelect() {
-    state = state.copyWith(keywords: [], isDoNotSelect: !state.isDoNotSelect);
+    state = state.copyWith(
+      selectedKeywords: [],
+      isDoNotSelect: !state.isDoNotSelect,
+    );
 
     KeywordPreferences.save([]);
   }
@@ -78,12 +81,12 @@ class KeywordNotifier extends StateNotifier<KeywordState> {
       state = state.copyWith(isDoNotSelectAlarm: false);
     } else {
       final updatedKeywords =
-          state.keywords.map((k) {
+          state.selectedKeywords.map((k) {
             return k.copyWith(receiveNotification: false);
           }).toList();
 
       state = state.copyWith(
-        keywords: updatedKeywords,
+        selectedKeywords: updatedKeywords,
         isDoNotSelectAlarm: true,
       );
 
