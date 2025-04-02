@@ -1,4 +1,19 @@
+import 'dart:convert';
+
+import 'package:notiskku/models/keyword.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+Future<void> saveKeywordPreferences(List<Keyword> prefs) async {
+  final sp = await SharedPreferences.getInstance();
+  final jsonList = prefs.map((p) => jsonEncode(p.toJson())).toList();
+  await sp.setStringList('keywordPrefs', jsonList);
+}
+
+Future<List<Keyword>> loadKeywordPreferences() async {
+  final sp = await SharedPreferences.getInstance();
+  final jsonList = sp.getStringList('keywordPrefs') ?? [];
+  return jsonList.map((str) => Keyword.fromJson(jsonDecode(str))).toList();
+}
 
 // 선택 전공 목록 저장
 Future<void> saveSelectedMajors(List<String> majors) async {
@@ -67,7 +82,7 @@ Future<void> saveSearch(List<String> word) async {
 }
 
 // 최근 검색어 불러오기
-Future <List<String>?> getSavedSearch() async {
+Future<List<String>?> getSavedSearch() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   return prefs.getStringList('savedSearch');
 }

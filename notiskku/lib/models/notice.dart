@@ -28,4 +28,24 @@ class Notice {
       link: row.length > 6 ? row[6] : "",
     );
   }
+
+  Map<String, String> toJson() => {
+    'id': id,
+    'category': category,
+    'title': title,
+    'date': date,
+    'uploader': uploader,
+    'views': views,
+    'link': link,
+  };
+
+  factory Notice.fromJson(Map<String, dynamic> json) => Notice(
+    id: json['id'] ?? '',
+    category: json['category'] ?? '',
+    title: json['title'] ?? '',
+    date: json['date'] ?? '',
+    uploader: json['uploader'] ?? '',
+    views: json['views'] ?? '',
+    link: json['link'] ?? '',
+  );
 }
