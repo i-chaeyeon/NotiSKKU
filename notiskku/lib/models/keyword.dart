@@ -11,6 +11,29 @@ class Keyword {
     this.receiveNotification = false,
   });
 
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is Keyword &&
+          runtimeType == other.runtimeType &&
+          keyword == other.keyword &&
+          defined == other.defined;
+
+  @override
+  int get hashCode => keyword.hashCode ^ defined.hashCode;
+
+  Keyword copyWith({
+    String? keyword,
+    Defined? defined,
+    bool? receiveNotification,
+  }) {
+    return Keyword(
+      keyword: keyword ?? this.keyword,
+      defined: defined ?? this.defined,
+      receiveNotification: receiveNotification ?? this.receiveNotification,
+    );
+  }
+
   Map<String, dynamic> toJson() => {
     'keyword': keyword,
     'defined': defined.name,

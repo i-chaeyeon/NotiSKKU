@@ -18,6 +18,21 @@ class NoticePreferences {
     return jsonList.map((str) => Notice.fromJson(jsonDecode(str))).toList();
   }
 
+  static Future<void> remove(List<Notice> noticesToRemove) async {
+    final prefs = await SharedPreferences.getInstance();
+    final jsonList = prefs.getStringList(_key) ?? [];
+
+    final updatedList =
+        jsonList.where((str) {
+          final notice = Notice.fromJson(jsonDecode(str));
+          return !noticesToRemove.any(
+            (n) => n.id == notice.id && n.id == notice.title,
+          );
+        }).toList();
+
+    await prefs.setStringList(_key, updatedList);
+  }
+
   static Future<void> clear() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove(_key);
