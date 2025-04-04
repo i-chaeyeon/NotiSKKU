@@ -16,11 +16,8 @@ class ScreenIntroAlarm extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final majorState = ref.watch(majorProvider);
-    final keywordState = ref.watch(keywordProvider);
-
-    final selectedAlarmMajors = majorState.alarmMajors;
-    final selectedAlarmKeywords = keywordState.alarmKeywords;
+    final selectedMajors = ref.watch(majorProvider).selectedMajors;
+    final selectedKeywords = ref.watch(keywordProvider).selectedKeywords;
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -85,8 +82,7 @@ class ScreenIntroAlarm extends ConsumerWidget {
           WideGreen(
             text: '설정 완료',
             onPressed: () {
-              if (selectedAlarmMajors.isNotEmpty ||
-                  selectedAlarmKeywords.isNotEmpty) {
+              if (selectedMajors.isNotEmpty || selectedKeywords.isNotEmpty) {
                 _goToNext(context);
               } else {
                 _showNoAlarmDialog(context);

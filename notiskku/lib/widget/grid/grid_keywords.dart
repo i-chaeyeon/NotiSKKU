@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:notiskku/models/keyword.dart';
 import 'package:notiskku/providers/keyword_provider.dart';
 import 'package:notiskku/data/keyword_data.dart';
 
@@ -39,11 +40,14 @@ class GridKeywords extends ConsumerWidget {
             itemCount: keywords.length,
             itemBuilder: (context, index) {
               final keyword = keywords[index].keyword;
+              Keyword matchedKeyword = keywords.firstWhere(
+                (k) => k.keyword == keyword,
+              );
               final isSelected = keywordState.selectedKeywords.contains(
-                keyword,
+                matchedKeyword,
               );
               return GestureDetector(
-                onTap: () => keywordNotifier.toggleKeyword(keyword),
+                onTap: () => keywordNotifier.toggleKeyword(matchedKeyword),
                 child: Container(
                   width: 86.w,
                   height: 37.h,
