@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:notiskku/widget/popup/popup_ui.dart';
 
 class FAQPopup extends StatelessWidget {
-  const FAQPopup({Key? key}) : super(key: key);
+  const FAQPopup({super.key});
 
   @override
   Widget build(BuildContext context) {

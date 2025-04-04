@@ -20,7 +20,7 @@ class _ScreenMainBoxEditState extends ConsumerState<ScreenMainBoxEdit> {
 
   @override
   Widget build(BuildContext context) {
-    final starredNotices = ref.watch(starredProvider);
+    final starredNotices = ref.watch(starredProvider).starredNotices;
     final bool isAllSelected =
         _selectedNotices.length == starredNotices.length &&
         starredNotices.isNotEmpty;

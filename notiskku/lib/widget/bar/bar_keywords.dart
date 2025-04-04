@@ -6,14 +6,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 class BarKeywords extends StatefulWidget {
   final Function(String) onKeywordSelected;
 
-  const BarKeywords({Key? key, required this.onKeywordSelected})
-    : super(key: key);
+  const BarKeywords({super.key, required this.onKeywordSelected});
 
   @override
-  _BarKeywordsState createState() => _BarKeywordsState();
+  BarKeywordsState createState() => BarKeywordsState();
 }
 
-class _BarKeywordsState extends State<BarKeywords> {
+class BarKeywordsState extends State<BarKeywords> {
   final ScrollController _scrollController = ScrollController();
   int selectedKeywordIndex = 0;
   List<String> keywords = [];

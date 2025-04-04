@@ -9,27 +9,28 @@ import 'package:notiskku/providers/keyword_provider.dart';
 class ListKeyword extends ConsumerWidget {
   final String searchText;
 
-  const ListKeyword({Key? key, required this.searchText}) : super(key: key);
+  const ListKeyword({super.key, required this.searchText});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // provider를 통해 선택된 키워드 상태 확인
     final keywordState = ref.watch(keywordProvider);
     final keywordNotifier = ref.read(keywordProvider.notifier);
 
-    // keyword_data.dart 파일의 키워드 리스트 (Keyword 모델의 keyword 속성만 추출)
-    final availableKeywords = keywords.map((k) => k.keyword).toList();
     final filteredKeywords =
-        availableKeywords.where((kw) {
-          return kw.toLowerCase().contains(searchText.toLowerCase());
+        keywords.where((k) {
+          return k.keyword.toLowerCase().contains(searchText.toLowerCase());
         }).toList();
+
+    final selectedKeywords = keywordState.selectedKeywords;
 
     return ListView.builder(
       padding: EdgeInsets.symmetric(horizontal: 30.w, vertical: 10.h),
       itemCount: filteredKeywords.length,
       itemBuilder: (context, index) {
         final keyword = filteredKeywords[index];
-        final isSelected = keywordState.selectedKeywords.contains(keyword);
+        final isSelected = selectedKeywords
+            .map((k) => k.keyword)
+            .contains(keyword);
         // final isAlarm = keywordState.alarmKeywords.contains(keyword);
         return Column(
           children: [
@@ -51,7 +52,7 @@ class ListKeyword extends ConsumerWidget {
                   children: [
                     // 키워드 텍스트
                     Text(
-                      keyword,
+                      keyword.keyword,
                       style: TextStyle(
                         fontSize: 19.sp,
                         fontWeight:

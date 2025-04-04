@@ -9,17 +9,6 @@ import 'package:notiskku/widget/side_scroll.dart';
 class BarCategories extends ConsumerStatefulWidget {
   const BarCategories({super.key});
 
-  static const categories = [
-    '전체',
-    '학사',
-    '입학',
-    '취업',
-    '채용/모집',
-    '장학',
-    '행사/세미나',
-    '일반',
-  ];
-
   @override
   _BarCategoriesState createState() => _BarCategoriesState();
 }
@@ -29,7 +18,7 @@ class _BarCategoriesState extends ConsumerState<BarCategories> {
 
   @override
   Widget build(BuildContext context) {
-    final selectedIndex = ref.watch(barCategoriesProvider);
+    final currentCategory = ref.watch(barCategoriesProvider);
     final notifier = ref.read(barCategoriesProvider.notifier);
 
     return Row(
@@ -39,19 +28,13 @@ class _BarCategoriesState extends ConsumerState<BarCategories> {
             controller: _scrollController,
             scrollDirection: Axis.horizontal,
             child: Row(
-              children: List.generate(BarCategories.categories.length, (index) {
+              children: List.generate(Categories.values.length, (index) {
                 return Padding(
                   padding: EdgeInsets.only(left: 7.w), //
                   child: GestureDetector(
                     onTap: () {
                       // 선택된 카테고리 변경
-                      notifier.state = index;
-                      // 현재 선택된 학과 가져오기
-                      final majorState = ref.read(majorProvider);
-                      final majorOrDepartment =
-                          majorState.selectedMajors.isNotEmpty
-                              ? majorState.selectedMajors[0]
-                              : '';
+                      notifier.state = Categories.values[index];
                       // 공지 리스트 강제 새로고침 (FutureProvider 다시 실행)
                       ref.invalidate(listNoticesProvider);
                     },
@@ -64,16 +47,16 @@ class _BarCategoriesState extends ConsumerState<BarCategories> {
                         ), // 패딩 조정
                         decoration: BoxDecoration(
                           color:
-                              selectedIndex == index
+                              currentCategory == Categories.values[index]
                                   ? const Color(0xB20B5B42)
                                   : const Color(0x99D9D9D9),
                           borderRadius: BorderRadius.circular(20.r),
                         ),
                         child: Text(
-                          BarCategories.categories[index],
+                          Categories.values[index].name,
                           style: TextStyle(
                             color:
-                                selectedIndex == index
+                                currentCategory == Categories.values[index]
                                     ? Colors.white
                                     : const Color(0xFF979797),
                             fontSize: 13.sp,
