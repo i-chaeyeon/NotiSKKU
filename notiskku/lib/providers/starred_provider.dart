@@ -1,45 +1,41 @@
-import 'dart:convert';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:notiskku/models/notice.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:notiskku/services/preferences_starred.dart';
 
-final starredProvider = StateNotifierProvider<StarredNotifier, List<Notice>>((ref) {
-  return StarredNotifier();
-});
+class StarredState {
+  final List<Notice> starredNotices;
 
-class StarredNotifier extends StateNotifier<List<Notice>> {
-  StarredNotifier() : super([]) {
+  const StarredState({this.starredNotices = const []});
+
+  StarredState copyWith({List<Notice>? starredNotices}) {
+    return StarredState(starredNotices: starredNotices ?? this.starredNotices);
+  }
+}
+
+class StarredNotifier extends StateNotifier<StarredState> {
+  StarredNotifier() : super(const StarredState()) {
     _loadStarredNotices();
   }
 
   Future<void> _loadStarredNotices() async {
-    final prefs = await SharedPreferences.getInstance();
-    final savedNotices = prefs.getStringList('starred_notices');
-    if (savedNotices != null) {
-      state = savedNotices
-          .map((noticeJson) => Notice.fromJson(json.decode(noticeJson)))
-          .toList();
-    }
+    List<Notice>? starredNotices = await NoticePreferences.load();
+    starredNotices = starredNotices.reversed.toList();
+    state = state.copyWith(starredNotices: starredNotices);
   }
 
   void toggleNotice(Notice notice) async {
-    if (state.any((n) => n.url == notice.url)) {
-      state = state.where((n) => n.url != notice.url).toList();
-    } else {
-      state = [...state, notice];
-    }
-    await _saveStarredNotices();
-  }
+    final currentStarredList = List<Notice>.from(state.starredNotices);
 
-  Future<void> _saveStarredNotices() async {
-    final prefs = await SharedPreferences.getInstance();
-    final noticesJsonList =
-        state.map((notice) => json.encode(notice.toJson())).toList();
-    await prefs.setStringList('starred_notices', noticesJsonList);
-  }
+    currentStarredList.remove(notice);
+    currentStarredList.add(notice);
 
-  bool contains(String url) {
-    return state.any((notice) => notice.url == url);
+    state = state.copyWith(starredNotices: currentStarredList);
+    NoticePreferences.save(currentStarredList);
   }
 }
 
+final starredProvider = StateNotifierProvider<StarredNotifier, StarredState>((
+  ref,
+) {
+  return StarredNotifier();
+});
