@@ -53,7 +53,7 @@ class _BarCategoriesState extends ConsumerState<BarCategories> {
                           borderRadius: BorderRadius.circular(20.r),
                         ),
                         child: Text(
-                          _getCategoryLabel(currentCategory),
+                          _getCategoryLabel(Categories.values[index]),
                           style: TextStyle(
                             color:
                                 currentCategory == Categories.values[index]
