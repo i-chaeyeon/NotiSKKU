@@ -9,9 +9,10 @@
 //   final selectedKeywords = keywordState.selectedKeywords;
 
 //   // 선택된 키워드가 없으면 기본 URL 사용
-//   final url = selectedKeywords.isNotEmpty
-//       ? _getCategoryUrl(selectedKeywords.first)
-//       : 'https://www.skku.edu/skku/campus/skk_comm/notice01.do';
+//   final url =
+//       selectedKeywords.isNotEmpty
+//           ? _getCategoryUrl(selectedKeywords.first)
+//           : 'https://www.skku.edu/skku/campus/skk_comm/notice01.do';
 
 //   return NoticeService().fetchNotices(url);
 // });

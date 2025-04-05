@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-//import 'package:notiskku/tabs/screen_main_keyword.dart';
+import 'package:notiskku/tabs/screen_main_keyword.dart';
 import 'package:notiskku/tabs/screen_main_notice.dart';
 import 'package:notiskku/tabs/screen_main_box.dart';
 import 'package:notiskku/tabs/screen_main_calender.dart';
@@ -36,7 +36,7 @@ class _ScreenMainTabsState extends State<ScreenMainTabs> {
   // 각 탭에 해당하는 페이지 리스트
   final List<Widget> _pages = const [
     ScreenMainNotice(),
-    //ScreenMainKeyword(),
+    ScreenMainKeyword(),
     ScreenMainBox(),
     ScreenMainCalender(),
     ScreenMainOthers(),
