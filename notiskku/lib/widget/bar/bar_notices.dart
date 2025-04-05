@@ -9,10 +9,10 @@ class BarNotices extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final currentNotice = ref.watch(barNoticesProvider);
-    final notifier = ref.read(
-      barNoticesProvider.notifier,
-    ); // 상태 업데이트를 위한 Notifier
+    final selectedNotice = ref.watch(
+      barNoticesProvider,
+    ); // enum Notices {common, dept, major}
+    final selectedNoticeNotifier = ref.read(barNoticesProvider.notifier);
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -26,12 +26,12 @@ class BarNotices extends ConsumerWidget {
             color: Colors.grey[600],
           );
         } else {
-          int categoryIndex = index ~/ 2;
+          Notices currentNotice = Notices.values[index ~/ 2];
           return Expanded(
             // 학교, 단과대학, 학과
             child: GestureDetector(
               onTap: () {
-                notifier.state = currentNotice; // 상태 변경
+                selectedNoticeNotifier.state = currentNotice; // 상태 변경
               },
               child: Padding(
                 padding: const EdgeInsets.all(5.0),
@@ -40,7 +40,7 @@ class BarNotices extends ConsumerWidget {
                   padding: EdgeInsets.symmetric(vertical: 8.h),
                   decoration: BoxDecoration(
                     color:
-                        currentNotice == Notices.values[index]
+                        selectedNotice == currentNotice
                             ? const Color(0xFFE8F5E9)
                             : Colors.white,
                     borderRadius: BorderRadius.circular(10.r),
@@ -50,11 +50,11 @@ class BarNotices extends ConsumerWidget {
                       currentNotice.name,
                       style: TextStyle(
                         color:
-                            currentNotice == Notices.values[index]
+                            selectedNotice == currentNotice
                                 ? const Color(0xFF0B5B42)
                                 : Colors.grey,
                         fontWeight:
-                            currentNotice == Notices.values[index]
+                            selectedNotice == currentNotice
                                 ? FontWeight.w900
                                 : FontWeight.w400,
                         fontSize: 14.sp,
