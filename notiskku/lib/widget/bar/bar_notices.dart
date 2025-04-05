@@ -47,7 +47,7 @@ class BarNotices extends ConsumerWidget {
                   ),
                   child: Center(
                     child: Text(
-                      currentNotice.name,
+                      _getNoticeLabel(currentNotice),
                       style: TextStyle(
                         color:
                             selectedNotice == currentNotice
@@ -69,5 +69,16 @@ class BarNotices extends ConsumerWidget {
         }
       }),
     );
+  }
+}
+
+String _getNoticeLabel(Notices notice) {
+  switch (notice) {
+    case Notices.common:
+      return '전체';
+    case Notices.dept:
+      return '단과대학';
+    case Notices.major:
+      return '학과';
   }
 }

@@ -41,35 +41,41 @@ class _NoticeAppBar extends ConsumerWidget implements PreferredSizeWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           // 좌측 화살표
-          GestureDetector(
-            onTap: () {
-              if (majorIndex > 0) {
-                majorIndexNotifier.state--;
-              }
-            },
-            child: const Icon(Icons.chevron_left, color: Colors.black),
-          ),
+          majorState.selectedMajors.length > 1
+              ? GestureDetector(
+                onTap: () {
+                  if (majorIndex > 0) {
+                    majorIndexNotifier.state--;
+                  }
+                },
+                child: const Icon(Icons.chevron_left, color: Colors.black),
+              )
+              : const SizedBox.shrink(),
 
-          // 현재 전공 텍스트
-          Text(
-            currentMajor,
-            style: TextStyle(
-              fontSize: 18.sp,
-              fontWeight: FontWeight.bold,
-              color: Colors.black,
+          // 학과 명
+          Flexible(
+            child: Text(
+              currentMajor,
+              style: TextStyle(
+                fontSize: 18.sp,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
+              ),
+              overflow: TextOverflow.ellipsis,
             ),
-            overflow: TextOverflow.ellipsis,
           ),
 
           // 우측 화살표
-          GestureDetector(
-            onTap: () {
-              if (majorIndex < majorState.selectedMajors.length - 1) {
-                majorIndexNotifier.state++;
-              }
-            },
-            child: const Icon(Icons.chevron_right, color: Colors.black),
-          ),
+          majorState.selectedMajors.length > 1
+              ? GestureDetector(
+                onTap: () {
+                  if (majorIndex < majorState.selectedMajors.length - 1) {
+                    majorIndexNotifier.state++;
+                  }
+                },
+                child: const Icon(Icons.chevron_right, color: Colors.black),
+              )
+              : const SizedBox.shrink(),
         ],
       ),
       actions: [

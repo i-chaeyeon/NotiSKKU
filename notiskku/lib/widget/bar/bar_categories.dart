@@ -53,7 +53,7 @@ class _BarCategoriesState extends ConsumerState<BarCategories> {
                           borderRadius: BorderRadius.circular(20.r),
                         ),
                         child: Text(
-                          Categories.values[index].name,
+                          _getCategoryLabel(currentCategory),
                           style: TextStyle(
                             color:
                                 currentCategory == Categories.values[index]
@@ -74,5 +74,26 @@ class _BarCategoriesState extends ConsumerState<BarCategories> {
         SideScroll(scrollController: _scrollController),
       ],
     );
+  }
+}
+
+String _getCategoryLabel(Categories category) {
+  switch (category) {
+    case Categories.all:
+      return '전체';
+    case Categories.academics:
+      return '학사';
+    case Categories.admission:
+      return '입학';
+    case Categories.employment:
+      return '취업';
+    case Categories.recruitment:
+      return '채용/모집';
+    case Categories.scholarship:
+      return '장학';
+    case Categories.eventsAndSeminars:
+      return '행사/세미나';
+    case Categories.general:
+      return '일반';
   }
 }
