@@ -25,10 +25,11 @@ class StarredNotifier extends StateNotifier<StarredState> {
 
   void toggleNotice(Notice notice) async {
     final currentStarredList = List<Notice>.from(state.starredNotices);
-
-    currentStarredList.remove(notice);
-    currentStarredList.add(notice);
-
+    if (currentStarredList.contains(notice)) {
+      currentStarredList.remove(notice);
+    } else {
+      currentStarredList.add(notice);
+    }
     state = state.copyWith(starredNotices: currentStarredList);
     NoticePreferences.save(currentStarredList);
   }
