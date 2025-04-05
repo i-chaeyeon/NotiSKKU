@@ -18,13 +18,17 @@ class _NoticeAppBar extends ConsumerWidget implements PreferredSizeWidget {
     final majorIndex = ref.watch(selectedMajorIndexProvider);
     final majorIndexNotifier = ref.read(selectedMajorIndexProvider.notifier);
 
-    final currentMajor =
-        majorState
-            .selectedMajors[majorIndex.clamp(
-              0,
-              majorState.selectedMajors.length - 1,
-            )]
-            .major;
+    String currentMajor = '';
+
+    majorState.selectedMajors.isEmpty
+        ? currentMajor = ' '
+        : currentMajor =
+            majorState
+                .selectedMajors[majorIndex.clamp(
+                  0,
+                  majorState.selectedMajors.length - 1,
+                )]
+                .major;
     // final selectedMajorsText =
     //     majorState.selectedMajors.isNotEmpty
     //         ? majorState.selectedMajors.join(', ')
@@ -53,17 +57,29 @@ class _NoticeAppBar extends ConsumerWidget implements PreferredSizeWidget {
               : const SizedBox.shrink(),
 
           // 학과 명
-          Flexible(
-            child: Text(
-              currentMajor,
-              style: TextStyle(
-                fontSize: 18.sp,
-                fontWeight: FontWeight.bold,
-                color: Colors.black,
+          majorState.selectedMajors.isEmpty
+              ? Flexible(
+                child: Text(
+                  currentMajor,
+                  style: TextStyle(
+                    fontSize: 15.sp,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                ),
+              )
+              : Flexible(
+                child: Text(
+                  currentMajor,
+                  style: TextStyle(
+                    fontSize: 18.sp,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
 
           // 우측 화살표
           majorState.selectedMajors.length > 1
