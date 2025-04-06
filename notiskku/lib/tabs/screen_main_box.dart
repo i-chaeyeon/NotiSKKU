@@ -6,7 +6,6 @@ import 'package:notiskku/providers/starred_provider.dart';
 import 'package:notiskku/edit/screen_main_box_edit.dart';
 import 'package:notiskku/widget/list/list_starred_notices.dart';
 
-
 class ScreenMainBox extends ConsumerStatefulWidget {
   const ScreenMainBox({super.key});
 
@@ -22,7 +21,7 @@ class _ScreenMainBoxState extends ConsumerState<ScreenMainBox> {
 
   @override
   Widget build(BuildContext context) {
-    final starredNotices = ref.watch(starredProvider);
+    final starredNotices = ref.watch(starredProvider).starredNotices;
 
     return Scaffold(
       appBar: AppBar(

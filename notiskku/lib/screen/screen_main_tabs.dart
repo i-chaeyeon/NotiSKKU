@@ -15,9 +15,7 @@ class MyApp extends StatelessWidget {
       designSize: const Size(360, 640),
       builder: (context, child) {
         return MaterialApp(
-          theme: ThemeData(
-            scaffoldBackgroundColor: Colors.white,
-          ),
+          theme: ThemeData(scaffoldBackgroundColor: Colors.white),
           home: const ScreenMainTabs(),
         );
       },
@@ -46,12 +44,12 @@ class _ScreenMainTabsState extends State<ScreenMainTabs> {
 
   // 하단 네비게이션 아이템 정의
   List<BottomNavigationBarItem> get _navItems => [
-        _buildNavItem('assets/images/notice_fix.png', '공지사항'),
-        _buildNavItem('assets/images/keyword_fix.png', '키워드'),
-        _buildNavItem('assets/images/bogwan_fix.png', '공지함'),
-        _buildNavItem('assets/images/calendar_fix.png', '학사일정'),
-        _buildNavItem('assets/images/more_fix.png', '더보기'),
-      ];
+    _buildNavItem('assets/images/notice_fix.png', '공지사항'),
+    _buildNavItem('assets/images/keyword_fix.png', '키워드'),
+    _buildNavItem('assets/images/bogwan_fix.png', '공지함'),
+    _buildNavItem('assets/images/calendar_fix.png', '학사일정'),
+    _buildNavItem('assets/images/more_fix.png', '더보기'),
+  ];
 
   // 아이템 구성 메서드
   BottomNavigationBarItem _buildNavItem(String assetPath, String label) {

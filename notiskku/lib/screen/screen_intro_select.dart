@@ -10,19 +10,20 @@ import 'package:notiskku/providers/major_provider.dart';
 import 'package:notiskku/providers/keyword_provider.dart';
 import 'package:notiskku/screen/screen_intro_alarm.dart';
 
-// 관심 학과와 키워드를 선택해주세요 
+// 관심 학과와 키워드를 선택해주세요
 class ScreenIntroSelect extends ConsumerWidget {
   const ScreenIntroSelect({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // ref.watch로 상태 읽기 
-    final toggleIndex = ref.watch(toggleIndexProvider); 
+    final settingsType = ref.watch(settingsProvider);
     final majorState = ref.watch(majorProvider);
     final keywordState = ref.watch(keywordProvider);
 
     // '설정완료' 버튼 활성화 조건: 학과 1개 이상 + 키워드 1개 이상 선택
-    final isButtonEnabled = majorState.selectedMajors.isNotEmpty && keywordState.selectedKeywords.isNotEmpty;
+    final isButtonEnabled =
+        majorState.selectedMajors.isNotEmpty &&
+        keywordState.selectedKeywords.isNotEmpty;
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -47,29 +48,31 @@ class ScreenIntroSelect extends ConsumerWidget {
             ),
           ),
           SizedBox(height: 10.h),
-          const BarSettings.BarSettings(), // 학과|키워드
+          const BarSettings.barSettings(), // 학과|키워드
           SizedBox(height: 10.h),
           Expanded(
-            child: toggleIndex == 0
-                ? const ListMajor() // 전체 전공 리스트 보여주기 
-                : const GridKeywords(), // 전체 키워드 그리드 보여주기 
+            child:
+                settingsType == Settings.major
+                    ? const ListMajor() // 전체 전공 리스트 보여주기
+                    : const GridKeywords(), // 전체 키워드 그리드 보여주기
           ),
           SizedBox(height: 30.h),
 
           WideCondition(
             text: '설정 완료',
             isEnabled: isButtonEnabled,
-            onPressed: isButtonEnabled
-                ? () {
-                    ref.read(majorProvider.notifier).updateSearchText(''); // 수동 초기화
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const ScreenIntroAlarm(), // 
-                      ),
-                    );
-                  }
-                : null,
+            onPressed:
+                isButtonEnabled
+                    ? () {
+                      ref.read(majorProvider.notifier).updateSearchText('');
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const ScreenIntroAlarm(),
+                        ),
+                      );
+                    }
+                    : null,
           ),
           SizedBox(height: 30.h),
         ],

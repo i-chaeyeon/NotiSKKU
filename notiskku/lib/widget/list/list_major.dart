@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:notiskku/data/major_data.dart';
+import 'package:notiskku/models/major.dart';
 import 'package:notiskku/providers/major_provider.dart';
 import 'package:notiskku/widget/dialog/dialog_limit_major.dart';
 import 'package:notiskku/widget/search/search_major.dart';
@@ -14,10 +16,15 @@ class ListMajor extends ConsumerWidget {
     final majorNotifier = ref.read(majorProvider.notifier);
 
     // 전공 리스트를 검색어 기준으로 필터링하고 가나다순 정렬
-    final filteredMajors = majorState.majors
-        .where((major) => major.toLowerCase().contains(majorState.searchText.toLowerCase()))
-        .toList()
-      ..sort(); // 가나다순 정렬 적용
+    final filteredMajors =
+        majorState.majors
+            .where(
+              (major) => major.toLowerCase().contains(
+                majorState.searchText.toLowerCase(),
+              ),
+            )
+            .toList()
+          ..sort(); // 가나다순 정렬 적용
 
     return Column(
       children: [
@@ -31,21 +38,33 @@ class ListMajor extends ConsumerWidget {
             itemCount: filteredMajors.length,
             itemBuilder: (context, index) {
               final major = filteredMajors[index];
-              final isSelected = majorState.selectedMajors.contains(major);
+              final isSelected = majorState.selectedMajors
+                  .map((m) => m.major)
+                  .contains(filteredMajors[index]);
 
               return GestureDetector(
                 onTap: () {
                   if (!isSelected && majorState.selectedMajors.length >= 2) {
-                    _showLimitDialog(context, majorState.selectedMajors);
+                    List<String> currentMajors =
+                        majorState.selectedMajors.map((m) => m.major).toList();
+                    _showLimitDialog(context, currentMajors);
                     return;
                   }
-                  majorNotifier.toggleSelectedMajor(major);
+                  Major matchedMajor = majors.firstWhere(
+                    (m) => m.major == major,
+                  );
+                  majorNotifier.toggleMajor(matchedMajor);
                 },
                 child: Container(
-                  padding: EdgeInsets.symmetric(vertical: 7.h, horizontal: 10.w),
+                  padding: EdgeInsets.symmetric(
+                    vertical: 7.h,
+                    horizontal: 10.w,
+                  ),
                   margin: EdgeInsets.symmetric(horizontal: 10.w),
                   decoration: const BoxDecoration(
-                    border: Border(bottom: BorderSide(color: Color(0xFFD9D9D9), width: 1.5)),
+                    border: Border(
+                      bottom: BorderSide(color: Color(0xFFD9D9D9), width: 1.5),
+                    ),
                   ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -54,12 +73,20 @@ class ListMajor extends ConsumerWidget {
                         major,
                         style: TextStyle(
                           fontSize: 19.sp,
-                          fontWeight: isSelected ? FontWeight.bold : FontWeight.w400,
-                          color: isSelected ? const Color(0xFF0B5B42) : const Color(0xFF979797),
+                          fontWeight:
+                              isSelected ? FontWeight.bold : FontWeight.w400,
+                          color:
+                              isSelected
+                                  ? const Color(0xFF0B5B42)
+                                  : const Color(0xFF979797),
                         ),
                       ),
                       if (isSelected)
-                        Icon(Icons.check, color: const Color(0xFF0B5B42), size: 20.w),
+                        Icon(
+                          Icons.check,
+                          color: const Color(0xFF0B5B42),
+                          size: 20.w,
+                        ),
                     ],
                   ),
                 ),

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:notiskku/models/notice.dart';
-import 'package:notiskku/notice_functions/launch_url.dart';
 import 'package:notiskku/providers/starred_provider.dart';
 
 class ScreenMainBoxEdit extends ConsumerStatefulWidget {
@@ -20,7 +19,7 @@ class _ScreenMainBoxEditState extends ConsumerState<ScreenMainBoxEdit> {
 
   @override
   Widget build(BuildContext context) {
-    final starredNotices = ref.watch(starredProvider);
+    final starredNotices = ref.watch(starredProvider).starredNotices;
     final bool isAllSelected =
         _selectedNotices.length == starredNotices.length &&
         starredNotices.isNotEmpty;
