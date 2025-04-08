@@ -1,6 +1,6 @@
 import 'package:notiskku/models/keyword.dart';
 
-const keywords = [
+final keywords = <Keyword>[
   Keyword(keyword: '기숙사', defined: Defined.developer),
   Keyword(keyword: '등록금', defined: Defined.developer),
   Keyword(keyword: '수강신청', defined: Defined.developer),

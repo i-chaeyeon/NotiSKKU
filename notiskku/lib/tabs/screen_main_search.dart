@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:notiskku/widget/button/button_searched.dart';
+//import 'package:notiskku/widget/button/button_searched.dart';
 import 'package:notiskku/widget/list/list_recent_search.dart';
 import 'package:notiskku/widget/list/list_search_results.dart';
 import 'package:notiskku/widget/search/search_notice.dart';
@@ -10,10 +10,10 @@ class ScreenMainSearch extends ConsumerStatefulWidget {
   const ScreenMainSearch({super.key});
 
   @override
-  _ScreenMainSearchState createState() => _ScreenMainSearchState();
+  ScreenMainSearchState createState() => ScreenMainSearchState();
 }
 
-class _ScreenMainSearchState extends ConsumerState<ScreenMainSearch> {
+class ScreenMainSearchState extends ConsumerState<ScreenMainSearch> {
   String searchText = '';
   bool isSearched = false;
 
@@ -55,7 +55,9 @@ class _ScreenMainSearchState extends ConsumerState<ScreenMainSearch> {
       body: Column(
         children: [
           const SizedBox(height: 10),
-          SearchNotice(onSearch: _updateSearch), // `onSearch`를 사용하여 검색 실행 시 상태 변경
+          SearchNotice(
+            onSearch: _updateSearch,
+          ), // `onSearch`를 사용하여 검색 실행 시 상태 변경
           SizedBox(height: 5.h),
           // 검색 상태에 따라 '최근 검색 내역' 또는 '검색 결과' 표시
           Container(

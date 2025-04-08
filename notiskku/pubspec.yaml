@@ -44,6 +44,8 @@ dependencies:
   provider: ^6.1.2
   shared_preferences: ^2.5.2
   auto_size_text: ^3.0.0
+  googleapis: ^14.0.0
+  googleapis_auth: ^1.4.1
 
   firebase_core: ^3.13.0
   firebase_messaging: ^15.2.5
@@ -79,6 +81,7 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
+    - assets/credentials.json 
     - assets/images/magic_wand.png
     - assets/images/medal.png
     - assets/images/notice_fix.png

@@ -7,20 +7,20 @@ class ListRecentSearch extends ConsumerStatefulWidget {
   const ListRecentSearch({super.key});
 
   @override
-  _ListRecentSearchState createState() => _ListRecentSearchState();
+  ListRecentSearchState createState() => ListRecentSearchState();
 }
 
-class _ListRecentSearchState extends ConsumerState<ListRecentSearch> {
+class ListRecentSearchState extends ConsumerState<ListRecentSearch> {
   @override
   Widget build(BuildContext context) {
-    final searchedWords = ref.watch(recentSearchProvider);
+    final searchedTexts = ref.watch(recentSearchProvider).searchedTexts;
 
     return Flexible(
       child: ListView.builder(
-        itemCount: searchedWords.length,
+        itemCount: searchedTexts.length,
         padding: EdgeInsets.symmetric(horizontal: 20.w),
         itemBuilder: (BuildContext context, int index) {
-          final reversedIndex = searchedWords.length - 1 - index;
+          final reversedIndex = searchedTexts.length - 1 - index;
           return Container(
             padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
             margin: EdgeInsets.symmetric(vertical: 4.h),
@@ -32,21 +32,16 @@ class _ListRecentSearchState extends ConsumerState<ListRecentSearch> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  searchedWords[reversedIndex],
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 15.sp,
-                  ),
+                  searchedTexts[reversedIndex],
+                  style: TextStyle(color: Colors.black, fontSize: 15.sp),
                 ),
                 GestureDetector(
                   onTap: () {
-                    ref.read(recentSearchProvider.notifier).deleteWord(searchedWords[reversedIndex]);
+                    ref
+                        .read(recentSearchProvider.notifier)
+                        .deleteWord(searchedTexts[reversedIndex]);
                   },
-                  child: Icon(
-                    Icons.close,
-                    color: Colors.black,
-                    size: 20.w,
-                  ),
+                  child: Icon(Icons.close, color: Colors.black, size: 20.w),
                 ),
               ],
             ),

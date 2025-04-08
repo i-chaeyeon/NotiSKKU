@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:notiskku/notice_functions/launch_url.dart'; // LaunchUrlService import 추가
+//import 'package:notiskku/notice_functions/launch_url.dart'; // LaunchUrlService import 추가
 import 'package:url_launcher/url_launcher.dart';
 
 import 'package:notiskku/screen/screen_intro_alarm.dart';
@@ -35,8 +35,8 @@ class ScreenMainOthers extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final LaunchUrlService launchService =
-        LaunchUrlService(); // LaunchUrlService 객체 생성
+    // final LaunchUrlService launchService =
+    //     LaunchUrlService(); // LaunchUrlService 객체 생성
 
     return Scaffold(
       appBar: AppBar(
@@ -75,7 +75,9 @@ class ScreenMainOthers extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const ScreenIntroAlarm(isFromOthers: true),
+                        builder:
+                            (context) =>
+                                const ScreenIntroAlarm(isFromOthers: true),
                       ),
                     );
                   },
@@ -161,7 +163,10 @@ class ScreenMainOthers extends StatelessWidget {
     VoidCallback? onTap, // onTap 콜백
   }) {
     return ListTile(
-      title: Text(title, style: TextStyle(fontSize: 19.sp, color: Colors.black)),
+      title: Text(
+        title,
+        style: TextStyle(fontSize: 19.sp, color: Colors.black),
+      ),
       trailing: const Icon(Icons.arrow_forward_ios, color: Colors.black),
       onTap: () {
         if (onTap != null) {

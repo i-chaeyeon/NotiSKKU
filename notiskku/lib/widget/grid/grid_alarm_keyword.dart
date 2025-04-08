@@ -11,8 +11,7 @@ class GridAlarmKeyword extends ConsumerWidget {
     final keywordState = ref.watch(keywordProvider);
     final keywordNotifier = ref.read(keywordProvider.notifier);
 
-    final selectedKeywords = keywordState.selectedKeywords; // 선택된 키워드
-    final selectedAlarmKeywords = keywordState.alarmKeywords; // 알람 설정된 키워드
+    final selectedKeywords = keywordState.selectedKeywords;
 
     if (selectedKeywords.isEmpty) {
       return const Center(child: Text('선택된 키워드가 없습니다.'));
@@ -30,10 +29,10 @@ class GridAlarmKeyword extends ConsumerWidget {
         itemCount: selectedKeywords.length,
         itemBuilder: (context, index) {
           final keyword = selectedKeywords[index];
-          final isSelectedForAlarm = selectedAlarmKeywords.contains(keyword);
+          final isSelectedForAlarm = keyword.receiveNotification;
 
           return GestureDetector(
-            onTap: () => keywordNotifier.toggleAlarmKeyword(keyword),
+            onTap: () => keywordNotifier.toggleAlarm(keyword),
             child: Container(
               width: 86.w,
               height: 37.h,
@@ -49,7 +48,7 @@ class GridAlarmKeyword extends ConsumerWidget {
                 child: FittedBox(
                   fit: BoxFit.scaleDown, // 글자가 너무 크면 자동으로 축소
                   child: Text(
-                    keyword,
+                    keyword.keyword,
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 19.sp,

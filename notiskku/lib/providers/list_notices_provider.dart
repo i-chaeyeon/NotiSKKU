@@ -1,66 +1,104 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:notiskku/google/google_sheets_api.dart';
 import 'package:notiskku/models/notice.dart';
-import 'package:notiskku/notice_functions/fetch_notice.dart';
-import 'package:notiskku/providers/major_provider.dart'; // 과 선택 정보 가져옴
-import 'package:notiskku/providers/bar_providers.dart'; // 학과|단과대학|학과, 전체|학사|입학|취업|... 선택 정보 가져옴
+import 'package:notiskku/providers/bar_providers.dart';
+import 'package:notiskku/providers/major_provider.dart';
 
-// 공지 데이터 제공을 위한 FutureProvider
-final listNoticesProvider = FutureProvider<List<Notice>>((ref) async {
-  final majorState = ref.watch(majorProvider);
-  final categoryIndex = ref.watch(barCategoriesProvider); // 선택된 카테고리 인덱스 가져오기
+class NoticeState {
+  final List<Notice> notices;
 
-  final selectedMajors = majorState.selectedMajors;
-  final majorOrDepartment = selectedMajors.isNotEmpty ? selectedMajors[0] : '';
+  const NoticeState({this.notices = const []});
 
-  return NoticeService().fetchNotices(
-    _getCategoryUrl(categoryIndex, majorOrDepartment),
-  );
-});
-
-// 카테고리별 URL 반환 함수 수정 (추후 수정 필요 !!)
-String _getCategoryUrl(int index, String majorOrDepartment) {
-  // 소프트웨어학과의 경우 특정 URL 반환
-  if (majorOrDepartment == '소프트웨어학과') {
-    if (index == 2) {  // selectedCategoryIndex → index 변경
-      switch (index) {
-        case 1: return 'https://cse.skku.edu/cse/notice.do?mode=list&srCategoryId1=1582';
-        case 2: return 'https://cse.skku.edu/cse/notice.do?mode=list&srCategoryId1=1583';
-        case 3: return 'https://cse.skku.edu/cse/notice.do?mode=list&srCategoryId1=1584';
-        case 4: return 'https://cse.skku.edu/cse/notice.do?mode=list&srCategoryId1=1585';
-        case 5: return 'https://cse.skku.edu/cse/notice.do?mode=list&srCategoryId1=1586';
-        case 6: return 'https://cse.skku.edu/cse/notice.do?mode=list&srCategoryId1=1587';
-        case 7: return 'https://cse.skku.edu/cse/notice.do?mode=list&srCategoryId1=1588';
-        default: return 'https://cse.skku.edu/cse/notice.do?mode=list';
-      }
-    } else if (index == 1) { // selectedCategoryIndex → index 변경
-      switch (index) {
-        case 1: return 'https://sw.skku.edu/sw/notice.do?mode=list&srCategoryId1=1582';
-        case 2: return 'https://sw.skku.edu/sw/notice.do?mode=list&srCategoryId1=1583';
-        case 3: return 'https://sw.skku.edu/sw/notice.do?mode=list&srCategoryId1=1584';
-        case 4: return 'https://sw.skku.edu/sw/notice.do?mode=list&srCategoryId1=1585';
-        case 5: return 'https://sw.skku.edu/sw/notice.do?mode=list&srCategoryId1=1586';
-        case 6: return 'https://sw.skku.edu/sw/notice.do?mode=list&srCategoryId1=1587';
-        case 7: return 'https://sw.skku.edu/sw/notice.do?mode=list&srCategoryId1=1588';
-        case 8: return 'https://sw.skku.edu/sw/notice.do?mode=list&srCategoryId1=1589';
-        default: return 'https://sw.skku.edu/sw/notice.do';
-      }
-    }
+  NoticeState copyWith({List<Notice>? notices}) {
+    return NoticeState(notices: notices ?? this.notices);
   }
-
-  // 일반 학과의 경우 (학교 선택 포함)
-  if (index == 0 || index == 1 || index == 2) { // selectedCategoryIndex → index 변경
-    switch (index) {
-      case 1: return 'https://www.skku.edu/skku/campus/skk_comm/notice02.do';
-      case 2: return 'https://www.skku.edu/skku/campus/skk_comm/notice03.do';
-      case 3: return 'https://www.skku.edu/skku/campus/skk_comm/notice04.do';
-      case 4: return 'https://www.skku.edu/skku/campus/skk_comm/notice05.do';
-      case 5: return 'https://www.skku.edu/skku/campus/skk_comm/notice06.do';
-      case 6: return 'https://www.skku.edu/skku/campus/skk_comm/notice07.do';
-      case 7: return 'https://www.skku.edu/skku/campus/skk_comm/notice08.do';
-      default: return 'https://www.skku.edu/skku/campus/skk_comm/notice01.do';
-    }
-  }
-
-  // 🔹 기본 URL 반환
-  return 'https://defaulturl.com';
 }
+
+class NoticesNotifier extends StateNotifier<NoticeState> {
+  NoticesNotifier({required this.fetchFunction, required this.categoryName})
+    : super(const NoticeState()) {
+    refreshNotices();
+  }
+
+  final Future<List<Notice>> Function({int startRow, int limit}) fetchFunction;
+  final Categories categoryName;
+  int currentRow = 1;
+  bool isLoading = false;
+  bool hasMore = true;
+
+  Future<void> refreshNotices() async {
+    currentRow = 1;
+    hasMore = true;
+    final allData = await fetchFunction(startRow: 1, limit: 10);
+    final filtered = _filterByCategory(allData);
+    state = state.copyWith(notices: filtered);
+    currentRow += filtered.length;
+  }
+
+  Future<void> loadMoreNotices() async {
+    if (isLoading || !hasMore) return;
+
+    isLoading = true;
+    try {
+      final data = await fetchFunction(startRow: currentRow, limit: 10);
+      if (data.isEmpty) {
+        hasMore = false;
+      } else {
+        final filtered = _filterByCategory(data);
+        state = state.copyWith(notices: [...state.notices, ...filtered]);
+        currentRow += filtered.length;
+      }
+    } finally {
+      isLoading = false;
+    }
+  }
+
+  List<Notice> _filterByCategory(List<Notice> data) {
+    if (categoryName == Categories.all) return data;
+    return data.where((n) => n.category == "[$categoryName]").toList();
+  }
+}
+
+final listNoticesProvider = StateNotifierProvider<NoticesNotifier, NoticeState>(
+  (ref) {
+    final majorState = ref.watch(majorProvider);
+    final selectedMajors = majorState.selectedMajors;
+
+    final noticeType = ref.watch(barNoticesProvider);
+
+    final categoryName = ref.watch(barCategoriesProvider);
+
+    Future<List<Notice>> fetchFunction({
+      int startRow = 1,
+      int limit = 10,
+    }) async {
+      if (noticeType == Notices.common) {
+        return GoogleSheetsAPI.readCommonData(startRow: startRow, limit: limit);
+      }
+
+      final fetches = selectedMajors.map((major) {
+        if (noticeType == Notices.dept) {
+          return GoogleSheetsAPI.readDeptData(
+            dept: major.department,
+            startRow: startRow,
+            limit: limit,
+          );
+        } else {
+          return GoogleSheetsAPI.readMajorData(
+            major: major.major,
+            startRow: startRow,
+            limit: limit,
+          );
+        }
+      });
+
+      final results = await Future.wait(fetches);
+      return results.expand((list) => list).toList();
+    }
+
+    return NoticesNotifier(
+      categoryName: categoryName,
+      fetchFunction: fetchFunction,
+    );
+  },
+);
