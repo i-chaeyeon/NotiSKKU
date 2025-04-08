@@ -5,11 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart'; // ProviderScope 추가
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(
-    const ProviderScope(
-      child: MyApp(),
-    ),
-  );
+  runApp(const ProviderScope(child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -23,6 +19,9 @@ class MyApp extends StatelessWidget {
       splitScreenMode: true,
       builder: (context, child) {
         return MaterialApp(
+          theme: ThemeData(
+            colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF0B5B42)),
+          ),
           debugShowCheckedModeBanner: false,
           home: const ScreenLogoIntro(),
         );
