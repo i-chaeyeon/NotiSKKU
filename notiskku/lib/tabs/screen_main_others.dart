@@ -14,6 +14,7 @@ import 'package:notiskku/widget/popup/version_notice_popup.dart';
 
 import 'package:notiskku/edit/screen_main_major_edit.dart';
 import 'package:notiskku/edit/screen_main_keyword_edit.dart';
+import 'package:notiskku/widget/popup/privacy_policy.dart'; 
 
 class ScreenMainOthers extends StatelessWidget {
   const ScreenMainOthers({super.key});
@@ -119,8 +120,7 @@ class ScreenMainOthers extends StatelessWidget {
                 // 정보 섹션
                 _buildSectionDivider(),
                 _buildSectionTitle('정보'),
-                _buildListItem(context, '  라이센스'),
-                _buildListItem(context, '  개인정보'),
+                _buildListItem(context, '  개인정보처리방침', showPrivacyPopup: true),
                 _buildListItem(context, '  이용 약관'),
               ],
             ),
@@ -152,47 +152,51 @@ class ScreenMainOthers extends StatelessWidget {
       ),
     );
   }
-
-  Widget _buildListItem(
-    BuildContext context,
-    String title, {
-    bool showFAQPopup = false,
-    bool showInquiryPopup = false,
-    bool showVersionPopup = false,
-    bool openSettings = false,
-    VoidCallback? onTap, // onTap 콜백
-  }) {
-    return ListTile(
-      title: Text(
-        title,
-        style: TextStyle(fontSize: 19.sp, color: Colors.black),
-      ),
-      trailing: const Icon(Icons.arrow_forward_ios, color: Colors.black),
-      onTap: () {
-        if (onTap != null) {
-          onTap();
-          return;
-        }
-        if (showFAQPopup) {
-          showDialog(
-            context: context,
-            builder: (BuildContext context) => const FAQPopup(),
-          );
-        } else if (showInquiryPopup) {
-          showDialog(
-            context: context,
-            builder: (BuildContext context) => const FeedbackPopup(),
-          );
-        } else if (showVersionPopup) {
-          showDialog(
-            context: context,
-            builder: (BuildContext context) => const VersionNoticePopup(),
-          );
-        }
-        if (openSettings) {
-          _openSettings();
-        }
-      },
-    );
+Widget _buildListItem(
+   BuildContext context,
+   String title, {
+   bool showFAQPopup = false,
+   bool showInquiryPopup = false,
+   bool showVersionPopup = false,
+   bool showPrivacyPopup = false,      // ① 개인정보처리방침 팝업용
+   bool openSettings = false,
+   VoidCallback? onTap,
+ }) {
+   return ListTile(
+     title: Text(title, style: TextStyle(fontSize: 19.sp, color: Colors.black)),
+     trailing: const Icon(Icons.arrow_forward_ios, color: Colors.black),
+     onTap: () {
+       // 우선 onTap 콜백이 있으면 우선 실행 후 return
+       if (onTap != null) {
+         onTap();
+         return;
+       }
+       if (showFAQPopup) {
+         showDialog(
+           context: context,
+           builder: (BuildContext context) => const FAQPopup(),
+         );
+       } else if (showInquiryPopup) {
+         showDialog(
+           context: context,
+           builder: (BuildContext context) => const FeedbackPopup(),
+         );
+       } else if (showVersionPopup) {
+         showDialog(
+           context: context,
+           builder: (BuildContext context) => const VersionNoticePopup(),
+         );
+       } else if (showPrivacyPopup) {  // ② 여기서 팝업 띄움
+         showDialog(
+           context: context,
+           builder: (BuildContext context) => const PrivacyPolicyPopup(),
+         );
+       }
+ 
+       if (openSettings) {
+         _openSettings();
+       }
+     },
+   );
   }
 }
