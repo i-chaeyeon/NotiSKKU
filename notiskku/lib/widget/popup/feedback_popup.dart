@@ -2,10 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:notiskku/widget/popup/popup_ui.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import 'package:url_launcher/url_launcher.dart';
-
 class FeedbackPopup extends StatelessWidget {
-  const FeedbackPopup({Key? key}) : super(key: key);
+  const FeedbackPopup({super.key});
 
   Future<void> _launchChat() async {
     const url = 'https://open.kakao.com/o/gKYMY3Wg';

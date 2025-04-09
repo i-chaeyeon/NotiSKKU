@@ -9,11 +9,11 @@ class NoticeTile extends ConsumerWidget {
   final Notice notice;
   final LaunchUrlService launchUrlService = LaunchUrlService(); // 인스턴스 생성
 
-  NoticeTile({Key? key, required this.notice}) : super(key: key);
+  NoticeTile({super.key, required this.notice});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isStarred = ref.watch(starredProvider);
+    final starredNotices = ref.watch(starredProvider).starredNotices;
 
     return Column(
       children: [
@@ -31,7 +31,9 @@ class NoticeTile extends ConsumerWidget {
               ref.read(starredProvider.notifier).toggleNotice(notice);
             },
             child: Image.asset(
-              isStarred.any((n) => n.url == notice.url)
+              starredNotices.any(
+                    (n) => n.title == notice.title && n.id == notice.id,
+                  )
                   ? 'assets/images/fullstar_fix.png'
                   : 'assets/images/emptystar_fix.png',
               width: 26.w,
@@ -39,7 +41,7 @@ class NoticeTile extends ConsumerWidget {
             ),
           ),
           onTap: () async {
-            await launchUrlService.launchURL(notice.url); // 인스턴스 사용하여 메서드 호출
+            await launchUrlService.launchURL(notice.link); // 인스턴스 사용하여 메서드 호출
           },
         ),
         Divider(

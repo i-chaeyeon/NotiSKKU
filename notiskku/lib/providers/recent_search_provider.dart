@@ -1,42 +1,56 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:notiskku/services/preference_services.dart';
+import 'package:notiskku/services/preferences_recent_search.dart';
 
-// 최근 검색어 Provider
-final recentSearchProvider = 
-    StateNotifierProvider<recentSearchNotifier, List<String>>((ref) {
-  return recentSearchNotifier();
-});
+class RecentSearchState {
+  final List<String> searchedTexts;
+
+  const RecentSearchState({this.searchedTexts = const []});
+
+  RecentSearchState copyWith({List<String>? searchedTexts}) {
+    return RecentSearchState(
+      searchedTexts: searchedTexts ?? this.searchedTexts,
+    );
+  }
+}
 
 // 최근 검색어 상태 관리 Notifier
-class recentSearchNotifier extends StateNotifier<List<String>> {
-  recentSearchNotifier() : super([]) {
+class RecentSearchNotifier extends StateNotifier<RecentSearchState> {
+  RecentSearchNotifier() : super(const RecentSearchState()) {
     _loadSearchWords();
   }
 
   // 저장된 검색어 불러오기
   Future<void> _loadSearchWords() async {
-    List<String>? savedSearch = await getSavedSearch();
-    if (savedSearch != null) {
-      state = List<String>.from(savedSearch);
-    }
+    List<String>? searchedTexts =
+        await RecentSearchPreferences.getSavedSearch();
+
+    state = state.copyWith(searchedTexts: searchedTexts);
   }
-  
+
   // 검색어 추가 (중복 시 최신순으로 이동)
   void searchWord(String word) {
-    if (state.contains(word)) {
-      state = [
-        ...state.where((w) => w != word), // 기존 목록에서 제거
-        word // 최신 검색어로 추가
-      ];
-    } else {
-      state = [...state, word];
-    }
-    saveSearch(state); // 저장
+    final currentWordList = List<String>.from(state.searchedTexts);
+
+    currentWordList.remove(word);
+    currentWordList.add(word);
+
+    state = state.copyWith(searchedTexts: currentWordList);
+    RecentSearchPreferences.saveSearch(currentWordList);
   }
 
   // 검색어 삭제
   void deleteWord(String word) {
-    state = state.where((w) => w != word).toList();
-    saveSearch(state); // 저장
+    final currentWordList = List<String>.from(state.searchedTexts);
+
+    currentWordList.remove(word);
+
+    state = state.copyWith(searchedTexts: currentWordList);
+    RecentSearchPreferences.saveSearch(currentWordList);
   }
 }
+
+// 최근 검색어 Provider
+final recentSearchProvider =
+    StateNotifierProvider<RecentSearchNotifier, RecentSearchState>((ref) {
+      return RecentSearchNotifier();
+    });

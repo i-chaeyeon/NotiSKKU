@@ -20,9 +20,8 @@ class ListStarredNotices extends StatelessWidget {
     return ListView.builder(
       itemCount: notices.length,
       itemBuilder: (BuildContext context, int index) {
-        final reversedIndex = notices.length - 1 - index;
-        final starredNotice = notices[reversedIndex];
-        return NoticeTile(notice: starredNotice);
+        final notice = notices[index];
+        return NoticeTile(notice: notice);
       },
     );
   }

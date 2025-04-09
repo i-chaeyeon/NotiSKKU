@@ -1,6 +1,6 @@
 import 'package:notiskku/models/major.dart';
 
-const major = [
+final majors = <Major>[
   Major(department: '학부대학', major: '사회과학계열'),
   Major(department: '학부대학', major: '인문사회계열'),
   Major(department: '학부대학', major: '공학계열'),

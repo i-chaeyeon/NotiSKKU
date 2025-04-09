@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:notiskku/providers/list_key_notices_provider.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:notiskku/models/keyword.dart';
+import 'package:notiskku/models/notice.dart';
+import 'package:notiskku/providers/list_notices_provider.dart';
 import 'package:notiskku/widget/bar/bar_keywords.dart';
 import 'package:notiskku/widget/list/list_notices.dart';
 
@@ -10,7 +12,9 @@ class ScreenMainKeyword extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final noticeAsync = ref.watch(ListKeyNoticesProvider);
+    final allNoticeState = ref.watch(listNoticesProvider);
+    final selectedKeyword = ref.watch(selectedKeywordProvider);
+    final noticeNotifier = ref.read(listNoticesProvider.notifier);
 
     return Scaffold(
       appBar: AppBar(
@@ -34,24 +38,49 @@ class ScreenMainKeyword extends ConsumerWidget {
       backgroundColor: Colors.white,
       body: Column(
         children: [
-          // 키워드 선택 바
-          BarKeywords(
-            onKeywordSelected: (selectedKeyword) {
-              ref.invalidate(ListKeyNoticesProvider); // 선택 시 새로고침
-            },
-          ),
+          const BarKeywords(),
           SizedBox(height: 10.h),
+
           Expanded(
-            child: noticeAsync.when(
-              data: (notices) => ListNotices(notices: notices),
-              loading: () => const Center(child: CircularProgressIndicator()),
-              error:
-                  (error, stack) =>
-                      const Center(child: Text('Failed to load notices')),
-            ),
+            child:
+                allNoticeState.notices.isEmpty
+                    ? const Center(child: CircularProgressIndicator())
+                    : _buildFilteredList(
+                      notices: allNoticeState.notices,
+                      keyword: selectedKeyword,
+                      onLoadMore: () => noticeNotifier.loadMoreNotices(),
+                    ),
           ),
         ],
       ),
     );
+  }
+
+  Widget _buildFilteredList({
+    required List<Notice> notices,
+    required Keyword? keyword,
+    required VoidCallback onLoadMore,
+  }) {
+    int loadCount = 0;
+
+    if (keyword == null) {
+      return const Center(child: Text('키워드를 선택해주세요'));
+    }
+
+    final filtered =
+        notices
+            .where(
+              (n) =>
+                  n.title.toLowerCase().contains(keyword.keyword.toLowerCase()),
+            )
+            .toList();
+
+    if (filtered.length < 10 || loadCount > 5) {
+      onLoadMore();
+      loadCount++;
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    return ListNotices(notices: filtered);
   }
 }
