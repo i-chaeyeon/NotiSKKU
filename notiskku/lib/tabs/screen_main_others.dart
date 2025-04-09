@@ -15,6 +15,8 @@ import 'package:notiskku/widget/popup/version_notice_popup.dart';
 import 'package:notiskku/edit/screen_main_major_edit.dart';
 import 'package:notiskku/edit/screen_main_keyword_edit.dart';
 import 'package:notiskku/widget/popup/privacy_policy.dart'; 
+import 'package:notiskku/widget/popup/service_intro.dart';
+import 'package:notiskku/widget/popup/terms_service.dart';   
 
 class ScreenMainOthers extends StatelessWidget {
   const ScreenMainOthers({super.key});
@@ -121,7 +123,8 @@ class ScreenMainOthers extends StatelessWidget {
                 _buildSectionDivider(),
                 _buildSectionTitle('정보'),
                 _buildListItem(context, '  개인정보처리방침', showPrivacyPopup: true),
-                _buildListItem(context, '  이용 약관'),
+                _buildListItem(context, '  이용 약관', showTermsPopup: true),
+                _buildListItem(context, '  서비스 소개', showServiceIntroPopup: true),
               ],
             ),
           ),
@@ -159,6 +162,8 @@ Widget _buildListItem(
    bool showInquiryPopup = false,
    bool showVersionPopup = false,
    bool showPrivacyPopup = false,      // ① 개인정보처리방침 팝업용
+   bool showTermsPopup = false,        // ② 이용약관 팝업용
+   bool showServiceIntroPopup = false, // ③ 서비스 소개 팝업용
    bool openSettings = false,
    VoidCallback? onTap,
  }) {
@@ -191,7 +196,20 @@ Widget _buildListItem(
            context: context,
            builder: (BuildContext context) => const PrivacyPolicyPopup(),
          );
+       } else if (showTermsPopup) {  // ③ 여기서 팝업 띄움
+         showDialog(
+           context: context,
+           builder: (BuildContext context) => const TermsOfServicePopup(),
+         );
+       } else if (showServiceIntroPopup) {
+         showDialog(
+           context: context,
+           builder: (BuildContext context) => const ServiceIntroPopup(),
+         );
+       } else if (openSettings) {
+         _openSettings();
        }
+       // 알림 설정 화면으로 이동
  
        if (openSettings) {
          _openSettings();
