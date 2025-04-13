@@ -50,7 +50,10 @@ class _NoticeAppBar extends ConsumerWidget implements PreferredSizeWidget {
                 onTap: () {
                   if (majorIndex > 0) {
                     majorIndexNotifier.state--;
+                  } else {
+                    majorIndexNotifier.state++;
                   }
+                  ref.invalidate(listNoticesProvider);
                 },
                 child: const Icon(Icons.chevron_left, color: Colors.black),
               )
@@ -87,7 +90,10 @@ class _NoticeAppBar extends ConsumerWidget implements PreferredSizeWidget {
                 onTap: () {
                   if (majorIndex < majorState.selectedMajors.length - 1) {
                     majorIndexNotifier.state++;
+                  } else {
+                    majorIndexNotifier.state--;
                   }
+                  ref.invalidate(listNoticesProvider);
                 },
                 child: const Icon(Icons.chevron_right, color: Colors.black),
               )
