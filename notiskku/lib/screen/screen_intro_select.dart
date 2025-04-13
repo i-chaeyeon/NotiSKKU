@@ -23,7 +23,8 @@ class ScreenIntroSelect extends ConsumerWidget {
     // '설정완료' 버튼 활성화 조건: 학과 1개 이상 + 키워드 1개 이상 선택
     final isButtonEnabled =
         majorState.selectedMajors.isNotEmpty &&
-        keywordState.selectedKeywords.isNotEmpty;
+        (keywordState.isDoNotSelect ||
+            keywordState.selectedKeywords.isNotEmpty);
 
     return Scaffold(
       backgroundColor: Colors.white,

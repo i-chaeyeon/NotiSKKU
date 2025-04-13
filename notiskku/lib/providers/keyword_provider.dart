@@ -40,7 +40,9 @@ class KeywordNotifier extends StateNotifier<KeywordState> {
   // selectedKeywords 추가/제거 관리
   void toggleKeyword(Keyword keyword) {
     final currentKeywords = List<Keyword>.from(state.selectedKeywords);
-
+    if (state.isDoNotSelect == true) {
+      toggleDoNotSelect();
+    }
     if (currentKeywords.contains(keyword)) {
       currentKeywords.remove(keyword);
     } else {
