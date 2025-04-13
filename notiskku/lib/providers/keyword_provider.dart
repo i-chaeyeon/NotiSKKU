@@ -78,23 +78,23 @@ class KeywordNotifier extends StateNotifier<KeywordState> {
   }
 
   // alarmKeywords '선택하지 않음' 토글 관리
-  void toggleDoNotSelectAlarm() {
-    if (state.isDoNotSelectAlarm) {
-      state = state.copyWith(isDoNotSelectAlarm: false);
-    } else {
-      final updatedKeywords =
-          state.selectedKeywords.map((k) {
-            return k.copyWith(receiveNotification: false);
-          }).toList();
+  // void toggleDoNotSelectAlarm() {
+  //   if (state.isDoNotSelectAlarm) {
+  //     state = state.copyWith(isDoNotSelectAlarm: false);
+  //   } else {
+  //     final updatedKeywords =
+  //         state.selectedKeywords.map((k) {
+  //           return k.copyWith(receiveNotification: false);
+  //         }).toList();
 
-      state = state.copyWith(
-        selectedKeywords: updatedKeywords,
-        isDoNotSelectAlarm: true,
-      );
+  //     state = state.copyWith(
+  //       selectedKeywords: updatedKeywords,
+  //       isDoNotSelectAlarm: true,
+  //     );
 
-      KeywordPreferences.save(updatedKeywords);
-    }
-  }
+  //     KeywordPreferences.save(updatedKeywords);
+  //   }
+  // }
 }
 
 // Provider 등록, keyword 관련 정보 관리

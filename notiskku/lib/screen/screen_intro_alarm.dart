@@ -82,10 +82,13 @@ class ScreenIntroAlarm extends ConsumerWidget {
           WideGreen(
             text: '설정 완료',
             onPressed: () {
-              if (selectedMajors.isNotEmpty || selectedKeywords.isNotEmpty) {
-                _goToNext(context);
-              } else {
+              if (selectedMajors.every((m) => m.receiveNotification == false) &&
+                  selectedKeywords.every(
+                    (k) => k.receiveNotification == false,
+                  )) {
                 _showNoAlarmDialog(context);
+              } else {
+                _goToNext(context);
               }
             },
           ),
