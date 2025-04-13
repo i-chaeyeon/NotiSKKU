@@ -8,7 +8,7 @@ import 'package:notiskku/widget/button/wide_condition.dart';
 import 'package:notiskku/widget/list/list_major.dart';
 
 class ScreenMainMajorEdit extends ConsumerWidget {
-  const ScreenMainMajorEdit({Key? key}) : super(key: key);
+  const ScreenMainMajorEdit({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

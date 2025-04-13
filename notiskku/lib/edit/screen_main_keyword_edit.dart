@@ -7,7 +7,7 @@ import 'package:notiskku/widget/search/search_keyword.dart';
 import 'package:notiskku/widget/list/list_keyword.dart';
 
 class ScreenMainKeywordEdit extends ConsumerStatefulWidget {
-  const ScreenMainKeywordEdit({Key? key}) : super(key: key);
+  const ScreenMainKeywordEdit({super.key});
 
   @override
   ConsumerState<ScreenMainKeywordEdit> createState() =>

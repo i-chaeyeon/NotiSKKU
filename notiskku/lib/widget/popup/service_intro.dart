@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:notiskku/widget/popup/popup_ui.dart';
 
 class ServiceIntroPopup extends StatelessWidget {
-  const ServiceIntroPopup({Key? key}) : super(key: key);
+  const ServiceIntroPopup({super.key});
 
   Widget _buildServiceIntroContent() {
     return SingleChildScrollView(

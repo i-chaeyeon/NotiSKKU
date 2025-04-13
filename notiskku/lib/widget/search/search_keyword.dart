@@ -7,11 +7,11 @@ class SearchKeyword extends StatelessWidget {
   final VoidCallback onClear;
 
   const SearchKeyword({
-    Key? key,
+    super.key,
     required this.controller,
     required this.onChanged,
     required this.onClear,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +45,7 @@ class SearchKeyword extends StatelessWidget {
             Align(
               alignment: Alignment.centerRight,
               child: GestureDetector(
-                onTap:onClear,
+                onTap: onClear,
                 child: Padding(
                   padding: const EdgeInsets.all(9.0),
                   child: Image.asset(
