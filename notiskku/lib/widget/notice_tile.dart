@@ -43,8 +43,8 @@ class NoticeTile extends ConsumerWidget {
               height: 26.h,
             ),
           ),
-          onTap: () async {
-            await launchUrlService.launchURL(link);
+          onTap: () {
+            launchUrlService.launchURL(link);
           },
         ),
         Divider(
