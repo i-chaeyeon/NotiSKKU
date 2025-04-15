@@ -36,8 +36,8 @@ class _ScreenMainTabsState extends State<ScreenMainTabs> {
   // 각 탭에 해당하는 페이지 리스트
   final List<Widget> _pages = const [
     ScreenMainNotice(),
-    ScreenMainKeyword(),
-    ScreenMainBox(),
+    // ScreenMainKeyword(),
+    // ScreenMainBox(),
     ScreenMainCalender(),
     ScreenMainOthers(),
   ];
