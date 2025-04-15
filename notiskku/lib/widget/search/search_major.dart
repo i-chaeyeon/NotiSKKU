@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:notiskku/providers/major_provider.dart';
+import 'package:notiskku/providers/user/user_provider.dart';
 
 class SearchMajor extends ConsumerStatefulWidget {
   const SearchMajor({super.key});
@@ -45,8 +45,8 @@ class _SearchMajorState extends ConsumerState<SearchMajor> {
                   counterText: '',
                   border: InputBorder.none,
                 ),
-                onChanged: (value) {
-                  ref.read(majorProvider.notifier).updateSearchText(value);
+                onChanged: (text) {
+                  ref.read(userProvider.notifier).updateSearchText(text);
                 },
               ),
             ),
@@ -57,7 +57,7 @@ class _SearchMajorState extends ConsumerState<SearchMajor> {
                   child: IconButton(
                     onPressed: () {
                       _controller.clear();
-                      ref.read(majorProvider.notifier).updateSearchText('');
+                      ref.read(userProvider.notifier).updateSearchText('');
                     },
                     icon: const Icon(Icons.cancel, color: Color(0xff979797)),
                     padding: EdgeInsets.zero,

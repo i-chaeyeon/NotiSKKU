@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:notiskku/providers/user/user_provider.dart';
 import 'package:notiskku/widget/grid/grid_keywords.dart';
 import 'package:notiskku/widget/bar/bar_settings.dart';
 import 'package:notiskku/widget/list/list_major.dart';
 import 'package:notiskku/widget/button/wide_condition.dart';
 import 'package:notiskku/providers/bar_providers.dart';
-import 'package:notiskku/providers/major_provider.dart';
-import 'package:notiskku/providers/keyword_provider.dart';
 import 'package:notiskku/screen/screen_intro_alarm.dart';
 
 // 관심 학과와 키워드를 선택해주세요
@@ -17,14 +16,13 @@ class ScreenIntroSelect extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final settingsType = ref.watch(settingsProvider);
-    final majorState = ref.watch(majorProvider);
-    final keywordState = ref.watch(keywordProvider);
+    final userState = ref.watch(userProvider);
 
     // '설정완료' 버튼 활성화 조건: 학과 1개 이상 + 키워드 1개 이상 선택
     final isButtonEnabled =
-        majorState.selectedMajors.isNotEmpty &&
-        (keywordState.isDoNotSelect ||
-            keywordState.selectedKeywords.isNotEmpty);
+        userState.selectedMajors.isNotEmpty &&
+        (userState.doNotSelectKeywords ||
+            userState.selectedKeywords.isNotEmpty);
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -40,7 +38,7 @@ class ScreenIntroSelect extends ConsumerWidget {
                 '관심 학과와 키워드를 선택해주세요😀\n(학과는 최대 2개까지 가능)',
                 textAlign: TextAlign.left,
                 style: TextStyle(
-                  color: Colors.black.withOpacity(0.9),
+                  color: Colors.black.withAlpha(229),
                   fontSize: 14.sp,
                   fontFamily: 'GmarketSans',
                   fontWeight: FontWeight.w500,
@@ -65,7 +63,7 @@ class ScreenIntroSelect extends ConsumerWidget {
             onPressed:
                 isButtonEnabled
                     ? () {
-                      ref.read(majorProvider.notifier).updateSearchText('');
+                      ref.read(userProvider.notifier).updateSearchText('');
                       Navigator.push(
                         context,
                         MaterialPageRoute(

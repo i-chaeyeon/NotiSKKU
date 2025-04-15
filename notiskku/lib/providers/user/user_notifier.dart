@@ -57,17 +57,11 @@ class UserNotifier extends StateNotifier<UserState> {
   }
 
   // 키워드 선택
-  // "선택하지 않음" 토글 관리
   // "선택하지 않음" 버그 확인하지 않음
   void toggleKeyword(Keyword keyword) {
     final currentKeywords = List<Keyword>.from(state.selectedKeywords);
     if (state.doNotSelectKeywords == true) {
-      state = state.copyWith(
-        selectedKeywords: [],
-        doNotSelectKeywords: !state.doNotSelectKeywords,
-      );
-
-      UserPreferences.saveKeywords([]);
+      toggleDoNotSelectKeywords();
     }
     if (currentKeywords.contains(keyword)) {
       currentKeywords.remove(keyword);
@@ -77,6 +71,16 @@ class UserNotifier extends StateNotifier<UserState> {
 
     state = state.copyWith(selectedKeywords: currentKeywords);
     UserPreferences.saveKeywords(currentKeywords);
+  }
+
+  // "선택하지 않음" 토글 관리
+  void toggleDoNotSelectKeywords() {
+    state = state.copyWith(
+      selectedKeywords: [],
+      doNotSelectKeywords: !state.doNotSelectKeywords,
+    );
+
+    UserPreferences.saveKeywords([]);
   }
 
   // 선택된 키워드별 알림 여부 선택
