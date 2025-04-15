@@ -1,10 +1,13 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:notiskku/firebase_options.dart';
 import 'package:notiskku/screen/screen_intro_logo.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart'; // ProviderScope 추가
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(const ProviderScope(child: MyApp()));
 }
 
@@ -20,7 +23,9 @@ class MyApp extends StatelessWidget {
       builder: (context, child) {
         return MaterialApp(
           theme: ThemeData(
-            colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF0B5B42)),
+            colorScheme: ColorScheme.fromSeed(
+              seedColor: const Color(0xFF0B5B42),
+            ),
           ),
           debugShowCheckedModeBanner: false,
           home: const ScreenLogoIntro(),
