@@ -29,10 +29,6 @@ class _NoticeAppBar extends ConsumerWidget implements PreferredSizeWidget {
                   majorState.selectedMajors.length - 1,
                 )]
                 .major;
-    // final selectedMajorsText =
-    //     majorState.selectedMajors.isNotEmpty
-    //         ? majorState.selectedMajors.join(', ')
-    //         : '공지사항';
     return AppBar(
       backgroundColor: Colors.white,
       elevation: 0,
