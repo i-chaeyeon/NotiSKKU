@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:notiskku/widget/popup/popup_ui.dart';
 
 class PrivacyPolicyPopup extends StatelessWidget {
-  const PrivacyPolicyPopup({Key? key}) : super(key: key);
+  const PrivacyPolicyPopup({super.key});
 
   Widget _buildPrivacyContent() {
     return SingleChildScrollView(

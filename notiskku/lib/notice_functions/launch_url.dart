@@ -6,9 +6,7 @@ class LaunchUrlService {
     final Uri uri = Uri.parse(Uri.encodeFull(url));
     if (await canLaunchUrl(uri)) {
       await launchUrl(uri, mode: LaunchMode.externalApplication);
-      print("launch success\n");
     } else {
-      print("Could not launch, invalid URL: $url");
       throw 'Could not launch $url';
     }
 

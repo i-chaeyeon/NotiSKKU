@@ -25,15 +25,19 @@ class DialogLimitMajor extends StatelessWidget {
           Text('전공은 최대 두 개까지 선택할 수 있습니다.', style: TextStyle(fontSize: 14.sp)),
           SizedBox(height: 10.h),
           Text(
-            "선택한 전공:\n${selectedMajors.join('\n')}",
-            style: TextStyle(fontSize: 13.sp),
+            "선택한 전공:",
+            style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w800),
           ),
+          Text(selectedMajors.join('\n'), style: TextStyle(fontSize: 13.sp)),
         ],
       ),
       actions: [
         TextButton(
           onPressed: () => Navigator.of(context).pop(),
-          child: Text('확인', style: TextStyle(fontSize: 16.sp, color: Colors.black)),
+          child: Text(
+            '확인',
+            style: TextStyle(fontSize: 16.sp, color: Colors.black),
+          ),
         ),
       ],
     );
