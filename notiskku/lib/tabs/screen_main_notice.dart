@@ -3,7 +3,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:notiskku/data/major_data.dart';
 import 'package:notiskku/providers/bar_providers.dart';
-import 'package:notiskku/providers/list_notices_provider.dart';
 import 'package:notiskku/providers/selected_major_provider.dart';
 import 'package:notiskku/providers/user/user_provider.dart';
 import 'package:notiskku/tabs/screen_main_search.dart';
@@ -149,20 +148,54 @@ class ScreenMainNotice extends ConsumerWidget {
     final currentDept =
         majors.firstWhere((m) => m.major == currentMajor).department;
 
+    final currentCategory = ref.watch(barCategoriesProvider);
+    String getCategory(Categories category) {
+      switch (category) {
+        case Categories.all:
+          return '[전체]';
+        case Categories.academics:
+          return '[학사]';
+        case Categories.admission:
+          return '[입학]';
+        case Categories.employment:
+          return '[취업]';
+        case Categories.recruitment:
+          return '[채용/모집]';
+        case Categories.scholarship:
+          return '[장학]';
+        case Categories.eventsAndSeminars:
+          return '[행사/세미나]';
+        case Categories.general:
+          return '[일반]';
+      }
+    }
+
     Future<Widget> getNoticesWidget(
       Notices type,
       String department,
       String major,
+      Categories category,
     ) async {
       late QuerySnapshot snapshot;
+      final currentCategoryLabel = getCategory(currentCategory);
 
       if (type == Notices.common) {
-        snapshot =
-            await FirebaseFirestore.instance
-                .collection('notices')
-                .where('type', isEqualTo: "전체")
-                .orderBy('date', descending: true)
-                .get();
+        if (currentCategoryLabel == '[전체]') {
+          snapshot =
+              await FirebaseFirestore.instance
+                  .collection('notices')
+                  .where('type', isEqualTo: "전체")
+                  .orderBy('date', descending: true)
+                  .get();
+        } else {
+          snapshot =
+              await FirebaseFirestore.instance
+                  .collection('notices')
+                  .where('type', isEqualTo: "전체")
+                  .where('category', isEqualTo: currentCategoryLabel)
+                  .orderBy('date', descending: true)
+                  .get();
+        }
       } else if (type == Notices.dept) {
         snapshot =
             await FirebaseFirestore.instance
@@ -202,7 +235,12 @@ class ScreenMainNotice extends ConsumerWidget {
           SizedBox(height: 10.h),
           Expanded(
             child: FutureBuilder<Widget>(
-              future: getNoticesWidget(typeState, currentDept, currentMajor),
+              future: getNoticesWidget(
+                typeState,
+                currentDept,
+                currentMajor,
+                currentCategory,
+              ),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(child: CircularProgressIndicator());
