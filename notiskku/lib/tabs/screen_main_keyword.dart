@@ -3,9 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:notiskku/models/keyword.dart';
-import 'package:notiskku/models/notice.dart';
-import 'package:notiskku/providers/list_notices_provider.dart';
-import 'package:notiskku/providers/user/user_provider.dart';
 import 'package:notiskku/widget/bar/bar_keywords.dart';
 import 'package:notiskku/widget/list/list_notices.dart';
 

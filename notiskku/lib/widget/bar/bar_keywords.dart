@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:notiskku/models/keyword.dart';
-import 'package:notiskku/providers/keyword_provider.dart';
-import 'package:notiskku/providers/list_notices_provider.dart';
 import 'package:notiskku/providers/user/user_provider.dart';
 import 'package:notiskku/widget/side_scroll.dart';
 
@@ -56,7 +54,6 @@ class _BarKeywordsState extends ConsumerState<BarKeywords> {
                         onTap: () {
                           ref.read(selectedKeywordProvider.notifier).state =
                               keyword;
-                          ref.invalidate(listNoticesProvider);
                         },
                         child: Container(
                           padding: EdgeInsets.symmetric(
