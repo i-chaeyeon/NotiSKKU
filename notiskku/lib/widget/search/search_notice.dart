@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:notiskku/providers/recent_search_provider.dart';
 import 'package:notiskku/providers/user/user_provider.dart';
 
 class SearchNotice extends ConsumerStatefulWidget {
