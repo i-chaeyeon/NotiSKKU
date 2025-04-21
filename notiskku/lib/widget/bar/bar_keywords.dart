@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:notiskku/models/keyword.dart';
 import 'package:notiskku/providers/keyword_provider.dart';
 import 'package:notiskku/providers/list_notices_provider.dart';
+import 'package:notiskku/providers/user/user_provider.dart';
 import 'package:notiskku/widget/side_scroll.dart';
 
 // 선택된 키워드 상태 관리용 Provider
@@ -21,8 +22,8 @@ class _BarKeywordsState extends ConsumerState<BarKeywords> {
 
   @override
   Widget build(BuildContext context) {
-    final selectedKeywordsState = ref.watch(keywordProvider);
-    final selectedKeywordsList = selectedKeywordsState.selectedKeywords;
+    final userState = ref.watch(userProvider);
+    final savedKeywordList = userState.selectedKeywords;
     final selectedKeyword = ref.watch(selectedKeywordProvider);
 
     return Column(
@@ -45,16 +46,16 @@ class _BarKeywordsState extends ConsumerState<BarKeywords> {
                 controller: _scrollController,
                 scrollDirection: Axis.horizontal,
                 child: Row(
-                  children: List.generate(selectedKeywordsList.length, (index) {
-                    final currentKeyword = selectedKeywordsList[index];
-                    final isSelected = currentKeyword == selectedKeyword;
+                  children: List.generate(savedKeywordList.length, (index) {
+                    final keyword = savedKeywordList[index];
+                    final isSelected = keyword == selectedKeyword;
 
                     return Padding(
                       padding: EdgeInsets.only(left: 7.w),
                       child: GestureDetector(
                         onTap: () {
                           ref.read(selectedKeywordProvider.notifier).state =
-                              currentKeyword;
+                              keyword;
                           ref.invalidate(listNoticesProvider);
                         },
                         child: Container(
@@ -65,12 +66,12 @@ class _BarKeywordsState extends ConsumerState<BarKeywords> {
                           decoration: BoxDecoration(
                             color:
                                 isSelected
-                                    ? const Color(0xB20B5B42) // 선택 시 초록빛
-                                    : const Color(0x99D9D9D9), // 기본 회색
+                                    ? const Color(0xB20B5B42)
+                                    : const Color(0x99D9D9D9),
                             borderRadius: BorderRadius.circular(20.r),
                           ),
                           child: Text(
-                            currentKeyword.keyword,
+                            keyword.keyword,
                             style: TextStyle(
                               color:
                                   isSelected
