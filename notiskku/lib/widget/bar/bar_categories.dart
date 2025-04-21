@@ -8,7 +8,7 @@ class BarCategories extends ConsumerStatefulWidget {
   const BarCategories({super.key});
 
   @override
-  _BarCategoriesState createState() => _BarCategoriesState();
+  createState() => _BarCategoriesState();
 }
 
 class _BarCategoriesState extends ConsumerState<BarCategories> {

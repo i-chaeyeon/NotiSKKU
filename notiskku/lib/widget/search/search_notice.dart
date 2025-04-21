@@ -9,9 +9,7 @@ class SearchNotice extends ConsumerStatefulWidget {
   const SearchNotice({super.key, required this.onSearch});
 
   @override
-  _SearchNoticeState createState() {
-    return _SearchNoticeState();
-  }
+  createState() => _SearchNoticeState();
 }
 
 class _SearchNoticeState extends ConsumerState<SearchNotice> {

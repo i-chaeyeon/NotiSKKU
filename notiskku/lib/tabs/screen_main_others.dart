@@ -14,25 +14,22 @@ import 'package:notiskku/widget/popup/version_notice_popup.dart';
 
 import 'package:notiskku/edit/screen_main_major_edit.dart';
 import 'package:notiskku/edit/screen_main_keyword_edit.dart';
-import 'package:notiskku/widget/popup/privacy_policy.dart'; 
+import 'package:notiskku/widget/popup/privacy_policy.dart';
 import 'package:notiskku/widget/popup/service_intro.dart';
-import 'package:notiskku/widget/popup/terms_service.dart';   
+import 'package:notiskku/widget/popup/terms_service.dart';
 
 class ScreenMainOthers extends StatelessWidget {
   const ScreenMainOthers({super.key});
 
   Future<void> _openSettings() async {
-    if (Platform.isAndroid) {
-      // Android 알림 설정 화면으로 이동
-      const url = 'app-settings:';
-      if (await canLaunch(url)) {
-        await launch(url);
-      }
-    } else if (Platform.isIOS) {
-      // iOS 알림 설정 화면으로 이동
-      await launch('app-settings:');
+    final uri = Uri.parse(
+      Platform.isAndroid ? 'app-settings:' : 'app-settings:',
+    );
+
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri);
     } else {
-      print("This platform does not support settings redirection.");
+      debugPrint("This platform does not support settings redirection.");
     }
   }
 
@@ -124,7 +121,11 @@ class ScreenMainOthers extends StatelessWidget {
                 _buildSectionTitle('정보'),
                 _buildListItem(context, '  개인정보처리방침', showPrivacyPopup: true),
                 _buildListItem(context, '  이용 약관', showTermsPopup: true),
-                _buildListItem(context, '  서비스 소개', showServiceIntroPopup: true),
+                _buildListItem(
+                  context,
+                  '  서비스 소개',
+                  showServiceIntroPopup: true,
+                ),
               ],
             ),
           ),
@@ -155,66 +156,72 @@ class ScreenMainOthers extends StatelessWidget {
       ),
     );
   }
-Widget _buildListItem(
-   BuildContext context,
-   String title, {
-   bool showFAQPopup = false,
-   bool showInquiryPopup = false,
-   bool showVersionPopup = false,
-   bool showPrivacyPopup = false,      // ① 개인정보처리방침 팝업용
-   bool showTermsPopup = false,        // ② 이용약관 팝업용
-   bool showServiceIntroPopup = false, // ③ 서비스 소개 팝업용
-   bool openSettings = false,
-   VoidCallback? onTap,
- }) {
-   return ListTile(
-     title: Text(title, style: TextStyle(fontSize: 19.sp, color: Colors.black)),
-     trailing: const Icon(Icons.arrow_forward_ios, color: Colors.black),
-     onTap: () {
-       // 우선 onTap 콜백이 있으면 우선 실행 후 return
-       if (onTap != null) {
-         onTap();
-         return;
-       }
-       if (showFAQPopup) {
-         showDialog(
-           context: context,
-           builder: (BuildContext context) => const FAQPopup(),
-         );
-       } else if (showInquiryPopup) {
-         showDialog(
-           context: context,
-           builder: (BuildContext context) => const FeedbackPopup(),
-         );
-       } else if (showVersionPopup) {
-         showDialog(
-           context: context,
-           builder: (BuildContext context) => const VersionNoticePopup(),
-         );
-       } else if (showPrivacyPopup) {  // ② 여기서 팝업 띄움
-         showDialog(
-           context: context,
-           builder: (BuildContext context) => const PrivacyPolicyPopup(),
-         );
-       } else if (showTermsPopup) {  // ③ 여기서 팝업 띄움
-         showDialog(
-           context: context,
-           builder: (BuildContext context) => const TermsOfServicePopup(),
-         );
-       } else if (showServiceIntroPopup) {
-         showDialog(
-           context: context,
-           builder: (BuildContext context) => const ServiceIntroPopup(),
-         );
-       } else if (openSettings) {
-         _openSettings();
-       }
-       // 알림 설정 화면으로 이동
- 
-       if (openSettings) {
-         _openSettings();
-       }
-     },
-   );
+
+  Widget _buildListItem(
+    BuildContext context,
+    String title, {
+    bool showFAQPopup = false,
+    bool showInquiryPopup = false,
+    bool showVersionPopup = false,
+    bool showPrivacyPopup = false, // ① 개인정보처리방침 팝업용
+    bool showTermsPopup = false, // ② 이용약관 팝업용
+    bool showServiceIntroPopup = false, // ③ 서비스 소개 팝업용
+    bool openSettings = false,
+    VoidCallback? onTap,
+  }) {
+    return ListTile(
+      title: Text(
+        title,
+        style: TextStyle(fontSize: 19.sp, color: Colors.black),
+      ),
+      trailing: const Icon(Icons.arrow_forward_ios, color: Colors.black),
+      onTap: () {
+        // 우선 onTap 콜백이 있으면 우선 실행 후 return
+        if (onTap != null) {
+          onTap();
+          return;
+        }
+        if (showFAQPopup) {
+          showDialog(
+            context: context,
+            builder: (BuildContext context) => const FAQPopup(),
+          );
+        } else if (showInquiryPopup) {
+          showDialog(
+            context: context,
+            builder: (BuildContext context) => const FeedbackPopup(),
+          );
+        } else if (showVersionPopup) {
+          showDialog(
+            context: context,
+            builder: (BuildContext context) => const VersionNoticePopup(),
+          );
+        } else if (showPrivacyPopup) {
+          // ② 여기서 팝업 띄움
+          showDialog(
+            context: context,
+            builder: (BuildContext context) => const PrivacyPolicyPopup(),
+          );
+        } else if (showTermsPopup) {
+          // ③ 여기서 팝업 띄움
+          showDialog(
+            context: context,
+            builder: (BuildContext context) => const TermsOfServicePopup(),
+          );
+        } else if (showServiceIntroPopup) {
+          showDialog(
+            context: context,
+            builder: (BuildContext context) => const ServiceIntroPopup(),
+          );
+        } else if (openSettings) {
+          _openSettings();
+        }
+        // 알림 설정 화면으로 이동
+
+        if (openSettings) {
+          _openSettings();
+        }
+      },
+    );
   }
 }

@@ -1,11 +1,11 @@
 import 'dart:convert';
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
 Future<List<Appointment>> loadAppointments() async {
-  final String jsonString =
-      await rootBundle.loadString('assets/data/academic_calendar.json');
+  final String jsonString = await rootBundle.loadString(
+    'assets/data/academic_calendar.json',
+  );
   final Map<String, dynamic> jsonData = json.decode(jsonString);
 
   final String colorDarkBlue = jsonData['colorDarkBlue']; // "#0B425B"
@@ -34,7 +34,7 @@ String _resolveColor(String colorKey, Map<String, String> colorMap) {
 Color _hexToColor(String hex) {
   hex = hex.replaceAll('#', '');
   if (hex.length == 6) {
-    hex = 'FF' + hex;
+    hex = 'FF$hex';
   }
   return Color(int.parse(hex, radix: 16));
 }
