@@ -60,7 +60,7 @@ class _ScreenMainKeywordEditState extends ConsumerState<ScreenMainKeywordEdit> {
                 '관심 키워드를 선택해주세요😀',
                 textAlign: TextAlign.left,
                 style: TextStyle(
-                  color: Colors.black.withOpacity(0.9),
+                  color: Colors.black.withValues(alpha: 0.1),
                   fontSize: 14.sp,
                   fontFamily: 'GmarketSans',
                   fontWeight: FontWeight.w500,

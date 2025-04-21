@@ -50,7 +50,7 @@ class ScreenMainCalender extends StatelessWidget {
               todayHighlightColor: const Color(0xFF0B5B42),
               selectionDecoration: BoxDecoration(
                 border: Border.all(
-                  color: const Color(0xFF0B5B42).withOpacity(0.2),
+                  color: Color.fromRGBO(11, 91, 66, 0.2),
                   width: 2.w,
                 ), // 테두리 초록색
               ),

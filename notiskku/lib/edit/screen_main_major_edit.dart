@@ -48,7 +48,7 @@ class ScreenMainMajorEdit extends ConsumerWidget {
                 '관심 학과를 선택해주세요😀\n(학과는 최대 2개까지 가능)',
                 textAlign: TextAlign.left,
                 style: TextStyle(
-                  color: Colors.black.withOpacity(0.9),
+                  color: Colors.black.withValues(alpha: 0.1),
                   fontSize: 14.sp,
                   fontFamily: 'GmarketSans',
                   fontWeight: FontWeight.w500,
