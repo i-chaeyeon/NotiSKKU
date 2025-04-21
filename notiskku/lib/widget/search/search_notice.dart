@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:notiskku/providers/recent_search_provider.dart';
+import 'package:notiskku/providers/user/user_provider.dart';
 
 class SearchNotice extends ConsumerStatefulWidget {
   final Function(String, bool) onSearch; //검색 실행 후 상태를 부모위젯젯에게 전달
@@ -40,7 +41,7 @@ class _SearchNoticeState extends ConsumerState<SearchNotice> {
     if (!isSearchEnabled) return;
     final searchText = _titleController.text.trim();
     if (searchText.isNotEmpty) {
-      ref.read(recentSearchProvider.notifier).searchWord(searchText);
+      ref.read(userProvider.notifier).addRecentSearch(searchText);
       widget.onSearch(searchText, true); // 검색 실행 상태 전달 !!
       FocusScope.of(context).unfocus(); // 키보드 닫기
     }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:notiskku/providers/recent_search_provider.dart';
+import 'package:notiskku/providers/user/user_provider.dart';
 
 class ListRecentSearch extends ConsumerStatefulWidget {
   const ListRecentSearch({super.key});
@@ -13,7 +13,7 @@ class ListRecentSearch extends ConsumerStatefulWidget {
 class ListRecentSearchState extends ConsumerState<ListRecentSearch> {
   @override
   Widget build(BuildContext context) {
-    final searchedTexts = ref.watch(recentSearchProvider).searchedTexts;
+    final searchedTexts = ref.watch(userProvider).recentSearchedText;
 
     return Flexible(
       child: ListView.builder(
@@ -38,8 +38,8 @@ class ListRecentSearchState extends ConsumerState<ListRecentSearch> {
                 GestureDetector(
                   onTap: () {
                     ref
-                        .read(recentSearchProvider.notifier)
-                        .deleteWord(searchedTexts[reversedIndex]);
+                        .read(userProvider.notifier)
+                        .deleteRecentSearch(searchedTexts[reversedIndex]);
                   },
                   child: Icon(Icons.close, color: Colors.black, size: 20.w),
                 ),
