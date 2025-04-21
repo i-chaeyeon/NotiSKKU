@@ -15,6 +15,7 @@ class _ListSearchResultsState extends State<ListSearchResults> {
     final snapshot =
         await FirebaseFirestore.instance
             .collection('notices')
+            .where('type', isEqualTo: "전체")
             .orderBy('date', descending: true)
             .get();
 
