@@ -26,17 +26,19 @@ class ListStarredNotices extends ConsumerWidget {
           await FirebaseFirestore.instance
               .collection('notices')
               .where(FieldPath.documentId, whereIn: hashes)
-              .orderBy('date', descending: true)
               .get();
 
-      final notices =
-          snapshot.docs.map((doc) {
-            final data = doc.data();
-            data['hash'] = doc.id;
-            return data;
-          }).toList();
+      final noticeMap = {
+        for (var doc in snapshot.docs) doc.id: {...doc.data(), 'hash': doc.id},
+      };
 
-      return ListNotices(notices: notices);
+      final orderedNotices =
+          hashes.reversed
+              .where((hash) => noticeMap.containsKey(hash))
+              .map((hash) => noticeMap[hash]!)
+              .toList();
+
+      return ListNotices(notices: orderedNotices);
     }
 
     return Expanded(
