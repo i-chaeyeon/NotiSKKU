@@ -37,7 +37,7 @@ class _ScreenMainTabsState extends State<ScreenMainTabs> {
   final List<Widget> _pages = const [
     ScreenMainNotice(),
     ScreenMainKeyword(),
-    // ScreenMainBox(),
+    ScreenMainBox(),
     ScreenMainCalender(),
     ScreenMainOthers(),
   ];
