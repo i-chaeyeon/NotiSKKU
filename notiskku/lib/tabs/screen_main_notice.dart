@@ -231,8 +231,10 @@ class ScreenMainNotice extends ConsumerWidget {
         children: [
           BarNotices(),
           SizedBox(height: 6.h),
-          BarCategories(),
-          SizedBox(height: 10.h),
+          if (typeState == Notices.common) ...[
+            BarCategories(),
+            SizedBox(height: 10.h),
+          ],
           Expanded(
             child: FutureBuilder<Widget>(
               future: getNoticesWidget(

@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:notiskku/providers/user/user_provider.dart';
-import 'package:notiskku/tabs/screen_main_search.dart';
-import 'package:notiskku/widget/list/list_search_results.dart';
 
 class ListRecentSearch extends ConsumerStatefulWidget {
   final void Function(String searchText)? onTapRecentSearch;
