@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:notiskku/providers/keyword_provider.dart';
+import 'package:notiskku/providers/user/user_provider.dart';
 import 'package:notiskku/widget/button/wide_condition.dart';
 import 'package:notiskku/widget/search/search_keyword.dart';
 import 'package:notiskku/widget/list/list_keyword.dart';
@@ -26,10 +26,10 @@ class _ScreenMainKeywordEditState extends ConsumerState<ScreenMainKeywordEdit> {
 
   @override
   Widget build(BuildContext context) {
-    final keywordState = ref.watch(keywordProvider);
+    final userState = ref.watch(userProvider);
     // "설정 완료" 버튼 활성화 조건 (예시로 선택된 키워드가 있거나 '선택하지 않음'이면 활성화)
     final isButtonEnabled =
-        keywordState.selectedKeywords.isNotEmpty || keywordState.isDoNotSelect;
+        userState.selectedKeywords.isNotEmpty || userState.doNotSelectKeywords;
 
     return Scaffold(
       appBar: AppBar(

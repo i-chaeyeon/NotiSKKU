@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:notiskku/providers/bar_providers.dart';
-import 'package:notiskku/providers/list_notices_provider.dart';
 import 'package:notiskku/widget/side_scroll.dart';
 
 class BarCategories extends ConsumerStatefulWidget {
@@ -34,8 +33,7 @@ class _BarCategoriesState extends ConsumerState<BarCategories> {
                     onTap: () {
                       // 선택된 카테고리 변경
                       notifier.state = Categories.values[index];
-                      // 공지 리스트 강제 새로고침 (FutureProvider 다시 실행)
-                      ref.invalidate(listNoticesProvider);
+                      // 공지 리스트 강제 새로고침 (FutureProvider 다시 실행) -> provider 삭제로 오류 발생 가능성 있음(구현 안됨)
                     },
                     child: Padding(
                       padding: EdgeInsets.only(top: 3.w),
