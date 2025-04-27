@@ -67,25 +67,29 @@ class _NoticeAppBar extends ConsumerWidget implements PreferredSizeWidget {
           // 학과 명
           userState.selectedMajors.isEmpty
               ? Flexible(
-                child: Text(
-                  currentMajor,
-                  style: TextStyle(
-                    fontSize: 15.sp,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    '학과를 선택해 주세요',
+                    style: TextStyle(
+                      fontSize: 15.sp,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
                   ),
-                  overflow: TextOverflow.ellipsis,
                 ),
               )
               : Flexible(
-                child: Text(
-                  currentMajor,
-                  style: TextStyle(
-                    fontSize: 18.sp,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    currentMajor,
+                    style: TextStyle(
+                      fontSize: 18.sp,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
                   ),
-                  overflow: TextOverflow.ellipsis,
                 ),
               ),
 
