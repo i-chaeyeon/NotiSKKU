@@ -27,10 +27,7 @@ class DefaultFirebaseOptions {
       case TargetPlatform.macOS:
         return macos;
       case TargetPlatform.windows:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for windows - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return windows;
       case TargetPlatform.linux:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for linux - '
@@ -77,4 +74,14 @@ class DefaultFirebaseOptions {
     storageBucket: 'notiskku-database.firebasestorage.app',
     iosBundleId: 'com.example.notiskku',
   );
+
+  static const FirebaseOptions windows = FirebaseOptions(
+    apiKey: 'AIzaSyDOq4HcsFkWTTgxbLYId1mfoKakZSIluYI',
+    appId: '1:816941767036:web:016a09407dbda24777ecf9',
+    messagingSenderId: '816941767036',
+    projectId: 'notiskku-database',
+    authDomain: 'notiskku-database.firebaseapp.com',
+    storageBucket: 'notiskku-database.firebasestorage.app',
+  );
+
 }
