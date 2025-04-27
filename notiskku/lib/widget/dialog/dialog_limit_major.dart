@@ -6,8 +6,32 @@ class DialogLimitMajor extends StatelessWidget {
 
   const DialogLimitMajor({super.key, required this.selectedMajors});
 
+  // 한글 줄바꿈 개선 함수
+  String applyWordBreakFix(String text) {
+    final RegExp emoji = RegExp(
+      r'(\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])',
+    );
+    String fullText = '';
+    List<String> words = text.split(' ');
+    for (var i = 0; i < words.length; i++) {
+      fullText +=
+          emoji.hasMatch(words[i])
+              ? words[i]
+              : words[i].replaceAllMapped(
+                RegExp(r'(\S)(?=\S)'),
+                (m) => '${m[1]}\u200D',
+              );
+      if (i < words.length - 1) fullText += ' ';
+    }
+    return fullText;
+  }
+
   @override
   Widget build(BuildContext context) {
+    final String fixedInstruction = applyWordBreakFix(
+      '전공은 최대 두 개까지 선택할 수 있습니다.',
+    );
+
     return AlertDialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
       backgroundColor: Colors.white,
@@ -22,7 +46,8 @@ class DialogLimitMajor extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('전공은 최대 두 개까지 선택할 수 있습니다.', style: TextStyle(fontSize: 14.sp)),
+          // Text('전공은 최대 두 개까지 선택할 수 있습니다.', style: TextStyle(fontSize: 14.sp)),
+          Text(fixedInstruction, style: TextStyle(fontSize: 14.sp)),
           SizedBox(height: 10.h),
           Text(
             "선택한 전공:",

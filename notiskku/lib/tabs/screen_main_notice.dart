@@ -56,50 +56,55 @@ class _NoticeAppBar extends ConsumerWidget implements PreferredSizeWidget {
         children: [
           // 좌측 화살표
           userState.selectedMajors.length > 1
-              ? GestureDetector(
-                onTap: () {
+              ?
+              IconButton(
+                icon: const Icon(Icons.chevron_left, color: Colors.black),
+                onPressed: () {
                   _updateMajorIndex(ref, true, userState.selectedMajors.length);
                 },
-                child: const Icon(Icons.chevron_left, color: Colors.black),
+                // splashRadius: 20.r, // 터치 효과 반경 조정 (선택사항임)
               )
               : const SizedBox.shrink(),
-
           // 학과 명
           userState.selectedMajors.isEmpty
               ? Flexible(
-                child: Text(
-                  currentMajor,
-                  style: TextStyle(
-                    fontSize: 15.sp,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    '학과를 선택해 주세요',
+                    style: TextStyle(
+                      fontSize: 15.sp,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
                   ),
-                  overflow: TextOverflow.ellipsis,
                 ),
               )
               : Flexible(
-                child: Text(
-                  currentMajor,
-                  style: TextStyle(
-                    fontSize: 18.sp,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    currentMajor,
+                    style: TextStyle(
+                      fontSize: 18.sp,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
                   ),
-                  overflow: TextOverflow.ellipsis,
                 ),
               ),
-
           // 우측 화살표
           userState.selectedMajors.length > 1
-              ? GestureDetector(
-                onTap: () {
+              ? IconButton(
+                icon: const Icon(Icons.chevron_right, color: Colors.black),
+                onPressed: () {
                   _updateMajorIndex(
                     ref,
                     false,
                     userState.selectedMajors.length,
                   );
                 },
-                child: const Icon(Icons.chevron_right, color: Colors.black),
+                // splashRadius: 20.r,
               )
               : const SizedBox.shrink(),
         ],

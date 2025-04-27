@@ -8,12 +8,12 @@ Future<List<Appointment>> loadAppointments() async {
   );
   final Map<String, dynamic> jsonData = json.decode(jsonString);
 
-  final String colorDarkBlue = jsonData['colorDarkBlue']; // "#0B425B"
+  final String colorDarkGreen = jsonData['colorDarkGreen']; // "#0B5B42"
   final List<dynamic> events = jsonData['events'];
 
   return events.map((data) {
     final String colorString = _resolveColor(data['color'], {
-      'colorDarkBlue': colorDarkBlue,
+      'colorDarkGreen': colorDarkGreen,
     });
     final Color color = _hexToColor(colorString);
 
