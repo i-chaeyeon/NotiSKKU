@@ -21,10 +21,20 @@ class ScreenIntroAlarm extends ConsumerWidget {
     final selectedKeywords = ref.watch(userProvider).selectedKeywords;
 
     return Scaffold(
+      // ▶ AppBar 추가
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.black, size: 24.w),
+          onPressed: () => Navigator.pop(context),
+        ),
+      ),
+      
       backgroundColor: Colors.white,
       body: Column(
         children: [
-          SizedBox(height: 80.h),
+          SizedBox(height: 20.h),
 
           Align(
             alignment: Alignment.centerLeft,

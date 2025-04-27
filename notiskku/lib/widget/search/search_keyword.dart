@@ -1,17 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:notiskku/providers/user/user_provider.dart';
 
-class SearchKeyword extends StatelessWidget {
-  final TextEditingController controller;
-  final Function(String) onChanged;
-  final VoidCallback onClear;
+class SearchKeyword extends ConsumerStatefulWidget {
+  const SearchKeyword({super.key});
 
-  const SearchKeyword({
-    super.key,
-    required this.controller,
-    required this.onChanged,
-    required this.onClear,
-  });
+  @override
+  ConsumerState<SearchKeyword> createState() => _SearchKeywordState();
+}
+
+class _SearchKeywordState extends ConsumerState<SearchKeyword> {
+  final TextEditingController _controller = TextEditingController();
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +33,7 @@ class SearchKeyword extends StatelessWidget {
           children: [
             Expanded(
               child: TextField(
-                controller: controller,
+                controller: _controller,
                 maxLength: 50,
                 style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w400),
                 decoration: InputDecoration(
@@ -39,22 +45,45 @@ class SearchKeyword extends StatelessWidget {
                   counterText: '',
                   border: InputBorder.none,
                 ),
-                onChanged: onChanged,
+                onChanged: (text) {
+                  // 검색어가 바뀔 때마다 userProvider에 상태 업데이트
+                  ref.read(userProvider.notifier).updateSearchText(text);
+                  setState(() {}); // X 버튼 토글용
+                },
               ),
             ),
-            Align(
-              alignment: Alignment.centerRight,
-              child: GestureDetector(
-                onTap: onClear,
-                child: Padding(
-                  padding: const EdgeInsets.all(9.0),
-                  child: Image.asset(
-                    'assets/images/green_search.png',
-                    width: 37.w,
-                    fit: BoxFit.contain,
+            Row(
+              children: [
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: IconButton(
+                    onPressed: () {
+                      _controller.clear();
+                      ref.read(userProvider.notifier).updateSearchText('');
+                    },
+                    icon: const Icon(Icons.cancel, color: Color(0xff979797)),
+                    padding: EdgeInsets.zero,
+                    splashRadius: 10.w, // 터치 효과 반경 설정
                   ),
                 ),
-              ),
+
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: GestureDetector(
+                    onTap: () {
+                      _controller.clear();
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.all(9.0),
+                      child: Image.asset(
+                        'assets/images/green_search.png',
+                        width: 37.w,
+                        fit: BoxFit.contain,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ],
         ),
