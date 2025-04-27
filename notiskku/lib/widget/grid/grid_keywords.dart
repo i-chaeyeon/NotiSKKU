@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:notiskku/models/keyword.dart';
-import 'package:notiskku/providers/keyword_provider.dart';
 import 'package:notiskku/data/keyword_data.dart';
+import 'package:notiskku/providers/user/user_provider.dart';
 
 class GridKeywords extends ConsumerWidget {
   const GridKeywords({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final keywordState = ref.watch(keywordProvider);
-    final keywordNotifier = ref.read(keywordProvider.notifier);
+    final userState = ref.watch(userProvider);
+    final userNotifier = ref.read(userProvider.notifier);
 
     return Column(
       children: [
@@ -21,8 +21,8 @@ class GridKeywords extends ConsumerWidget {
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 30.w),
           child: _DoNotSelectButton(
-            isSelected: keywordState.isDoNotSelect,
-            onPressed: () => keywordNotifier.toggleDoNotSelect(),
+            isSelected: userState.doNotSelectKeywords,
+            onPressed: () => userNotifier.toggleDoNotSelectKeywords(),
           ),
         ),
         SizedBox(height: 25.h),
@@ -43,11 +43,11 @@ class GridKeywords extends ConsumerWidget {
               Keyword matchedKeyword = keywords.firstWhere(
                 (k) => k.keyword == keyword,
               );
-              final isSelected = keywordState.selectedKeywords.contains(
+              final isSelected = userState.selectedKeywords.contains(
                 matchedKeyword,
               );
               return GestureDetector(
-                onTap: () => keywordNotifier.toggleKeyword(matchedKeyword),
+                onTap: () => userNotifier.toggleKeyword(matchedKeyword),
                 child: Container(
                   width: 86.w,
                   height: 37.h,

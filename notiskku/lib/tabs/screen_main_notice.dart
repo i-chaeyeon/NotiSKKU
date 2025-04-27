@@ -1,38 +1,48 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:notiskku/providers/major_provider.dart';
-import 'package:notiskku/providers/list_notices_provider.dart';
+import 'package:notiskku/data/major_data.dart';
+import 'package:notiskku/providers/bar_providers.dart';
 import 'package:notiskku/providers/selected_major_provider.dart';
+import 'package:notiskku/providers/user/user_provider.dart';
 import 'package:notiskku/tabs/screen_main_search.dart';
 import 'package:notiskku/widget/bar/bar_categories.dart';
 import 'package:notiskku/widget/bar/bar_notices.dart';
 import 'package:notiskku/widget/list/list_notices.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class _NoticeAppBar extends ConsumerWidget implements PreferredSizeWidget {
   const _NoticeAppBar();
 
+  void _updateMajorIndex(WidgetRef ref, bool isLeft, int listLength) {
+    final notifier = ref.read(selectedMajorIndexProvider.notifier);
+    final currentIndex = ref.read(selectedMajorIndexProvider);
+
+    final newIndex =
+        isLeft
+            ? (currentIndex - 1 + listLength) % listLength
+            : (currentIndex + 1) % listLength;
+
+    notifier.state = newIndex;
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final majorState = ref.watch(majorProvider);
+    final userState = ref.watch(userProvider);
     final majorIndex = ref.watch(selectedMajorIndexProvider);
-    final majorIndexNotifier = ref.read(selectedMajorIndexProvider.notifier);
 
+    // currentMajor에 현재 화면에 렌더링 되는 학과가 선택됨
     String currentMajor = '';
-
-    majorState.selectedMajors.isEmpty
+    userState.selectedMajors.isEmpty
         ? currentMajor = ' '
         : currentMajor =
-            majorState
+            userState
                 .selectedMajors[majorIndex.clamp(
                   0,
-                  majorState.selectedMajors.length - 1,
+                  userState.selectedMajors.length - 1,
                 )]
                 .major;
-    // final selectedMajorsText =
-    //     majorState.selectedMajors.isNotEmpty
-    //         ? majorState.selectedMajors.join(', ')
-    //         : '공지사항';
+
     return AppBar(
       backgroundColor: Colors.white,
       elevation: 0,
@@ -45,22 +55,17 @@ class _NoticeAppBar extends ConsumerWidget implements PreferredSizeWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           // 좌측 화살표
-          majorState.selectedMajors.length > 1
+          userState.selectedMajors.length > 1
               ? GestureDetector(
                 onTap: () {
-                  if (majorIndex > 0) {
-                    majorIndexNotifier.state--;
-                  } else {
-                    majorIndexNotifier.state++;
-                  }
-                  ref.invalidate(listNoticesProvider);
+                  _updateMajorIndex(ref, true, userState.selectedMajors.length);
                 },
                 child: const Icon(Icons.chevron_left, color: Colors.black),
               )
               : const SizedBox.shrink(),
 
           // 학과 명
-          majorState.selectedMajors.isEmpty
+          userState.selectedMajors.isEmpty
               ? Flexible(
                 child: Text(
                   currentMajor,
@@ -85,15 +90,14 @@ class _NoticeAppBar extends ConsumerWidget implements PreferredSizeWidget {
               ),
 
           // 우측 화살표
-          majorState.selectedMajors.length > 1
+          userState.selectedMajors.length > 1
               ? GestureDetector(
                 onTap: () {
-                  if (majorIndex < majorState.selectedMajors.length - 1) {
-                    majorIndexNotifier.state++;
-                  } else {
-                    majorIndexNotifier.state--;
-                  }
-                  ref.invalidate(listNoticesProvider);
+                  _updateMajorIndex(
+                    ref,
+                    false,
+                    userState.selectedMajors.length,
+                  );
                 },
                 child: const Icon(Icons.chevron_right, color: Colors.black),
               )
@@ -127,7 +131,98 @@ class ScreenMainNotice extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final noticeState = ref.watch(listNoticesProvider);
+    final userState = ref.watch(userProvider);
+    final majorIndex = ref.watch(selectedMajorIndexProvider);
+    final typeState = ref.watch(barNoticesProvider);
+
+    final currentMajor =
+        userState.selectedMajors.isEmpty
+            ? ''
+            : userState
+                .selectedMajors[majorIndex.clamp(
+                  0,
+                  userState.selectedMajors.length - 1,
+                )]
+                .major;
+
+    final currentDept =
+        majors.firstWhere((m) => m.major == currentMajor).department;
+
+    final currentCategory = ref.watch(barCategoriesProvider);
+    String getCategory(Categories category) {
+      switch (category) {
+        case Categories.all:
+          return '[전체]';
+        case Categories.academics:
+          return '[학사]';
+        case Categories.admission:
+          return '[입학]';
+        case Categories.employment:
+          return '[취업]';
+        case Categories.recruitment:
+          return '[채용/모집]';
+        case Categories.scholarship:
+          return '[장학]';
+        case Categories.eventsAndSeminars:
+          return '[행사/세미나]';
+        case Categories.general:
+          return '[일반]';
+      }
+    }
+
+    Future<Widget> getNoticesWidget(
+      Notices type,
+      String department,
+      String major,
+      Categories category,
+    ) async {
+      late QuerySnapshot snapshot;
+      final currentCategoryLabel = getCategory(currentCategory);
+
+      if (type == Notices.common) {
+        if (currentCategoryLabel == '[전체]') {
+          snapshot =
+              await FirebaseFirestore.instance
+                  .collection('notices')
+                  .where('type', isEqualTo: "전체")
+                  .orderBy('date', descending: true)
+                  .get();
+        } else {
+          snapshot =
+              await FirebaseFirestore.instance
+                  .collection('notices')
+                  .where('type', isEqualTo: "전체")
+                  .where('category', isEqualTo: currentCategoryLabel)
+                  .orderBy('date', descending: true)
+                  .get();
+        }
+      } else if (type == Notices.dept) {
+        snapshot =
+            await FirebaseFirestore.instance
+                .collection('notices')
+                .where('department', isEqualTo: department)
+                .orderBy('date', descending: true)
+                .get();
+      } else if (type == Notices.major) {
+        snapshot =
+            await FirebaseFirestore.instance
+                .collection('notices')
+                .where('major', isEqualTo: major)
+                .orderBy('date', descending: true)
+                .get();
+      } else {
+        return const Center(child: Text("잘못된 타입입니다."));
+      }
+
+      final notices =
+          snapshot.docs.map((doc) {
+            final data = doc.data() as Map<String, dynamic>;
+            data['hash'] = doc.id;
+            return data;
+          }).toList();
+
+      return ListNotices(notices: notices);
+    }
 
     return Scaffold(
       appBar: const _NoticeAppBar(),
@@ -136,13 +231,28 @@ class ScreenMainNotice extends ConsumerWidget {
         children: [
           BarNotices(),
           SizedBox(height: 6.h),
-          BarCategories(),
-          SizedBox(height: 10.h),
+          if (typeState == Notices.common) ...[
+            BarCategories(),
+            SizedBox(height: 10.h),
+          ],
           Expanded(
-            child:
-                noticeState.notices.isEmpty
-                    ? const Center(child: CircularProgressIndicator())
-                    : ListNotices(notices: noticeState.notices),
+            child: FutureBuilder<Widget>(
+              future: getNoticesWidget(
+                typeState,
+                currentDept,
+                currentMajor,
+                currentCategory,
+              ),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                } else if (snapshot.hasError) {
+                  return Center(child: Text('오류 발생: ${snapshot.error}'));
+                } else {
+                  return snapshot.data ?? const Center(child: Text('공지 없음'));
+                }
+              },
+            ),
           ),
         ],
       ),

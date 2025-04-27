@@ -9,7 +9,5 @@ class LaunchUrlService {
     } else {
       throw 'Could not launch $url';
     }
-
-    await launchUrl(uri, mode: LaunchMode.externalApplication);
   }
 }

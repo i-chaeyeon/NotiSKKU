@@ -6,11 +6,12 @@ class FeedbackPopup extends StatelessWidget {
   const FeedbackPopup({super.key});
 
   Future<void> _launchChat() async {
-    const url = 'https://open.kakao.com/o/gKYMY3Wg';
-    if (await canLaunch(url)) {
-      await launch(url);
+    final Uri uri = Uri.parse('https://open.kakao.com/o/gKYMv3Wg');
+
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
     } else {
-      throw 'Could not launch $url';
+      throw 'Could not launch $uri';
     }
   }
 

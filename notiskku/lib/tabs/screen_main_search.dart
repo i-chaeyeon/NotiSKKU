@@ -18,7 +18,7 @@ class ScreenMainSearchState extends ConsumerState<ScreenMainSearch> {
   bool isSearched = false;
 
   // 검색 상태 업데이트
-  void _updateSearch(String newText, bool searched) {
+  void updateSearch(String newText, bool searched) {
     setState(() {
       searchText = newText;
       isSearched = searched;
@@ -56,7 +56,7 @@ class ScreenMainSearchState extends ConsumerState<ScreenMainSearch> {
         children: [
           const SizedBox(height: 10),
           SearchNotice(
-            onSearch: _updateSearch,
+            onSearch: updateSearch,
           ), // `onSearch`를 사용하여 검색 실행 시 상태 변경
           SizedBox(height: 5.h),
           // 검색 상태에 따라 '최근 검색 내역' 또는 '검색 결과' 표시
@@ -66,7 +66,7 @@ class ScreenMainSearchState extends ConsumerState<ScreenMainSearch> {
             child: Align(
               alignment: Alignment.centerLeft,
               child: Text(
-                isSearched ? '검색 결과' : '최근 검색 내역',
+                isSearched ? "‘$searchText’에 대한 검색 결과" : '최근 검색 내역',
                 style: TextStyle(
                   color: Colors.black,
                   fontSize: 18.sp,
@@ -80,7 +80,9 @@ class ScreenMainSearchState extends ConsumerState<ScreenMainSearch> {
             child:
                 isSearched
                     ? ListSearchResults(searchText: searchText)
-                    : ListRecentSearch(),
+                    : ListRecentSearch(
+                      onTapRecentSearch: (text) => updateSearch(text, true),
+                    ),
           ),
           SizedBox(height: 10.h),
         ],

@@ -1,21 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:notiskku/providers/keyword_provider.dart';
+import 'package:notiskku/providers/user/user_provider.dart';
 
 class GridAlarmKeyword extends ConsumerWidget {
   const GridAlarmKeyword({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final keywordState = ref.watch(keywordProvider);
-    final keywordNotifier = ref.read(keywordProvider.notifier);
+    final userState = ref.watch(userProvider);
+    final userNotifier = ref.read(userProvider.notifier);
 
-    final selectedKeywords = keywordState.selectedKeywords;
-
-    // if (selectedKeywords.isEmpty) {
-    //   return const Center(child: Text('선택된 키워드가 없습니다.'));
-    // }
+    final selectedKeywords = userState.selectedKeywords;
 
     return Expanded(
       child: Padding(
@@ -41,7 +37,7 @@ class GridAlarmKeyword extends ConsumerWidget {
                     final isSelectedForAlarm = keyword.receiveNotification;
 
                     return GestureDetector(
-                      onTap: () => keywordNotifier.toggleAlarm(keyword),
+                      onTap: () => userNotifier.toggleKeywordAlarm(keyword),
                       child: Container(
                         padding: EdgeInsets.symmetric(vertical: 6.h),
                         decoration: BoxDecoration(

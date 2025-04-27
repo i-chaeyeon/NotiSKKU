@@ -1,15 +1,18 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:notiskku/models/notice.dart';
-import 'package:notiskku/widget/notice_tile.dart';
+import 'package:notiskku/widget/list/list_notices.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:notiskku/providers/user/user_provider.dart';
 
-class ListStarredNotices extends StatelessWidget {
-  final List<Notice> notices;
-
-  const ListStarredNotices({super.key, required this.notices});
+class ListStarredNotices extends ConsumerWidget {
+  const ListStarredNotices({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    if (notices.isEmpty) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final userState = ref.watch(userProvider);
+    final hashedStarredNotices = userState.starredNotices;
+
+    if (hashedStarredNotices.isEmpty) {
       return const Center(
         child: Text(
           '저장된 공지가 없습니다',
@@ -17,12 +20,40 @@ class ListStarredNotices extends StatelessWidget {
         ),
       );
     }
-    return ListView.builder(
-      itemCount: notices.length,
-      itemBuilder: (BuildContext context, int index) {
-        final notice = notices[index];
-        return NoticeTile(notice: notice);
-      },
+
+    Future<Widget> getStarredNoticesWidget(List<String> hashes) async {
+      final snapshot =
+          await FirebaseFirestore.instance
+              .collection('notices')
+              .where(FieldPath.documentId, whereIn: hashes)
+              .get();
+
+      final noticeMap = {
+        for (var doc in snapshot.docs) doc.id: {...doc.data(), 'hash': doc.id},
+      };
+
+      final orderedNotices =
+          hashes.reversed
+              .where((hash) => noticeMap.containsKey(hash))
+              .map((hash) => noticeMap[hash]!)
+              .toList();
+
+      return ListNotices(notices: orderedNotices);
+    }
+
+    return Expanded(
+      child: FutureBuilder<Widget>(
+        future: getStarredNoticesWidget(hashedStarredNotices),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('오류 발생: ${snapshot.error}'));
+          } else {
+            return snapshot.data ?? const Center(child: Text('공지 없음'));
+          }
+        },
+      ),
     );
   }
 }

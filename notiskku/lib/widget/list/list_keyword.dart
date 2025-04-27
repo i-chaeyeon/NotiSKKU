@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 // 데이터 파일에 정의된 키워드 모델 리스트
 import 'package:notiskku/data/keyword_data.dart';
-import 'package:notiskku/providers/keyword_provider.dart';
+import 'package:notiskku/providers/user/user_provider.dart';
 
 class ListKeyword extends ConsumerWidget {
   final String searchText;
@@ -13,15 +13,15 @@ class ListKeyword extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final keywordState = ref.watch(keywordProvider);
-    final keywordNotifier = ref.read(keywordProvider.notifier);
+    final userState = ref.watch(userProvider);
+    final userNotifier = ref.read(userProvider.notifier);
 
     final filteredKeywords =
         keywords.where((k) {
           return k.keyword.toLowerCase().contains(searchText.toLowerCase());
         }).toList();
 
-    final selectedKeywords = keywordState.selectedKeywords;
+    final selectedKeywords = userState.selectedKeywords;
 
     return ListView.builder(
       padding: EdgeInsets.symmetric(horizontal: 30.w, vertical: 10.h),
@@ -30,14 +30,14 @@ class ListKeyword extends ConsumerWidget {
         final keyword = filteredKeywords[index];
         final isSelected = selectedKeywords
             .map((k) => k.keyword)
-            .contains(keyword);
+            .contains(keyword.toString());
         // final isAlarm = keywordState.alarmKeywords.contains(keyword);
         return Column(
           children: [
             GestureDetector(
               onTap: () {
                 // 일반 키워드 선택/해제
-                keywordNotifier.toggleKeyword(keyword);
+                userNotifier.toggleKeyword(keyword);
               },
               child: Container(
                 padding: EdgeInsets.symmetric(vertical: 7.h, horizontal: 10.w),

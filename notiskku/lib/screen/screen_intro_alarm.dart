@@ -1,23 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:notiskku/providers/major_provider.dart';
-import 'package:notiskku/providers/keyword_provider.dart';
+import 'package:notiskku/providers/user/user_provider.dart';
 import 'package:notiskku/screen/screen_intro_ready.dart';
 import 'package:notiskku/widget/grid/grid_alarm_keyword.dart';
 import 'package:notiskku/widget/list/list_alarm_major.dart';
 import 'package:notiskku/widget/button/wide_green.dart';
 import 'package:notiskku/widget/dialog/dialog_no_alarm.dart';
 
-// 알림 받을 학과와 키워드를 선택해주세요
+// AppPreferences 사용해 이후 어플 최초 실행인지 상태 관리 구현 필요
+// AppPreferences는 구현 완료 (세팅하고 쓰면 됨)
+// 제거되는 부분: isFromOthers
 class ScreenIntroAlarm extends ConsumerWidget {
   const ScreenIntroAlarm({super.key, this.isFromOthers = false});
   final bool isFromOthers;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final selectedMajors = ref.watch(majorProvider).selectedMajors;
-    final selectedKeywords = ref.watch(keywordProvider).selectedKeywords;
+    final selectedMajors = ref.watch(userProvider).selectedMajors;
+    final selectedKeywords = ref.watch(userProvider).selectedKeywords;
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -33,7 +34,7 @@ class ScreenIntroAlarm extends ConsumerWidget {
                 '알림 받을 학과와 키워드를 선택해주세요😀\n미선택 시 알림이 발송되지 않습니다.',
                 textAlign: TextAlign.left,
                 style: TextStyle(
-                  color: Colors.black.withOpacity(0.9),
+                  color: Colors.black.withAlpha(229),
                   fontSize: 14.sp,
                   fontFamily: 'GmarketSans',
                   fontWeight: FontWeight.w500,

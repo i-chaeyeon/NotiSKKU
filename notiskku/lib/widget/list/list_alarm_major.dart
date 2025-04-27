@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:notiskku/providers/major_provider.dart';
+import 'package:notiskku/providers/user/user_provider.dart';
 
 class ListAlarmMajor extends ConsumerWidget {
   const ListAlarmMajor({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final majorState = ref.watch(majorProvider);
-    final majorNotifier = ref.read(majorProvider.notifier);
+    final userState = ref.watch(userProvider);
+    final userNotifier = ref.read(userProvider.notifier);
 
-    final filteredMajors = majorState.selectedMajors;
+    final filteredMajors = userState.selectedMajors;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -20,7 +20,7 @@ class ListAlarmMajor extends ConsumerWidget {
             final isSelected = major.receiveNotification;
 
             return GestureDetector(
-              onTap: () => majorNotifier.toggleAlarm(major),
+              onTap: () => userNotifier.toggleMajorAlarm(major),
               child: FractionallySizedBox(
                 widthFactor: 0.85, // 버튼 너비 동일 유지
                 child: Container(

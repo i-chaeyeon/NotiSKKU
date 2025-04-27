@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:notiskku/models/notice.dart';
-import 'package:notiskku/providers/starred_provider.dart';
 import 'package:notiskku/edit/screen_main_box_edit.dart';
 import 'package:notiskku/widget/list/list_starred_notices.dart';
 
@@ -21,8 +20,6 @@ class _ScreenMainBoxState extends ConsumerState<ScreenMainBox> {
 
   @override
   Widget build(BuildContext context) {
-    final starredNotices = ref.watch(starredProvider).starredNotices;
-
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -95,7 +92,7 @@ class _ScreenMainBoxState extends ConsumerState<ScreenMainBox> {
       body: Column(
         children: [
           SizedBox(height: 10.h),
-          Expanded(child: ListStarredNotices(notices: starredNotices)),
+          Expanded(child: ListStarredNotices()),
         ],
       ),
     );

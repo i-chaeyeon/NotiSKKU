@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 // MajorProvider와 ListMajor 위젯을 사용하기 위해 import
-import 'package:notiskku/providers/major_provider.dart';
+import 'package:notiskku/providers/user/user_provider.dart';
 import 'package:notiskku/widget/button/wide_condition.dart';
 import 'package:notiskku/widget/list/list_major.dart';
 
@@ -13,11 +13,11 @@ class ScreenMainMajorEdit extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // majorProvider 상태를 구독
-    final majorState = ref.watch(majorProvider);
+    final userState = ref.watch(userProvider);
 
     // 버튼 활성화 조건: 선택된 학과가 1개 이상일 때
     // (필요에 따라 2개가 정확히 선택되어야만 활성화 등으로 바꿀 수도 있음)
-    final isButtonEnabled = majorState.selectedMajors.isNotEmpty;
+    final isButtonEnabled = userState.selectedMajors.isNotEmpty;
 
     return Scaffold(
       appBar: AppBar(
@@ -48,7 +48,7 @@ class ScreenMainMajorEdit extends ConsumerWidget {
                 '관심 학과를 선택해주세요😀\n(학과는 최대 2개까지 가능)',
                 textAlign: TextAlign.left,
                 style: TextStyle(
-                  color: Colors.black.withOpacity(0.9),
+                  color: Colors.black.withValues(alpha: 0.1),
                   fontSize: 14.sp,
                   fontFamily: 'GmarketSans',
                   fontWeight: FontWeight.w500,
@@ -68,7 +68,7 @@ class ScreenMainMajorEdit extends ConsumerWidget {
                 isButtonEnabled
                     ? () {
                       ref
-                          .read(majorProvider.notifier)
+                          .read(userProvider.notifier)
                           .updateSearchText(''); // 수동 초기화
                       Navigator.pop(context);
                     }

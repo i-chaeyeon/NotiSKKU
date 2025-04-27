@@ -1,9 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:notiskku/models/keyword.dart';
-import 'package:notiskku/models/notice.dart';
-import 'package:notiskku/providers/list_notices_provider.dart';
 import 'package:notiskku/widget/bar/bar_keywords.dart';
 import 'package:notiskku/widget/list/list_notices.dart';
 
@@ -12,9 +11,34 @@ class ScreenMainKeyword extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final allNoticeState = ref.watch(listNoticesProvider);
     final selectedKeyword = ref.watch(selectedKeywordProvider);
-    final noticeNotifier = ref.read(listNoticesProvider.notifier);
+
+    Future<Widget> getNoticeByKeyword(Keyword keyword) async {
+      final keywordText = keyword.keyword;
+
+      final snapshot =
+          await FirebaseFirestore.instance
+              .collection('notices')
+              .where('type', isEqualTo: "전체")
+              .orderBy('date', descending: true)
+              .get();
+
+      final results =
+          snapshot.docs
+              .where(
+                (doc) => doc['title'].toString().toLowerCase().contains(
+                  keywordText.toLowerCase(),
+                ),
+              )
+              .map((doc) {
+                final data = doc.data();
+                data['hash'] = doc.id;
+                return data;
+              })
+              .toList();
+
+      return ListNotices(notices: results);
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -42,45 +66,26 @@ class ScreenMainKeyword extends ConsumerWidget {
           SizedBox(height: 10.h),
 
           Expanded(
-            child:
-                allNoticeState.notices.isEmpty
-                    ? const Center(child: CircularProgressIndicator())
-                    : _buildFilteredList(
-                      notices: allNoticeState.notices,
-                      keyword: selectedKeyword,
-                      onLoadMore: () => noticeNotifier.loadMoreNotices(),
-                    ),
+            child: FutureBuilder<Widget>(
+              future:
+                  selectedKeyword == null
+                      ? Future.value(
+                        const Center(child: Text('선택된 키워드가 없습니다.')),
+                      )
+                      : getNoticeByKeyword(selectedKeyword),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                } else if (snapshot.hasError) {
+                  return Center(child: Text('오류 발생: ${snapshot.error}'));
+                } else {
+                  return snapshot.data ?? const Center(child: Text('공지 없음'));
+                }
+              },
+            ),
           ),
         ],
       ),
     );
-  }
-
-  Widget _buildFilteredList({
-    required List<Notice> notices,
-    required Keyword? keyword,
-    required VoidCallback onLoadMore,
-  }) {
-    int loadCount = 0;
-
-    if (keyword == null) {
-      return const Center(child: Text('키워드를 선택해주세요'));
-    }
-
-    final filtered =
-        notices
-            .where(
-              (n) =>
-                  n.title.toLowerCase().contains(keyword.keyword.toLowerCase()),
-            )
-            .toList();
-
-    if (filtered.length < 10 || loadCount > 5) {
-      onLoadMore();
-      loadCount++;
-      return const Center(child: CircularProgressIndicator());
-    }
-
-    return ListNotices(notices: filtered);
   }
 }
