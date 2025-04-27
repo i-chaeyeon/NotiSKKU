@@ -46,7 +46,7 @@ class _ScreenMainTabsState extends State<ScreenMainTabs> {
   List<BottomNavigationBarItem> get _navItems => [
     _buildNavItem('assets/images/notice_fix.png', '공지사항'),
     _buildNavItem('assets/images/keyword_fix.png', '키워드'),
-    _buildNavItem('assets/images/bogwan_fix.png', '공지함'),
+    _buildNavItem('assets/images/emptystar_fix.png', '즐겨찾기'),
     _buildNavItem('assets/images/calendar_fix.png', '학사일정'),
     _buildNavItem('assets/images/more_fix.png', '더보기'),
   ];
