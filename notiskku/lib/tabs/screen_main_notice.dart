@@ -56,9 +56,8 @@ class _NoticeAppBar extends ConsumerWidget implements PreferredSizeWidget {
         children: [
           // 좌측 화살표
           userState.selectedMajors.length > 1
-              ?
-              IconButton(
-                icon: const Icon(Icons.chevron_left, color: Colors.black),
+              ? IconButton(
+                icon: Icon(Icons.chevron_left, color: Colors.black, size: 24.w),
                 onPressed: () {
                   _updateMajorIndex(ref, true, userState.selectedMajors.length);
                 },
@@ -96,7 +95,7 @@ class _NoticeAppBar extends ConsumerWidget implements PreferredSizeWidget {
           // 우측 화살표
           userState.selectedMajors.length > 1
               ? IconButton(
-                icon: const Icon(Icons.chevron_right, color: Colors.black),
+                icon: Icon(Icons.chevron_right, color: Colors.black, size: 24.w),
                 onPressed: () {
                   _updateMajorIndex(
                     ref,
