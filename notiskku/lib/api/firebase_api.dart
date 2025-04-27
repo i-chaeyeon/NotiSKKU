@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:notiskku/tabs/screen_main_notice.dart';
+import 'package:notiskku/screen/screen_main_tabs.dart';
 
 import '../main.dart'; // navigatorKey 접근용
 
@@ -37,7 +37,7 @@ class FirebaseApi {
   void _handleMessage(RemoteMessage message) {
     Future.delayed(Duration.zero, () {
       navigatorKey.currentState?.push(
-        MaterialPageRoute(builder: (_) => ScreenMainNotice()),
+        MaterialPageRoute(builder: (_) => ScreenMainTabs()),
       );
     });
   }
