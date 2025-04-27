@@ -56,7 +56,7 @@ class _ScreenMainBoxState extends ConsumerState<ScreenMainBox> {
                   ),
                 ),
         title: Text(
-          '공지보관함',
+          '즐겨찾기',
           style: TextStyle(
             fontSize: 20.sp,
             fontWeight: FontWeight.bold,
