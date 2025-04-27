@@ -30,7 +30,9 @@ class ListKeyword extends ConsumerWidget {
         final keyword = filteredKeywords[index];
         final isSelected = selectedKeywords
             .map((k) => k.keyword)
-            .contains(keyword.toString());
+            // .contains(keyword.toString());
+            .contains(keyword.keyword);
+
         // final isAlarm = keywordState.alarmKeywords.contains(keyword);
         return Column(
           children: [
