@@ -5,9 +5,15 @@ import 'package:notiskku/firebase_options.dart';
 import 'package:notiskku/screen/screen_intro_logo.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart'; // ProviderScope 추가
 
+import 'api/firebase_api.dart';
+
+final navigatorKey = GlobalKey<NavigatorState>();
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await FirebaseApi().initNotifications();
+
   runApp(const ProviderScope(child: MyApp()));
 }
 
@@ -22,6 +28,7 @@ class MyApp extends StatelessWidget {
       splitScreenMode: true,
       builder: (context, child) {
         return MaterialApp(
+          navigatorKey: navigatorKey,
           theme: ThemeData(
             colorScheme: ColorScheme.fromSeed(
               seedColor: const Color(0xFF0B5B42),
