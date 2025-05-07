@@ -28,7 +28,7 @@ class NoticeTile extends ConsumerWidget {
             style: TextStyle(fontSize: 15.sp, color: Colors.black),
           ),
           subtitle: Text(
-            '$date | 조회수: $views',
+            views == 'null' ? '$date | 조회수: -' : '$date | 조회수: $views',
             style: TextStyle(fontSize: 14.sp, color: Colors.grey),
           ),
           trailing: GestureDetector(
