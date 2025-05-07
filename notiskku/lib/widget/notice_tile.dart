@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:notiskku/data/temp_starred_notices.dart';
 import 'package:notiskku/notice_functions/launch_url.dart';
+import 'package:notiskku/providers/tab_providers.dart';
 import 'package:notiskku/providers/user/user_provider.dart';
 
 class NoticeTile extends ConsumerStatefulWidget {
@@ -26,7 +27,7 @@ class _NoticeTileState extends ConsumerState<NoticeTile> {
     final link = widget.notice['url'] ?? '';
 
     final starredNotices = ref.watch(userProvider).starredNotices;
-    tempStarredNotices = starredNotices;
+    final currentTab = ref.watch(tabIndexProvider);
 
     return Column(
       children: [
@@ -47,7 +48,12 @@ class _NoticeTileState extends ConsumerState<NoticeTile> {
               });
             },
             child: Image.asset(
-              starredNotices.contains(hash) || tempStarredNotices.contains(hash)
+              (currentTab == 2)
+                  ? !tempStarredNotices.contains(hash)
+                      ? 'assets/images/fullstar_fix.png'
+                      : 'assets/images/emptystar_fix.png'
+                  : (starredNotices.contains(hash) ||
+                      tempStarredNotices.contains(hash))
                   ? 'assets/images/fullstar_fix.png'
                   : 'assets/images/emptystar_fix.png',
               width: 26.w,

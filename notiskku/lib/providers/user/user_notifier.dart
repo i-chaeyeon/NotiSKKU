@@ -122,6 +122,19 @@ class UserNotifier extends StateNotifier<UserState> {
     tempList.clear();
   }
 
+  void deleteTempStarred(List<String> tempList) {
+    final currentStarred = List<String>.from(state.starredNotices);
+    final targetHashes =
+        tempList.where((hash) => currentStarred.contains(hash)).toList();
+
+    if (targetHashes.isEmpty) return;
+
+    currentStarred.removeWhere((element) => targetHashes.contains(element));
+    state = state.copyWith(starredNotices: currentStarred);
+    UserPreferences.saveStarred(currentStarred);
+    tempList.clear();
+  }
+
   // 현재 검색어 업데이트
   void updateSearchText(String text) {
     state = state.copyWith(currentSearchText: text);
