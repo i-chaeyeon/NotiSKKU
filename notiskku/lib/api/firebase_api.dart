@@ -5,9 +5,9 @@ import 'package:notiskku/screen/screen_main_tabs.dart';
 import '../main.dart'; // navigatorKey 접근용
 
 Future<void> handleBackgroundMessage(RemoteMessage message) async {
-  print('Title: ${message.notification?.title}');
-  print('Body: ${message.notification?.body}');
-  print('Payload: ${message.data}');
+  debugPrint('Title: ${message.notification?.title}');
+  debugPrint('Body: ${message.notification?.body}');
+  debugPrint('Payload: ${message.data}');
 }
 
 class FirebaseApi {
@@ -17,7 +17,7 @@ class FirebaseApi {
     await _firebaseMessaging.requestPermission();
 
     final fCMToken = await _firebaseMessaging.getToken();
-    print('Token: $fCMToken'); // 실제 앱 운영 시 DB에 저장
+    debugPrint('Token: $fCMToken'); // 실제 앱 운영 시 DB에 저장
 
     // 백그라운드 메시지 핸들러 등록
     FirebaseMessaging.onBackgroundMessage(handleBackgroundMessage);
