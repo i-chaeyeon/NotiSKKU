@@ -6,6 +6,7 @@ import 'package:notiskku/providers/bar_providers.dart';
 import 'package:notiskku/providers/selected_major_provider.dart';
 import 'package:notiskku/providers/user/user_provider.dart';
 import 'package:notiskku/widget/list/list_notices.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ListSearchResults extends ConsumerStatefulWidget {
   final String searchText;
@@ -78,6 +79,15 @@ class _ListSearchResultsState extends ConsumerState<ListSearchResults> {
               return data;
             })
             .toList();
+
+    if (results.isEmpty) {
+      return Center(
+        child: Text(
+          '검색된 공지가 없습니다.🥲',
+          style: TextStyle(fontSize: 16.sp, color: Colors.grey),
+        ),
+      );
+    }
 
     return ListNotices(notices: results);
   }
