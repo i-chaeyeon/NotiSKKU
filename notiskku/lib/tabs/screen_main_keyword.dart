@@ -2,7 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:notiskku/data/temp_starred_notices.dart';
 import 'package:notiskku/models/keyword.dart';
+import 'package:notiskku/providers/user/user_provider.dart';
 import 'package:notiskku/widget/bar/bar_keywords.dart';
 import 'package:notiskku/widget/list/list_notices.dart';
 
@@ -14,6 +16,7 @@ class ScreenMainKeyword extends ConsumerWidget {
     final selectedKeyword = ref.watch(selectedKeywordProvider);
 
     Future<Widget> getNoticeByKeyword(Keyword keyword) async {
+      ref.read(userProvider.notifier).saveTempStarred(tempStarredNotices);
       final keywordText = keyword.keyword;
 
       final snapshot =
