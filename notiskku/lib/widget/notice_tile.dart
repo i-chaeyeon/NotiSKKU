@@ -26,6 +26,7 @@ class _NoticeTileState extends ConsumerState<NoticeTile> {
     final link = widget.notice['url'] ?? '';
 
     final starredNotices = ref.watch(userProvider).starredNotices;
+    tempStarredNotices = starredNotices;
 
     return Column(
       children: [
