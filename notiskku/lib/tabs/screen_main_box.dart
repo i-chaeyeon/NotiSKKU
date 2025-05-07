@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:notiskku/data/temp_starred_notices.dart';
 import 'package:notiskku/models/notice.dart';
 import 'package:notiskku/edit/screen_main_box_edit.dart';
+import 'package:notiskku/providers/user/user_provider.dart';
 import 'package:notiskku/widget/list/list_starred_notices.dart';
 
 class ScreenMainBox extends ConsumerStatefulWidget {
@@ -31,6 +33,8 @@ class _ScreenMainBoxState extends ConsumerState<ScreenMainBox> {
                   padding: const EdgeInsets.all(10.0),
                   child: GestureDetector(
                     onTap: () {
+                      final userNotifier = ref.read(userProvider.notifier);
+                      userNotifier.deleteTempStarred(tempStarredNotices);
                       setState(() {
                         editMode = false;
                         _selectedNotices.clear();
