@@ -1,23 +1,69 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:notiskku/data/major_data.dart';
+import 'package:notiskku/providers/bar_providers.dart';
+import 'package:notiskku/providers/selected_major_provider.dart';
+import 'package:notiskku/providers/user/user_provider.dart';
 import 'package:notiskku/widget/list/list_notices.dart';
 
-class ListSearchResults extends StatefulWidget {
+class ListSearchResults extends ConsumerStatefulWidget {
   final String searchText;
-  const ListSearchResults({super.key, required this.searchText});
+  final Notices typeState;
+
+  const ListSearchResults({
+    super.key,
+    required this.searchText,
+    required this.typeState,
+  });
 
   @override
-  State<ListSearchResults> createState() => _ListSearchResultsState(); // 클래스명 수정
+  ConsumerState<ListSearchResults> createState() => _ListSearchResultsState();
 }
 
-class _ListSearchResultsState extends State<ListSearchResults> {
-  Future<Widget> getSearchResults(String searchText) async {
-    final snapshot =
-        await FirebaseFirestore.instance
-            .collection('notices')
-            .where('type', isEqualTo: "전체")
-            .orderBy('date', descending: true)
-            .get();
+class _ListSearchResultsState extends ConsumerState<ListSearchResults> {
+  Future<Widget> getSearchResults(String searchText, Notices typeState) async {
+    final userState = ref.watch(userProvider);
+    final majorIndex = ref.watch(selectedMajorIndexProvider);
+    final typeState = ref.watch(barNoticesProvider);
+
+    final currentMajor =
+        userState.selectedMajors.isEmpty
+            ? ''
+            : userState
+                .selectedMajors[majorIndex.clamp(
+                  0,
+                  userState.selectedMajors.length - 1,
+                )]
+                .major;
+
+    final currentDept =
+        majors.firstWhere((m) => m.major == currentMajor).department;
+    late QuerySnapshot snapshot;
+
+    if (typeState == Notices.common) {
+      snapshot =
+          await FirebaseFirestore.instance
+              .collection('notices')
+              .where('type', isEqualTo: "전체")
+              .orderBy('date', descending: true)
+              .get();
+    } else if (typeState == Notices.dept) {
+      snapshot =
+          await FirebaseFirestore.instance
+              .collection('notices')
+              .where('department', isEqualTo: currentDept)
+              .orderBy('date', descending: true)
+              .get();
+    } else if (typeState == Notices.major) {
+      snapshot =
+          await FirebaseFirestore.instance
+              .collection('notices')
+              .where('type', isEqualTo: "학과")
+              .where('major', isEqualTo: currentMajor)
+              .orderBy('date', descending: true)
+              .get();
+    }
 
     final results =
         snapshot.docs
@@ -27,7 +73,7 @@ class _ListSearchResultsState extends State<ListSearchResults> {
               ),
             )
             .map((doc) {
-              final data = doc.data();
+              final data = doc.data() as Map<String, dynamic>;
               data['hash'] = doc.id;
               return data;
             })
@@ -39,9 +85,9 @@ class _ListSearchResultsState extends State<ListSearchResults> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.all(8.0),
+      padding: const EdgeInsets.all(8.0),
       child: FutureBuilder<Widget>(
-        future: getSearchResults(widget.searchText),
+        future: getSearchResults(widget.searchText, widget.typeState),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
