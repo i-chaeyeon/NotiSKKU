@@ -33,8 +33,6 @@ class _ScreenMainBoxState extends ConsumerState<ScreenMainBox> {
                   padding: const EdgeInsets.all(10.0),
                   child: GestureDetector(
                     onTap: () {
-                      final userNotifier = ref.read(userProvider.notifier);
-                      userNotifier.deleteTempStarred(tempStarredNotices);
                       setState(() {
                         editMode = false;
                         _selectedNotices.clear();
@@ -73,6 +71,8 @@ class _ScreenMainBoxState extends ConsumerState<ScreenMainBox> {
             padding: const EdgeInsets.all(10.0),
             child: GestureDetector(
               onTap: () {
+                final userNotifier = ref.read(userProvider.notifier);
+                userNotifier.deleteTempStarred(tempStarredNotices);
                 Navigator.push(
                   context,
                   MaterialPageRoute(
