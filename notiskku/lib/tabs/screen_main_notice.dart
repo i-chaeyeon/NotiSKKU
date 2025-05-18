@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:notiskku/data/major_data.dart';
 import 'package:notiskku/data/temp_starred_notices.dart';
+import 'package:notiskku/edit/screen_main_major_edit.dart';
 import 'package:notiskku/models/major.dart';
 import 'package:notiskku/providers/bar_providers.dart';
 import 'package:notiskku/providers/selected_major_provider.dart';
@@ -205,9 +206,45 @@ class ScreenMainNotice extends ConsumerWidget {
       final currentCategoryLabel = getCategory(currentCategory);
 
       if ((type == Notices.dept || type == Notices.major) && major == '') {
-        return Text("공지 선택하고 오세요");
+        return Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.asset(
+                'assets/images/no_major_exception.png',
+                width: 206.w,
+                height: 202.h,
+                fit: BoxFit.contain,
+              ),
+              SizedBox(height: 16.h),
+              Text(
+                '학과 선택 후 단과대/학과별 공지를 볼 수 있어요🥲',
+                style: TextStyle(fontSize: 14.sp, color: Colors.grey),
+                textAlign: TextAlign.center,
+              ),
+              SizedBox(height: 16.h),
+              TextButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const ScreenMainMajorEdit(),
+                    ),
+                  );
+                },
+                child: Text(
+                  '→ 학과 선택하러 가기',
+                  style: TextStyle(
+                    fontSize: 20.sp,
+                    color: Color(0xFF0B5B42),
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
       }
-
       if (type == Notices.common) {
         if (currentCategoryLabel == '[전체]') {
           snapshot =
