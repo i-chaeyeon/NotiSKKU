@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-//import 'package:notiskku/widget/button/button_searched.dart';
+import 'package:notiskku/models/major.dart';
+import 'package:notiskku/providers/bar_providers.dart';
+import 'package:notiskku/providers/selected_major_provider.dart';
+import 'package:notiskku/providers/user/user_provider.dart';
+import 'package:notiskku/widget/bar/bar_notices.dart';
 import 'package:notiskku/widget/list/list_recent_search.dart';
 import 'package:notiskku/widget/list/list_search_results.dart';
 import 'package:notiskku/widget/search/search_notice.dart';
@@ -27,6 +31,20 @@ class ScreenMainSearchState extends ConsumerState<ScreenMainSearch> {
 
   @override
   Widget build(BuildContext context) {
+    final typeState = ref.watch(barNoticesProvider);
+    final userState = ref.watch(userProvider);
+    final majorIndex = ref.watch(selectedMajorIndexProvider);
+
+    Major userInfo = userState.selectedMajors[majorIndex];
+    String currentMajor = userInfo.major;
+    String currentDept = userInfo.department;
+
+    String hintText = '검색어를 입력하세요.';
+    if (typeState == Notices.dept) {
+      hintText = '$currentDept 내 겁색';
+    } else if (typeState == Notices.major) {
+      hintText = '$currentMajor 내 검색';
+    }
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -54,9 +72,11 @@ class ScreenMainSearchState extends ConsumerState<ScreenMainSearch> {
       backgroundColor: Colors.white,
       body: Column(
         children: [
-          const SizedBox(height: 10),
+          BarNotices(),
+          SizedBox(height: 5.h),
           SearchNotice(
             onSearch: updateSearch,
+            hintText: hintText,
           ), // `onSearch`를 사용하여 검색 실행 시 상태 변경
           SizedBox(height: 5.h),
           // 검색 상태에 따라 '최근 검색 내역' 또는 '검색 결과' 표시
@@ -79,7 +99,10 @@ class ScreenMainSearchState extends ConsumerState<ScreenMainSearch> {
           Expanded(
             child:
                 isSearched
-                    ? ListSearchResults(searchText: searchText)
+                    ? ListSearchResults(
+                      searchText: searchText,
+                      typeState: typeState,
+                    )
                     : ListRecentSearch(
                       onTapRecentSearch: (text) => updateSearch(text, true),
                     ),
