@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:notiskku/data/major_data.dart';
 import 'package:notiskku/data/temp_starred_notices.dart';
+import 'package:notiskku/models/major.dart';
 import 'package:notiskku/providers/bar_providers.dart';
 import 'package:notiskku/providers/selected_major_provider.dart';
 import 'package:notiskku/providers/user/user_provider.dart';
@@ -165,7 +166,12 @@ class ScreenMainNotice extends ConsumerWidget {
                 .major;
 
     final currentDept =
-        majors.firstWhere((m) => m.major == currentMajor).department;
+        majors
+            .firstWhere(
+              (m) => m.major == currentMajor,
+              orElse: () => Major(department: '', major: ''), // 기본값 지정
+            )
+            .department;
 
     final currentCategory = ref.watch(barCategoriesProvider);
     String getCategory(Categories category) {
@@ -197,6 +203,10 @@ class ScreenMainNotice extends ConsumerWidget {
     ) async {
       late QuerySnapshot snapshot;
       final currentCategoryLabel = getCategory(currentCategory);
+
+      if ((type == Notices.dept || type == Notices.major) && major == '') {
+        return Text("공지 선택하고 오세요");
+      }
 
       if (type == Notices.common) {
         if (currentCategoryLabel == '[전체]') {
