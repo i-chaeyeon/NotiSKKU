@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:notiskku/data/major_data.dart';
+import 'package:notiskku/data/temp_starred_notices.dart';
 import 'package:notiskku/providers/bar_providers.dart';
 import 'package:notiskku/providers/selected_major_provider.dart';
 import 'package:notiskku/providers/user/user_provider.dart';
@@ -24,6 +25,7 @@ class _NoticeAppBar extends ConsumerWidget implements PreferredSizeWidget {
             : (currentIndex + 1) % listLength;
 
     notifier.state = newIndex;
+    ref.read(userProvider.notifier).saveTempStarred(tempStarredNotices);
   }
 
   @override
@@ -60,6 +62,9 @@ class _NoticeAppBar extends ConsumerWidget implements PreferredSizeWidget {
                 icon: Icon(Icons.chevron_left, color: Colors.black, size: 24.w),
                 onPressed: () {
                   _updateMajorIndex(ref, true, userState.selectedMajors.length);
+                  ref
+                      .read(userProvider.notifier)
+                      .saveTempStarred(tempStarredNotices);
                 },
                 // splashRadius: 20.r, // 터치 효과 반경 조정 (선택사항임)
               )
@@ -95,13 +100,20 @@ class _NoticeAppBar extends ConsumerWidget implements PreferredSizeWidget {
           // 우측 화살표
           userState.selectedMajors.length > 1
               ? IconButton(
-                icon: Icon(Icons.chevron_right, color: Colors.black, size: 24.w),
+                icon: Icon(
+                  Icons.chevron_right,
+                  color: Colors.black,
+                  size: 24.w,
+                ),
                 onPressed: () {
                   _updateMajorIndex(
                     ref,
                     false,
                     userState.selectedMajors.length,
                   );
+                  ref
+                      .read(userProvider.notifier)
+                      .saveTempStarred(tempStarredNotices);
                 },
                 // splashRadius: 20.r,
               )
@@ -113,6 +125,9 @@ class _NoticeAppBar extends ConsumerWidget implements PreferredSizeWidget {
           padding: EdgeInsets.all(15.0),
           child: GestureDetector(
             onTap: () {
+              ref
+                  .read(userProvider.notifier)
+                  .saveTempStarred(tempStarredNotices);
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => ScreenMainSearch()),

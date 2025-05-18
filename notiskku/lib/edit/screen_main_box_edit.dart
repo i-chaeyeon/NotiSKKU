@@ -29,26 +29,39 @@ class _ScreenMainBoxEditState extends ConsumerState<ScreenMainBoxEdit> {
       setState(() => _noticeDocs = []);
       return;
     }
+
     final chunks = <List<String>>[];
     for (var i = 0; i < starredHashes.length; i += 10) {
       chunks.add(starredHashes.skip(i).take(10).toList());
     }
-    final docs = <DocumentSnapshot>[];
+
+    final Map<String, DocumentSnapshot> docMap = {};
     for (final chunk in chunks) {
-      final query = await FirebaseFirestore.instance
-          .collection('notices')
-          .where(FieldPath.documentId, whereIn: chunk)
-          .get();
-      docs.addAll(query.docs);
+      final query =
+          await FirebaseFirestore.instance
+              .collection('notices')
+              .where(FieldPath.documentId, whereIn: chunk)
+              .get();
+      for (var doc in query.docs) {
+        docMap[doc.id] = doc;
+      }
     }
-    setState(() => _noticeDocs = docs);
+
+    final orderedDocs =
+        starredHashes.reversed
+            .where((hash) => docMap.containsKey(hash))
+            .map((hash) => docMap[hash]!)
+            .toList();
+
+    setState(() => _noticeDocs = orderedDocs);
   }
 
   @override
   Widget build(BuildContext context) {
     final starredHashes = ref.watch(userProvider).starredNotices;
     final bool isAllSelected =
-        _selectedHashes.length == starredHashes.length && starredHashes.isNotEmpty;
+        _selectedHashes.length == starredHashes.length &&
+        starredHashes.isNotEmpty;
 
     return Scaffold(
       appBar: AppBar(
@@ -60,13 +73,21 @@ class _ScreenMainBoxEditState extends ConsumerState<ScreenMainBoxEdit> {
           child: Center(
             child: Text(
               '취소',
-              style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.bold, color: Colors.black),
+              style: TextStyle(
+                fontSize: 14.sp,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
+              ),
             ),
           ),
         ),
         title: Text(
           '공지 편집',
-          style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.bold, color: Colors.black),
+          style: TextStyle(
+            fontSize: 20.sp,
+            fontWeight: FontWeight.bold,
+            color: Colors.black,
+          ),
         ),
         centerTitle: true,
         actions: [
@@ -89,7 +110,10 @@ class _ScreenMainBoxEditState extends ConsumerState<ScreenMainBoxEdit> {
                 style: TextStyle(
                   fontSize: 14.sp,
                   fontWeight: FontWeight.bold,
-                  color: isAllSelected ? const Color(0xFF0B5B42) : const Color(0xFF979797),
+                  color:
+                      isAllSelected
+                          ? const Color(0xFF0B5B42)
+                          : const Color(0xFF979797),
                 ),
               ),
             ),
@@ -97,103 +121,123 @@ class _ScreenMainBoxEditState extends ConsumerState<ScreenMainBoxEdit> {
         ],
       ),
       backgroundColor: Colors.white,
-      body: _noticeDocs == null
-          ? const Center(child: CircularProgressIndicator())
-          : _noticeDocs!.isEmpty
+      body:
+          _noticeDocs == null
+              ? const Center(child: CircularProgressIndicator())
+              : _noticeDocs!.isEmpty
               ? Center(
-                  child: Text(
-                    '저장된 공지가 없습니다',
-                    style: TextStyle(fontSize: 18.sp, color: Colors.grey),
-                  ),
-                )
+                child: Text(
+                  '저장된 공지가 없습니다',
+                  style: TextStyle(fontSize: 18.sp, color: Colors.grey),
+                ),
+              )
               : Column(
-                  children: [
-                    const SizedBox(height: 10),
-                    Expanded(
-                      child: ListView.builder(
-                        itemCount: _noticeDocs!.length,
-                        itemBuilder: (context, index) {
-                          final doc = _noticeDocs![index];
-                          final hash = doc.id;
-                          final data = doc.data() as Map<String, dynamic>;
-                          final title = data['title'] ?? '';
-                          final date = data['date'] ?? '';
-                          final views = data['views'] ?? 0;
-                          final isSelected = _selectedHashes.contains(hash);
+                children: [
+                  const SizedBox(height: 10),
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: _noticeDocs!.length,
+                      itemBuilder: (context, index) {
+                        final doc = _noticeDocs![index];
+                        final hash = doc.id;
+                        final data = doc.data() as Map<String, dynamic>;
+                        final title = data['title'] ?? '';
+                        final date = data['date'] ?? '';
+                        final views = data['views'] ?? 0;
+                        final isSelected = _selectedHashes.contains(hash);
 
-                          return Column(
-                            children: [
-                              ListTile(
-                                onTap: () {
-                                  setState(() {
-                                    if (isSelected) {
-                                      _selectedHashes.remove(hash);
-                                    } else {
-                                      _selectedHashes.add(hash);
-                                    }
-                                  });
-                                },
-                                title: Text(
-                                  title,
-                                  style: TextStyle(fontSize: 15.sp, color: Colors.black),
-                                ),
-                                subtitle: Text(
-                                  '$date | 조회수: $views',
-                                  style: TextStyle(fontSize: 14.sp, color: Colors.grey),
-                                ),
-                                trailing: Icon(
-                                  isSelected ? Icons.check_circle : Icons.radio_button_unchecked,
-                                  color: isSelected ? const Color(0xFF0B5B42) : Colors.grey,
-                                  size: 26.sp,
+                        return Column(
+                          children: [
+                            ListTile(
+                              onTap: () {
+                                setState(() {
+                                  if (isSelected) {
+                                    _selectedHashes.remove(hash);
+                                  } else {
+                                    _selectedHashes.add(hash);
+                                  }
+                                });
+                              },
+                              title: Text(
+                                title,
+                                style: TextStyle(
+                                  fontSize: 15.sp,
+                                  color: Colors.black,
                                 ),
                               ),
-                              Divider(
-                                color: Colors.grey,
-                                thickness: 1.h,
-                                indent: 16.w,
-                                endIndent: 16.w,
+                              subtitle: Text(
+                                '$date | 조회수: $views',
+                                style: TextStyle(
+                                  fontSize: 14.sp,
+                                  color: Colors.grey,
+                                ),
                               ),
-                            ],
-                          );
-                        },
-                      ),
+                              trailing: Icon(
+                                isSelected
+                                    ? Icons.check_circle
+                                    : Icons.radio_button_unchecked,
+                                color:
+                                    isSelected
+                                        ? const Color(0xFF0B5B42)
+                                        : Colors.grey,
+                                size: 26.sp,
+                              ),
+                            ),
+                            Divider(
+                              color: Colors.grey,
+                              thickness: 1.h,
+                              indent: 16.w,
+                              endIndent: 16.w,
+                            ),
+                          ],
+                        );
+                      },
                     ),
-                    Padding(
-                      padding: EdgeInsets.only(bottom: 30.h),
-                      child: SizedBox(
-                        width: 301.w,
-                        height: 43.h,
-                        child: TextButton(
-                          onPressed: _selectedHashes.isEmpty
-                              ? null
-                              : () {
-                                  final userNotifier = ref.read(userProvider.notifier);
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(bottom: 30.h),
+                    child: SizedBox(
+                      width: 301.w,
+                      height: 43.h,
+                      child: TextButton(
+                        onPressed:
+                            _selectedHashes.isEmpty
+                                ? null
+                                : () {
+                                  final userNotifier = ref.read(
+                                    userProvider.notifier,
+                                  );
                                   for (final notice in _selectedHashes) {
                                     userNotifier.toggleStarredNotice(notice);
                                   }
                                   Navigator.pop(context);
                                 },
-                          style: TextButton.styleFrom(
-                            foregroundColor: Colors.white,
-                            backgroundColor: const Color(0xFFE64343),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(30.r),
-                            ),
+                        style: TextButton.styleFrom(
+                          foregroundColor: Colors.white,
+                          backgroundColor: const Color(0xFFE64343),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30.r),
                           ),
-                          child: Center(
-                            child: FittedBox(
-                              fit: BoxFit.scaleDown,
-                              child: Text(
-                                '삭제',
-                                style: TextStyle(fontSize: 18.sp, color: Colors.white, fontWeight: FontWeight.w400, fontFamily: 'Inter'),
+                        ),
+                        child: Center(
+                          child: FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: Text(
+                              '삭제',
+                              style: TextStyle(
+                                fontSize: 18.sp,
+                                color: Colors.white,
+                                fontWeight: FontWeight.w400,
+                                fontFamily: 'Inter',
                               ),
                             ),
                           ),
                         ),
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
+              ),
     );
   }
 }
