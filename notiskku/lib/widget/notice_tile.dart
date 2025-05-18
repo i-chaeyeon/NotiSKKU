@@ -34,8 +34,8 @@ class _NoticeTileState extends ConsumerState<NoticeTile> {
         ListTile(
           title: Text(title, style: TextStyle(fontSize: 15.sp)),
           subtitle: Text(
-            '$date | 조회수: $views',
-            style: TextStyle(fontSize: 14.sp),
+            views == 'null' ? '$date | 조회수: -' : '$date | 조회수: $views',
+            style: TextStyle(fontSize: 14.sp, color: Colors.grey),
           ),
           trailing: GestureDetector(
             onTap: () {

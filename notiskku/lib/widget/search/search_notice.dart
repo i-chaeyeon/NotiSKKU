@@ -5,8 +5,13 @@ import 'package:notiskku/providers/user/user_provider.dart';
 
 class SearchNotice extends ConsumerStatefulWidget {
   final Function(String, bool) onSearch; //검색 실행 후 상태를 부모위젯젯에게 전달
+  final String hintText;
 
-  const SearchNotice({super.key, required this.onSearch});
+  const SearchNotice({
+    super.key,
+    required this.onSearch,
+    required this.hintText,
+  });
 
   @override
   createState() => _SearchNoticeState();
@@ -63,7 +68,7 @@ class _SearchNoticeState extends ConsumerState<SearchNotice> {
                 maxLength: 50,
                 style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w400),
                 decoration: InputDecoration(
-                  hintText: '검색어를 입력하세요.',
+                  hintText: widget.hintText,
                   hintStyle: TextStyle(
                     fontSize: 18.sp,
                     color: const Color(0xFFD9D9D9),
