@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:notiskku/edit/screen_main_major_edit.dart';
-import 'package:notiskku/models/major.dart';
 import 'package:notiskku/providers/bar_providers.dart';
 import 'package:notiskku/providers/selected_major_provider.dart';
 import 'package:notiskku/providers/user/user_provider.dart';
@@ -51,7 +50,6 @@ class ScreenMainSearchState extends ConsumerState<ScreenMainSearch> {
         children: [
           BarNotices(),
           SizedBox(height: 5.h),
-          // ✅ 여기서 조건 분기
           if (typeState != Notices.common && !hasMajor)
             Expanded(
               child: Center(
@@ -135,7 +133,6 @@ class ScreenMainSearchState extends ConsumerState<ScreenMainSearch> {
     );
   }
 
-  // 공통 AppBar 분리
   PreferredSizeWidget _buildAppBar(BuildContext context) {
     return AppBar(
       backgroundColor: Colors.white,

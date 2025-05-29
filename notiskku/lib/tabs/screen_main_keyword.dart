@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:notiskku/data/temp_starred_notices.dart';
+import 'package:notiskku/edit/screen_main_keyword_edit.dart';
 import 'package:notiskku/models/keyword.dart';
 import 'package:notiskku/providers/user/user_provider.dart';
 import 'package:notiskku/widget/bar/bar_keywords.dart';
@@ -66,14 +67,52 @@ class ScreenMainKeyword extends ConsumerWidget {
       body: Column(
         children: [
           const BarKeywords(),
-          SizedBox(height: 10.h),
-
           Expanded(
             child: FutureBuilder<Widget>(
               future:
                   selectedKeyword == null
                       ? Future.value(
-                        const Center(child: Text('선택된 키워드가 없습니다.')),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Image.asset(
+                              'assets/images/no_major_exception.png',
+                              width: 206.w,
+                              height: 202.h,
+                              fit: BoxFit.contain,
+                            ),
+                            SizedBox(height: 16.h),
+                            Text(
+                              '키워드 선택 후 키워드별 공지를 볼 수 있어요',
+                              style: TextStyle(
+                                fontSize: 14.sp,
+                                color: Colors.grey,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                            SizedBox(height: 16.h),
+                            TextButton(
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder:
+                                        (context) =>
+                                            const ScreenMainKeywordEdit(),
+                                  ),
+                                );
+                              },
+                              child: Text(
+                                '→ 키워드 선택하러 가기',
+                                style: TextStyle(
+                                  fontSize: 20.sp,
+                                  color: Color(0xFF0B5B42),
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       )
                       : getNoticeByKeyword(selectedKeyword),
               builder: (context, snapshot) {

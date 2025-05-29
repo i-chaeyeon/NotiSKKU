@@ -10,7 +10,6 @@ import 'package:notiskku/widget/list/list_keyword.dart';
 class ScreenMainKeywordEdit extends ConsumerWidget {
   const ScreenMainKeywordEdit({super.key});
 
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final userState = ref.watch(userProvider);
@@ -49,7 +48,7 @@ class ScreenMainKeywordEdit extends ConsumerWidget {
                 textAlign: TextAlign.left,
                 style: TextStyle(
                   color: Colors.black,
-                  fontSize: 14.sp,
+                  fontSize: 15.sp,
                   fontFamily: 'GmarketSans',
                   fontWeight: FontWeight.w500,
                 ),
@@ -60,16 +59,11 @@ class ScreenMainKeywordEdit extends ConsumerWidget {
           // 2) 검색창
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 30.w, vertical: 10.h),
-            child: SearchKeyword(),  // 검색 위젯
+            child: SearchKeyword(), // 검색 위젯
           ),
-
-
-
 
           // 3) 키워드 리스트 (검색어 provider.currentSearchText 를 넘겨줌)
-          Expanded(
-            child: ListKeyword(searchText: searchText),
-          ),
+          Expanded(child: ListKeyword(searchText: searchText)),
           SizedBox(height: 30.h),
           // 설정 완료 버튼
           WideCondition(
