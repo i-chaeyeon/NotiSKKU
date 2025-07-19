@@ -5,14 +5,14 @@ import 'package:notiskku/firebase/firebase_options.dart';
 import 'package:notiskku/screen/screen_intro_logo.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart'; // ProviderScope 추가
 
-import 'api/firebase_api.dart';
+import 'firebase/notification_provider.dart';
 
 final navigatorKey = GlobalKey<NavigatorState>();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  await FirebaseApi().initNotifications();
+  await NotificationProvider().init();
 
   runApp(const ProviderScope(child: MyApp()));
 }
