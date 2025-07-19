@@ -3,7 +3,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:notiskku/providers/user/user_provider.dart';
 import 'package:notiskku/screen/screen_intro_loading.dart';
-import 'package:notiskku/screen/screen_intro_ready.dart';
 import 'package:notiskku/widget/grid/grid_alarm_keyword.dart';
 import 'package:notiskku/widget/list/list_alarm_major.dart';
 import 'package:notiskku/widget/button/wide_green.dart';

@@ -1,26 +1,56 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:notiskku/firebase/topic_subscription.dart';
+import 'package:notiskku/providers/user/user_provider.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:notiskku/screen/screen_intro_ready.dart';
 
-class ScreenIntroLoading extends StatefulWidget {
+class ScreenIntroLoading extends ConsumerStatefulWidget {
   const ScreenIntroLoading({super.key});
 
   @override
-  State<ScreenIntroLoading> createState() => _ScreenIntroLoadingState();
+  ConsumerState<ScreenIntroLoading> createState() => _ScreenIntroLoadingState();
 }
 
-class _ScreenIntroLoadingState extends State<ScreenIntroLoading> {
-  // 일단 2초 뒤 넘어가는 것으로 설정해 둠
-  // 실제로는 데이터 저장(firebase) 완료되면 넘어가도록 설정할 예정 !!!!
+class _ScreenIntroLoadingState extends ConsumerState<ScreenIntroLoading> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(Duration(seconds: 2), () {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (_) => ScreenIntroReady()),
-      );
-    });
+    _initSubscriptions();
+  }
+
+  Future<void> _initSubscriptions() async {
+    final majors = ref.read(userProvider).selectedMajors;
+    final keywords = ref.read(userProvider).selectedKeywords;
+
+    try {
+      await TopicSubscription.subscribeToAll(keywords: keywords, majors: majors);
+
+      // 구독 성공 후 바로 다음 화면으로 이동
+      if (mounted) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => const ScreenIntroReady()),
+        );
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('알림 구독이 완료되었습니다.'),
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('알림 구독에 실패했습니다: $e'),
+            backgroundColor: Colors.red,
+            duration: const Duration(seconds: 3),
+          ),
+        );
+      }
+    }
   }
 
   @override
@@ -31,13 +61,13 @@ class _ScreenIntroLoadingState extends State<ScreenIntroLoading> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            SizedBox(height: 60.h), // 반응형 상단 여백
+            SizedBox(height: 60.h),
             Column(
               children: [
                 Image.asset(
                   'assets/images/fourth_fix.png',
-                  height: 170.h, // Image size based on screen height
-                  width: 170.h, // Image width based on screen width
+                  height: 170.h,
+                  width: 170.h,
                   fit: BoxFit.contain,
                 ),
                 SizedBox(height: 23.h),
