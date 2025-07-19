@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:notiskku/providers/user/user_provider.dart';
+import 'package:notiskku/screen/screen_intro_loading.dart';
 import 'package:notiskku/screen/screen_intro_ready.dart';
 import 'package:notiskku/widget/grid/grid_alarm_keyword.dart';
 import 'package:notiskku/widget/list/list_alarm_major.dart';
@@ -127,7 +128,7 @@ class ScreenIntroAlarm extends ConsumerWidget {
       // 초기 시작 시: ScreenIntroReady로 이동.
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => const ScreenIntroReady()),
+        MaterialPageRoute(builder: (context) => const ScreenIntroLoading()),
       );
     }
   }
