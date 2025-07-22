@@ -24,7 +24,10 @@ class _ScreenIntroLoadingState extends ConsumerState<ScreenIntroLoading> {
     final keywords = ref.read(userProvider).selectedKeywords;
 
     try {
-      await TopicSubscription.subscribeToAll(keywords: keywords, majors: majors);
+      await TopicSubscription.subscribeToAll(
+        keywords: keywords,
+        majors: majors,
+      );
 
       // 구독 성공 후 바로 다음 화면으로 이동
       if (mounted) {

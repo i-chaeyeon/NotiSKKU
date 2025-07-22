@@ -11,15 +11,14 @@ class TopicSubscription {
     // 전공 주제 구독 (전공, 단과대 각각에 대해 주제 구독)
     for (final m in majors) {
       if (m.receiveNotification) {
-        await FirebaseMessaging.instance.subscribeToTopic('major-${m.id}');
-        await FirebaseMessaging.instance.subscribeToTopic('department-${m.id}');
+        await FirebaseMessaging.instance.subscribeToTopic(m.id);
       }
     }
 
     // 키워드 주제 구독 'keyword-"선택한 키워드"' (예: "keyword-기숙사"와 같은 제목의 주제 구독)
     for (final k in keywords) {
       if (k.receiveNotification) {
-        await FirebaseMessaging.instance.subscribeToTopic('keyword-${k.id}');
+        await FirebaseMessaging.instance.subscribeToTopic(k.id);
       }
     }
   }
@@ -30,11 +29,10 @@ class TopicSubscription {
     required List<Major> majors,
   }) async {
     for (final m in majors) {
-      await FirebaseMessaging.instance.unsubscribeFromTopic('major-${m.id}');
-      await FirebaseMessaging.instance.unsubscribeFromTopic('department-${m.id}');
+      await FirebaseMessaging.instance.unsubscribeFromTopic(m.id);
     }
     for (final k in keywords) {
-      await FirebaseMessaging.instance.unsubscribeFromTopic('keyword-${k.id}');
+      await FirebaseMessaging.instance.unsubscribeFromTopic(k.id);
     }
   }
 }

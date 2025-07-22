@@ -1,7 +1,7 @@
 enum Defined { user, developer }
 
 class Keyword {
-  final int id;
+  final String id;
   final String keyword;
   final Defined defined;
   final bool receiveNotification;
@@ -27,7 +27,7 @@ class Keyword {
   int get hashCode => id.hashCode;
 
   Keyword copyWith({
-    int? id,
+    String? id,
     String? keyword,
     Defined? defined,
     bool? receiveNotification,
