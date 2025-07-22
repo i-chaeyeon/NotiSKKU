@@ -5,13 +5,12 @@ class AppPreferences {
 
   static Future<bool> isFirstLaunch() async {
     final prefs = await SharedPreferences.getInstance();
-    final isFirst = prefs.getBool(_keyFirstLaunch) ?? true;
+    return prefs.getBool(_keyFirstLaunch) ?? true;
+  }
 
-    if (isFirst) {
-      await prefs.setBool(_keyFirstLaunch, false);
-    }
-
-    return isFirst;
+  static Future<void> setFirstLaunch() async{
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_keyFirstLaunch, false);
   }
 
   static Future<void> resetFirstLaunch() async {

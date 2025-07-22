@@ -23,7 +23,6 @@ class _ScreenLogoIntroState extends State<ScreenLogoIntro> {
       final isFirst = await AppPreferences.isFirstLaunch();
 
       if (isFirst) {
-        await AppPreferences.isFirstLaunch();
         if (!mounted) return;
         Navigator.pushReplacement(
           context,
