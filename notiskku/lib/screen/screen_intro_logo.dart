@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:notiskku/screen/screen_intro.dart';
+import 'package:notiskku/screen/screen_intro_one.dart';
+import 'package:notiskku/screen/screen_main_tabs.dart';
+import 'package:notiskku/services/preferences_app.dart';
 // import 'package:notiskku/screen/screen_main_tabs.dart';
 // import 'package:notiskku/services/preferences_app.dart';
 
@@ -25,24 +28,24 @@ class _ScreenLogoIntroState extends State<ScreenLogoIntro> {
       );
     });
 
-    // Future.delayed(const Duration(seconds: 1), () async {
-    //   final isFirst = await AppPreferences.isFirstLaunch();
+    Future.delayed(const Duration(seconds: 1), () async {
+      final isFirst = await AppPreferences.isFirstLaunch();
 
-    //   if (isFirst) {
-    //     await AppPreferences.setLaunched();
-    //     if (!mounted) return;
-    //     Navigator.pushReplacement(
-    //       context,
-    //       MaterialPageRoute(builder: (context) => const ScreenIntroOne()),
-    //     );
-    //   } else {
-    //     if (!mounted) return;
-    //     Navigator.pushReplacement(
-    //       context,
-    //       MaterialPageRoute(builder: (context) => const ScreenMainTabs()),
-    //     );
-    //   }
-    // });
+      if (isFirst) {
+        await AppPreferences.isFirstLaunch();
+        if (!mounted) return;
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const ScreenIntroOne()),
+        );
+      } else {
+        if (!mounted) return;
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const ScreenMainTabs()),
+        );
+      }
+    });
   }
 
   @override
