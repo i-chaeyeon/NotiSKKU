@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:notiskku/data/temp_starred_notices.dart';
 import 'package:notiskku/providers/bar_providers.dart';
+import 'package:notiskku/providers/user/user_provider.dart';
 
 // 학교 | 단과대학 | 학과
 class BarNotices extends ConsumerWidget {
@@ -31,6 +33,9 @@ class BarNotices extends ConsumerWidget {
             // 학교, 단과대학, 학과
             child: GestureDetector(
               onTap: () {
+                ref
+                    .read(userProvider.notifier)
+                    .saveTempStarred(tempStarredNotices);
                 selectedNoticeNotifier.state = currentNotice; // 상태 변경
               },
               child: Padding(

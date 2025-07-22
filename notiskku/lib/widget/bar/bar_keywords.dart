@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:notiskku/data/temp_starred_notices.dart';
 import 'package:notiskku/models/keyword.dart';
 import 'package:notiskku/providers/user/user_provider.dart';
 import 'package:notiskku/widget/side_scroll.dart';
@@ -52,6 +53,9 @@ class _BarKeywordsState extends ConsumerState<BarKeywords> {
                       padding: EdgeInsets.only(left: 7.w),
                       child: GestureDetector(
                         onTap: () {
+                          ref
+                              .read(userProvider.notifier)
+                              .saveTempStarred(tempStarredNotices);
                           ref.read(selectedKeywordProvider.notifier).state =
                               keyword;
                         },

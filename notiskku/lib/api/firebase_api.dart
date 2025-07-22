@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart'; // debugPrint 포함
 import 'package:flutter/material.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:notiskku/screen/screen_main_tabs.dart';
@@ -5,29 +6,31 @@ import 'package:notiskku/screen/screen_main_tabs.dart';
 import '../main.dart'; // navigatorKey 접근용
 
 Future<void> handleBackgroundMessage(RemoteMessage message) async {
-  print('Title: ${message.notification?.title}');
-  print('Body: ${message.notification?.body}');
-  print('Payload: ${message.data}');
+  debugPrint('Title: ${message.notification?.title}');
+  debugPrint('Body: ${message.notification?.body}');
+  debugPrint('Payload: ${message.data}');
 }
 
 class FirebaseApi {
   final _firebaseMessaging = FirebaseMessaging.instance;
 
   Future<void> initNotifications() async {
+    if (kIsWeb) {
+      debugPrint('웹 환경에서는 Firebase Messaging을 초기화하지 않습니다.');
+      return;
+    }
+
     await _firebaseMessaging.requestPermission();
 
     final fCMToken = await _firebaseMessaging.getToken();
-    print('Token: $fCMToken'); // 실제 앱 운영 시 DB에 저장
+    debugPrint('Token: $fCMToken'); // 실제 앱 운영 시 DB에 저장
 
-    // 백그라운드 메시지 핸들러 등록
     FirebaseMessaging.onBackgroundMessage(handleBackgroundMessage);
 
-    // 앱이 열려있을 때 알림 클릭 시
     FirebaseMessaging.onMessageOpenedApp.listen((message) {
       _handleMessage(message);
     });
 
-    // 앱이 완전히 종료된 상태에서 알림 클릭 시
     final initialMessage = await _firebaseMessaging.getInitialMessage();
     if (initialMessage != null) {
       _handleMessage(initialMessage);

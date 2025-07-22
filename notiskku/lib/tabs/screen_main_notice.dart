@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:notiskku/data/major_data.dart';
+import 'package:notiskku/data/temp_starred_notices.dart';
+import 'package:notiskku/edit/screen_main_major_edit.dart';
+import 'package:notiskku/models/major.dart';
 import 'package:notiskku/providers/bar_providers.dart';
 import 'package:notiskku/providers/selected_major_provider.dart';
 import 'package:notiskku/providers/user/user_provider.dart';
@@ -24,6 +27,7 @@ class _NoticeAppBar extends ConsumerWidget implements PreferredSizeWidget {
             : (currentIndex + 1) % listLength;
 
     notifier.state = newIndex;
+    ref.read(userProvider.notifier).saveTempStarred(tempStarredNotices);
   }
 
   @override
@@ -60,6 +64,9 @@ class _NoticeAppBar extends ConsumerWidget implements PreferredSizeWidget {
                 icon: Icon(Icons.chevron_left, color: Colors.black, size: 24.w),
                 onPressed: () {
                   _updateMajorIndex(ref, true, userState.selectedMajors.length);
+                  ref
+                      .read(userProvider.notifier)
+                      .saveTempStarred(tempStarredNotices);
                 },
                 // splashRadius: 20.r, // 터치 효과 반경 조정 (선택사항임)
               )
@@ -95,13 +102,20 @@ class _NoticeAppBar extends ConsumerWidget implements PreferredSizeWidget {
           // 우측 화살표
           userState.selectedMajors.length > 1
               ? IconButton(
-                icon: Icon(Icons.chevron_right, color: Colors.black, size: 24.w),
+                icon: Icon(
+                  Icons.chevron_right,
+                  color: Colors.black,
+                  size: 24.w,
+                ),
                 onPressed: () {
                   _updateMajorIndex(
                     ref,
                     false,
                     userState.selectedMajors.length,
                   );
+                  ref
+                      .read(userProvider.notifier)
+                      .saveTempStarred(tempStarredNotices);
                 },
                 // splashRadius: 20.r,
               )
@@ -113,6 +127,9 @@ class _NoticeAppBar extends ConsumerWidget implements PreferredSizeWidget {
           padding: EdgeInsets.all(15.0),
           child: GestureDetector(
             onTap: () {
+              ref
+                  .read(userProvider.notifier)
+                  .saveTempStarred(tempStarredNotices);
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => ScreenMainSearch()),
@@ -150,7 +167,12 @@ class ScreenMainNotice extends ConsumerWidget {
                 .major;
 
     final currentDept =
-        majors.firstWhere((m) => m.major == currentMajor).department;
+        majors
+            .firstWhere(
+              (m) => m.major == currentMajor,
+              orElse: () => Major(department: '', major: ''), // 기본값 지정
+            )
+            .department;
 
     final currentCategory = ref.watch(barCategoriesProvider);
     String getCategory(Categories category) {
@@ -183,6 +205,46 @@ class ScreenMainNotice extends ConsumerWidget {
       late QuerySnapshot snapshot;
       final currentCategoryLabel = getCategory(currentCategory);
 
+      if ((type == Notices.dept || type == Notices.major) && major == '') {
+        return Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.asset(
+                'assets/images/no_major_exception.png',
+                width: 206.w,
+                height: 202.h,
+                fit: BoxFit.contain,
+              ),
+              SizedBox(height: 16.h),
+              Text(
+                '학과 선택 후 단과대/학과별 공지를 볼 수 있어요🥲',
+                style: TextStyle(fontSize: 14.sp, color: Colors.grey),
+                textAlign: TextAlign.center,
+              ),
+              SizedBox(height: 16.h),
+              TextButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const ScreenMainMajorEdit(),
+                    ),
+                  );
+                },
+                child: Text(
+                  '→ 학과 선택하러 가기',
+                  style: TextStyle(
+                    fontSize: 20.sp,
+                    color: Color(0xFF0B5B42),
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      }
       if (type == Notices.common) {
         if (currentCategoryLabel == '[전체]') {
           snapshot =
