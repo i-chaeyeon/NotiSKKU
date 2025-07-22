@@ -7,7 +7,14 @@ import 'package:notiskku/providers/user/user_provider.dart';
 import 'package:notiskku/widget/side_scroll.dart';
 
 // 선택된 키워드 상태 관리용 Provider
-final selectedKeywordProvider = StateProvider<Keyword?>((ref) => null);
+final selectedKeywordProvider = StateProvider<Keyword?>((ref) {
+  final user = ref.watch(userProvider);
+  if (user.selectedKeywords.isNotEmpty) {
+    return user.selectedKeywords.first;
+  } else {
+    return null;
+  }
+});
 
 class BarKeywords extends ConsumerStatefulWidget {
   const BarKeywords({super.key});

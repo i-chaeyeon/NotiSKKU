@@ -16,16 +16,27 @@ class ListMajor extends ConsumerWidget {
     final userNotifier = ref.read(userProvider.notifier);
 
     // 전공 리스트를 검색어 기준으로 필터링하고 가나다순 정렬
-    final filteredMajors =
-        majors
-            .where(
-              (major) => major.major.toLowerCase().contains(
-                userState.currentSearchText.toLowerCase(),
-              ),
-            )
-            .toList()
-          ..sort((a, b) => a.major.compareTo(b.major));
+       // 1) 검색어로 필터링하고 가나다순 정렬
+    final filteredAndSorted = majors
+        .where((m) => m.major
+            .toLowerCase()
+            .contains(userState.currentSearchText.toLowerCase()))
+        .toList()
+      ..sort((a, b) => a.major.compareTo(b.major));
 
+    // 2) 선택된 학과와 선택되지 않은 학과로 분리
+    final selected   = filteredAndSorted
+        .where((m) => userState.selectedMajors
+            .any((selected) => selected.major == m.major))
+        .toList();
+    final unselected = filteredAndSorted
+        .where((m) => userState.selectedMajors
+            .every((selected) => selected.major != m.major))
+        .toList();
+
+    // 3) 선택된 학과 먼저, 그 다음 선택되지 않은 학과
+    final displayMajors = [...selected, ...unselected];
+    
     return Column(
       children: [
         Padding(
@@ -35,12 +46,12 @@ class ListMajor extends ConsumerWidget {
         Expanded(
           child: ListView.builder(
             padding: EdgeInsets.symmetric(horizontal: 30.w, vertical: 10.h),
-            itemCount: filteredMajors.length,
+            itemCount: displayMajors.length,
             itemBuilder: (context, index) {
-              final major = filteredMajors[index].major;
+              final majorObj   = displayMajors[index];
+              final major      = majorObj.major;
               final isSelected = userState.selectedMajors
-                  .map((m) => m.major)
-                  .contains(filteredMajors[index].major);
+                  .any((m) => m.major == major);
 
               return GestureDetector(
                 onTap: () {
@@ -50,10 +61,8 @@ class ListMajor extends ConsumerWidget {
                     _showLimitDialog(context, currentMajors);
                     return;
                   }
-                  Major matchedMajor = majors.firstWhere(
-                    (m) => m.major == major,
-                  );
-                  userNotifier.toggleMajor(matchedMajor);
+                  // displayMajors 내의 객체를 그대로 토글해도 OK
+                  userNotifier.toggleMajor(majorObj);
                 },
                 child: Container(
                   padding: EdgeInsets.symmetric(

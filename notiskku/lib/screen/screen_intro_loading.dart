@@ -5,6 +5,9 @@ import 'package:notiskku/providers/user/user_provider.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:notiskku/screen/screen_intro_ready.dart';
 
+// 여기서 토큰도 날려야 함
+// 만약에 학과, 키워드 설정 안했으면 주제 구독은 안하고, 토큰만 날림
+
 class ScreenIntroLoading extends ConsumerStatefulWidget {
   const ScreenIntroLoading({super.key});
 
@@ -62,33 +65,29 @@ class _ScreenIntroLoadingState extends ConsumerState<ScreenIntroLoading> {
       backgroundColor: Colors.white,
       body: SafeArea(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            SizedBox(height: 60.h),
-            Column(
-              children: [
-                Image.asset(
-                  'assets/images/fourth_fix.png',
-                  height: 170.h,
-                  width: 170.h,
-                  fit: BoxFit.contain,
-                ),
-                SizedBox(height: 23.h),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      '로딩 중...',
-                      style: TextStyle(
-                        color: Color(0xFF0B5B42),
-                        fontSize: 24.sp,
-                        fontFamily: 'Inter',
-                        fontWeight: FontWeight.w700,
-                      ),
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.asset(
+                    'assets/images/fourth_fix.png',
+                    height: 170.h,
+                    width: 170.h,
+                    fit: BoxFit.contain,
+                  ),
+                  SizedBox(height: 23.h),
+                  Text(
+                    '로딩 중...',
+                    style: TextStyle(
+                      color: Color(0xFF0B5B42),
+                      fontSize: 24.sp,
+                      fontFamily: 'Inter',
+                      fontWeight: FontWeight.w700,
                     ),
-                  ],
-                ),
-              ],
+                  ),
+                ],
+              ),
             ),
           ],
         ),

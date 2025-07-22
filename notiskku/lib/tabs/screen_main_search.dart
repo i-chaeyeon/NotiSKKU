@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:notiskku/models/major.dart';
+import 'package:notiskku/edit/screen_main_major_edit.dart';
 import 'package:notiskku/providers/bar_providers.dart';
 import 'package:notiskku/providers/selected_major_provider.dart';
 import 'package:notiskku/providers/user/user_provider.dart';
@@ -21,7 +21,6 @@ class ScreenMainSearchState extends ConsumerState<ScreenMainSearch> {
   String searchText = '';
   bool isSearched = false;
 
-  // 검색 상태 업데이트
   void updateSearch(String newText, bool searched) {
     setState(() {
       searchText = newText;
@@ -35,81 +34,124 @@ class ScreenMainSearchState extends ConsumerState<ScreenMainSearch> {
     final userState = ref.watch(userProvider);
     final majorIndex = ref.watch(selectedMajorIndexProvider);
 
-    Major userInfo = userState.selectedMajors[majorIndex];
-    String currentMajor = userInfo.major;
-    String currentDept = userInfo.department;
+    final hasMajor = userState.selectedMajors.isNotEmpty;
 
     String hintText = '검색어를 입력하세요.';
-    if (typeState == Notices.dept) {
-      hintText = '$currentDept 내 겁색';
-    } else if (typeState == Notices.major) {
-      hintText = '$currentMajor 내 검색';
+    if (hasMajor && typeState == Notices.dept) {
+      hintText = '${userState.selectedMajors[majorIndex].department} 내 검색';
+    } else if (hasMajor && typeState == Notices.major) {
+      hintText = '${userState.selectedMajors[majorIndex].major} 내 검색';
     }
+
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios, color: Color(0xFF979797)),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-        title: Text(
-          '검색',
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            fontSize: 20.sp,
-            fontWeight: FontWeight.bold,
-            color: Colors.black,
-          ),
-        ),
-        centerTitle: true, // 제목 중앙 정렬
-        actions: [
-          SizedBox(width: 40.w), // 오른쪽 여백 추가
-        ],
-      ),
+      appBar: _buildAppBar(context),
       backgroundColor: Colors.white,
       body: Column(
         children: [
           BarNotices(),
           SizedBox(height: 5.h),
-          SearchNotice(
-            onSearch: updateSearch,
-            hintText: hintText,
-          ), // `onSearch`를 사용하여 검색 실행 시 상태 변경
-          SizedBox(height: 5.h),
-          // 검색 상태에 따라 '최근 검색 내역' 또는 '검색 결과' 표시
-          Container(
-            margin: EdgeInsets.symmetric(horizontal: 20.w),
-            padding: EdgeInsets.all(5.0),
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                isSearched ? "‘$searchText’에 대한 검색 결과" : '최근 검색 내역',
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 18.sp,
-                  fontWeight: FontWeight.w600,
+          if (typeState != Notices.common && !hasMajor)
+            Expanded(
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image.asset(
+                      'assets/images/no_major_exception.png',
+                      width: 206.w,
+                      height: 202.h,
+                      fit: BoxFit.contain,
+                    ),
+                    SizedBox(height: 16.h),
+                    Text(
+                      '학과를 선택해야 검색할 수 있어요 🥲',
+                      style: TextStyle(fontSize: 14.sp, color: Colors.grey),
+                      textAlign: TextAlign.center,
+                    ),
+                    SizedBox(height: 16.h),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const ScreenMainMajorEdit(),
+                          ),
+                        );
+                      },
+                      child: Text(
+                        '→ 학과 선택하러 가기',
+                        style: TextStyle(
+                          fontSize: 20.sp,
+                          color: Color(0xFF0B5B42),
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
-            ),
-          ),
-          // 최근 검색 내역 또는 검색 결과 표시
-          Expanded(
-            child:
-                isSearched
-                    ? ListSearchResults(
-                      searchText: searchText,
-                      typeState: typeState,
-                    )
-                    : ListRecentSearch(
-                      onTapRecentSearch: (text) => updateSearch(text, true),
+            )
+          else
+            Expanded(
+              child: Column(
+                children: [
+                  SearchNotice(onSearch: updateSearch, hintText: hintText),
+                  SizedBox(height: 5.h),
+                  Container(
+                    margin: EdgeInsets.symmetric(horizontal: 20.w),
+                    padding: EdgeInsets.all(5.0),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        isSearched ? "‘$searchText’에 대한 검색 결과" : '최근 검색 내역',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 18.sp,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
                     ),
-          ),
-          SizedBox(height: 10.h),
+                  ),
+                  Expanded(
+                    child:
+                        isSearched
+                            ? ListSearchResults(
+                              searchText: searchText,
+                              typeState: typeState,
+                            )
+                            : ListRecentSearch(
+                              onTapRecentSearch:
+                                  (text) => updateSearch(text, true),
+                            ),
+                  ),
+                  SizedBox(height: 10.h),
+                ],
+              ),
+            ),
         ],
       ),
+    );
+  }
+
+  PreferredSizeWidget _buildAppBar(BuildContext context) {
+    return AppBar(
+      backgroundColor: Colors.white,
+      elevation: 0,
+      leading: IconButton(
+        icon: Icon(Icons.arrow_back_ios, color: Color(0xFF979797)),
+        onPressed: () => Navigator.pop(context),
+      ),
+      title: Text(
+        '검색',
+        textAlign: TextAlign.center,
+        style: TextStyle(
+          fontSize: 20.sp,
+          fontWeight: FontWeight.bold,
+          color: Colors.black,
+        ),
+      ),
+      centerTitle: true,
+      actions: [SizedBox(width: 40.w)],
     );
   }
 }

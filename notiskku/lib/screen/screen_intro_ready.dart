@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:notiskku/screen/screen_main_tabs.dart';
+import 'package:notiskku/services/preferences_app.dart';
 import 'package:notiskku/widget/button/wide_green.dart';
 
 class ScreenIntroReady extends StatelessWidget {
