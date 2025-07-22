@@ -30,7 +30,7 @@ class Major {
     bool? receiveNotification,
   }) {
     return Major(
-      id: id ?? this.id, 
+      id: id,
       department: department ?? this.department,
       major: major ?? this.major,
       receiveNotification: receiveNotification ?? this.receiveNotification,

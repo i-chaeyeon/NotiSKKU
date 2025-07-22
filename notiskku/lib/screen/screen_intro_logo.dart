@@ -20,14 +20,6 @@ class _ScreenLogoIntroState extends State<ScreenLogoIntro> {
   void initState() {
     super.initState();
 
-    Future.delayed(const Duration(seconds: 1), () {
-      if (!mounted) return;
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const ScreenIntro()),
-      );
-    });
-
     Future.delayed(const Duration(seconds: 1), () async {
       final isFirst = await AppPreferences.isFirstLaunch();
 
@@ -36,7 +28,7 @@ class _ScreenLogoIntroState extends State<ScreenLogoIntro> {
         if (!mounted) return;
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const ScreenIntroOne()),
+          MaterialPageRoute(builder: (context) => const ScreenIntro()),
         );
       } else {
         if (!mounted) return;
