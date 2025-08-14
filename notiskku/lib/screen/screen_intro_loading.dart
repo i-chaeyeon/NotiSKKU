@@ -55,6 +55,12 @@ class _ScreenIntroLoadingState extends ConsumerState<ScreenIntroLoading> {
             duration: const Duration(seconds: 3),
           ),
         );
+
+        // 디버깅 용 - 출시 시 하단 4줄은 주석 처리 필요
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => const ScreenIntroReady()),
+        );
       }
     }
   }
