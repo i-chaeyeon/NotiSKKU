@@ -129,7 +129,7 @@ flutter run -d ios
 ## 📝 라이선스
 
 This project is licensed under the **MIT License**.\
-See the [LICENSE](./LICENSE) file for details.
+See the [LICENSE](./Lincense) file for details.
 
 
 ## 🙋‍♂️ 기여 방법
