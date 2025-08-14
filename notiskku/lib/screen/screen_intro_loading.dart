@@ -4,6 +4,7 @@ import 'package:notiskku/firebase/topic_subscription.dart';
 import 'package:notiskku/providers/user/user_provider.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:notiskku/screen/screen_intro_ready.dart';
+import 'package:notiskku/services/preferences_app.dart';
 
 // 여기서 토큰도 날려야 함
 // 만약에 학과, 키워드 설정 안했으면 주제 구독은 안하고, 토큰만 날림
@@ -34,6 +35,7 @@ class _ScreenIntroLoadingState extends ConsumerState<ScreenIntroLoading> {
 
       // 구독 성공 후 바로 다음 화면으로 이동
       if (mounted) {
+        await AppPreferences.setFirstLaunch();
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (_) => const ScreenIntroReady()),
@@ -56,7 +58,8 @@ class _ScreenIntroLoadingState extends ConsumerState<ScreenIntroLoading> {
           ),
         );
 
-        // 디버깅 용 - 출시 시 하단 4줄은 주석 처리 필요
+        // 개발/테스트용 !!! 일단 화면 넘겨....
+        await AppPreferences.setFirstLaunch();
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (_) => const ScreenIntroReady()),
