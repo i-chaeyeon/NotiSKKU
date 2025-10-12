@@ -9,7 +9,7 @@
 
 ### 맞춤형 키워드 및 알림 설정하기!
 <p align="center">
-  <img src="assets/screenshots/keyword_setting.png" width="30%"/>
+  <img src="screenshots/Key Features 2.png" width="30%"/>
 </p>
 
 관심 있는 키워드를 설정하고 해당 키워드가 포함된 공지사항을 실시간으로 받아보세요.
@@ -19,7 +19,7 @@
 
 ### 원하는 공지는 즐겨찾기로 간편하게!
 <p align="center">
-  <img src="assets/screenshots/bookmark_feature.png" width="30%"/>
+  <img src="screenshots/Key Features 2.png" width="30%"/>
 </p>
 
 중요한 공지사항을 별표로 저장하고 즐겨찾기 탭에서 한눈에 모아보세요.
@@ -29,7 +29,7 @@
 
 ### 학사일정을 한눈에!
 <p align="center">
-  <img src="assets/screenshots/academic_calendar.png" width="30%"/>
+  <img src="screenshots/Key Features 3.png" width="30%"/>
 </p>
 
 성균관대학교의 모든 학사일정을 캘린더로 확인하세요.
