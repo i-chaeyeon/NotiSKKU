@@ -40,7 +40,7 @@
 ## 🏛️ 시스템 아키텍처
 
 <p align="center">
-  <img src="assets/architecture/system_architecture.png" width="80%"/>
+  <img src="assets/system_architecture.png" width="100%"/>
 </p>
 
 NotiSKKU는 **Flutter 기반**으로 구현되었으며, Firebase와 Google Sheets API를 활용합니다.
