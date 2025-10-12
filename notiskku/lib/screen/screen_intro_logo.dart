@@ -67,7 +67,6 @@ class _ScreenLogoIntroState extends State<ScreenLogoIntro> {
               ),
             ),
             SizedBox(
-              width: 195.w,
               child: Text(
                 'NotiSKKU',
                 style: TextStyle(
