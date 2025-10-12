@@ -19,24 +19,32 @@ class _ScreenLogoIntroState extends State<ScreenLogoIntro> {
   void initState() {
     super.initState();
 
-    Future.delayed(const Duration(seconds: 1), () async {
-      // final isFirst = await AppPreferences.isFirstLaunch();
-
-      // if (isFirst) {
-      // await AppPreferences.isFirstLaunch();
-      // if (!mounted) return;
-      // Navigator.pushReplacement(
-      //   context,
-      //   MaterialPageRoute(builder: (context) => const ScreenIntro()),
-      // );
-      // } else {
-      //   if (!mounted) return;
-      //   Navigator.pushReplacement(
-      //     context,
-      //     MaterialPageRoute(builder: (context) => const ScreenMainTabs()),
-      //   );
-      // }
+    Future.delayed(const Duration(seconds: 1), () {
+      if (!mounted) return;
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const ScreenIntro()),
+      );
     });
+
+    // Future.delayed(const Duration(seconds: 1), () async {
+    // final isFirst = await AppPreferences.isFirstLaunch();
+
+    // if (isFirst) {
+    // await AppPreferences.isFirstLaunch();
+    // if (!mounted) return;
+    // Navigator.pushReplacement(
+    //   context,
+    //   MaterialPageRoute(builder: (context) => const ScreenIntro()),
+    // );
+    // } else {
+    //   if (!mounted) return;
+    //   Navigator.pushReplacement(
+    //     context,
+    //     MaterialPageRoute(builder: (context) => const ScreenMainTabs()),
+    //   );
+    // }
+    // });
   }
 
   @override
