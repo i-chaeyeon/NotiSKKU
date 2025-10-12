@@ -10,7 +10,7 @@ const messaging = getMessaging();
 
 exports.scheduledPushNotification = onSchedule(
   {
-    schedule: "*/10 * * * *", // 10분마다 실행
+    schedule: "*/30 * * * *", // 10분마다 실행
     timeZone: "Asia/Seoul",
   },
   async () => {
@@ -18,11 +18,11 @@ exports.scheduledPushNotification = onSchedule(
 
     try {
       const now = new Date();
-      const tenMinutesAgo = new Date(now.getTime() - 10 * 60 * 1000);
+      const thirtyMinutesAgo = new Date(now.getTime() - 30 * 60 * 1000);
 
       const notices = await db
         .collection("notices")
-        .where("updated_at", ">=", tenMinutesAgo)
+        .where("updated_at", ">=", thirtyMinutesAgo)
         .get();
 
       if (notices.empty) {
