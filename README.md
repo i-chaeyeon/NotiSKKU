@@ -68,6 +68,17 @@ notiskku/
 - **test/**  
   단위 테스트 코드  
 
+## 🛠️ 기술 스택
+
+### Frontend
+- **Flutter** 3.7.0+
+- **Dart** ^3.7.0
+
+### Backend & Database
+- **Firebase Core** 3.13.0  
+- **Firebase Firestore** 5.6.6
+- **Firebase Cloud Messaging** 15.2.5
+
 ## ⚙️ 설치 및 실행
 
 ### ✅ 요구 사항
