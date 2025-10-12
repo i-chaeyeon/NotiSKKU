@@ -171,7 +171,7 @@ class ScreenMainNotice extends ConsumerWidget {
         majors
             .firstWhere(
               (m) => m.major == currentMajor,
-              orElse: () => Major(department: '', major: ''), // 기본값 지정
+              orElse: () => Major(id: '', department: '', major: ''), // 기본값 지정
             )
             .department;
 
