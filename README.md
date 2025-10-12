@@ -132,17 +132,14 @@ This project is licensed under the **MIT License**.\
 See the [LICENSE](./LICENSE) file for details.
 
 
-## 🙋‍♂️ 기여 방법
+<br/>
 
-1. 이 저장소를 **Fork** 합니다.  
-2. 새로운 브랜치를 생성합니다.  
-
-```text
-git checkout -b feature/XYZ
-```
-
-3. 커밋 메시지 컨벤션을 지켜서 커밋합니다.  
-4. Pull Request를 생성 후 리뷰를 요청합니다.
+## 🎉 기여하기
+1. Fork the Project
+2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the Branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
 ## ❓ 추가할 내용 (TODO)
 
