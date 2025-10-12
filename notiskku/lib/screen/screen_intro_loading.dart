@@ -6,9 +6,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:notiskku/screen/screen_intro_ready.dart';
 import 'package:notiskku/services/preferences_app.dart';
 
-// 여기서 토큰도 날려야 함
-// 만약에 학과, 키워드 설정 안했으면 주제 구독은 안하고, 토큰만 날림
-
 class ScreenIntroLoading extends ConsumerStatefulWidget {
   const ScreenIntroLoading({super.key});
 
@@ -33,7 +30,6 @@ class _ScreenIntroLoadingState extends ConsumerState<ScreenIntroLoading> {
         majors: majors,
       );
 
-      // 구독 성공 후 바로 다음 화면으로 이동
       if (mounted) {
         await AppPreferences.setFirstLaunch();
         Navigator.pushReplacement(
@@ -58,7 +54,6 @@ class _ScreenIntroLoadingState extends ConsumerState<ScreenIntroLoading> {
           ),
         );
 
-        // 개발/테스트용 !!! 일단 화면 넘겨....
         await AppPreferences.setFirstLaunch();
         Navigator.pushReplacement(
           context,
@@ -73,32 +68,30 @@ class _ScreenIntroLoadingState extends ConsumerState<ScreenIntroLoading> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
-        child: Column(
-          children: [
-            Expanded(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Image.asset(
-                    'assets/images/fourth_fix.png',
-                    height: 170.h,
-                    width: 170.h,
-                    fit: BoxFit.contain,
-                  ),
-                  SizedBox(height: 23.h),
-                  Text(
-                    '로딩 중...',
-                    style: TextStyle(
-                      color: Color(0xFF0B5B42),
-                      fontSize: 24.sp,
-                      fontFamily: 'Inter',
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                ],
+        child: Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Image.asset(
+                'assets/images/fourth_fix.png',
+                height: 170.h,
+                width: 170.h,
+                fit: BoxFit.contain,
               ),
-            ),
-          ],
+              SizedBox(height: 23.h),
+              Text(
+                '로딩 중...',
+                style: TextStyle(
+                  color: const Color(0xFF0B5B42),
+                  fontSize: 24.sp,
+                  fontFamily: 'Inter',
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
