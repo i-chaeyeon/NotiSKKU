@@ -13,6 +13,7 @@ import 'package:notiskku/widget/bar/bar_categories.dart';
 import 'package:notiskku/widget/bar/bar_notices.dart';
 import 'package:notiskku/widget/list/list_notices.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class _NoticeAppBar extends ConsumerWidget implements PreferredSizeWidget {
   const _NoticeAppBar();
@@ -170,7 +171,7 @@ class ScreenMainNotice extends ConsumerWidget {
         majors
             .firstWhere(
               (m) => m.major == currentMajor,
-              orElse: () => Major(department: '', major: ''), // 기본값 지정
+              orElse: () => Major(id: '', department: '', major: ''), // 기본값 지정
             )
             .department;
 
@@ -196,6 +197,15 @@ class ScreenMainNotice extends ConsumerWidget {
       }
     }
 
+    Future<void> _launchURL(String url) async {
+      final Uri uri = Uri.parse(url);
+      if (await canLaunchUrl(uri)) {
+        await launchUrl(uri);
+      } else {
+        throw 'Could not launch $url';
+      }
+    }
+
     Future<Widget> getNoticesWidget(
       Notices type,
       String department,
@@ -204,6 +214,32 @@ class ScreenMainNotice extends ConsumerWidget {
     ) async {
       late QuerySnapshot snapshot;
       final currentCategoryLabel = getCategory(currentCategory);
+
+      final noScrapingMajors = {
+        '유학동양학과': 'https://confucian.skku.edu/confucian/index.do',
+        '미디어커뮤니케이션학과': 'https://mediacomm.skku.edu/mediacomm/index.do',
+        '소비자학과': 'https://consumer.skku.edu/consumer/index.do',
+        '글로벌경제학과': 'https://geco.skku.edu/geco/index.do',
+        '글로벌경영학과': 'https://gsb.skku.edu/gsb/index.do',
+        '반도체시스템공학과': 'https://semi.skku.edu/semi/index.do',
+        '반도체융합공학과': 'https://scse.skku.edu/scse/index.do',
+        '소재부품융합공학과': 'https://amse.skku.edu/amse/index.do',
+        '차세대반도체공학연계전공': 'https://semi.skku.edu/semi/index.do',
+        '글로벌융합학부 공통': 'https://ic.skku.edu/ic/index.do',
+        '데이터사이언스융합전공': 'https://ic.skku.edu/ic/index.do',
+        '인공지능융합전공': 'https://ic.skku.edu/ic/index.do',
+        '자기설계융합전공': 'https://ic.skku.edu/ic/index.do',
+        '지능형소프트웨어학과': 'https://sw.skku.edu/sw/index.do',
+        '컬쳐앤테크놀로지융합전공': 'https://ic.skku.edu/ic/index.do',
+        '건축학과(건축학계열)': 'https://arch.skku.edu/arch/index.do',
+        '나노공학과': 'https://saint.skku.edu/saint/index.do',
+        '바이오메카트로닉스학과': 'https://bme.skku.edu/bme/index.do',
+        '융합생명공학과': 'https://biotech.skku.edu/biotech/index.do',
+        '의학과': 'https://med.skku.edu/med/index.do',
+        '글로벌바이오메디컬공학과': 'https://gbme.skku.edu/gbme/index.do',
+        '에너지학과': 'https://energy.skku.edu/energy/index.do',
+        '응용AI융합학부': 'https://ai.skku.edu/ai/index.do',
+      };
 
       if ((type == Notices.dept || type == Notices.major) && major == '') {
         return Center(
@@ -270,6 +306,41 @@ class ScreenMainNotice extends ConsumerWidget {
                 .orderBy('date', descending: true)
                 .get();
       } else if (type == Notices.major) {
+        if (noScrapingMajors.containsKey(major)) {
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  '공지를 불러올 수 없는 학과입니다.\n하단 링크를 통해 직접 접속해 확인해주세요! 🥲',
+                  style: TextStyle(fontSize: 14.sp, color: Colors.grey),
+                  textAlign: TextAlign.center,
+                ),
+                SizedBox(height: 16.h),
+                TextButton(
+                  onPressed: () {
+                    _launchURL(noScrapingMajors[major]!);
+                  },
+                  child: Text(
+                    '→ 학과 게시판 바로가기',
+                    style: TextStyle(
+                      fontSize: 20.sp,
+                      color: Color(0xFF0B5B42),
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                SizedBox(height: 16.h),
+                Image.asset(
+                  'assets/images/no_major_exception.png',
+                  width: 206.w,
+                  height: 202.h,
+                  fit: BoxFit.contain,
+                ),
+              ],
+            ),
+          );
+        }
         snapshot =
             await FirebaseFirestore.instance
                 .collection('notices')

@@ -8,7 +8,7 @@ class AppPreferences {
     return prefs.getBool(_keyFirstLaunch) ?? true;
   }
 
-  static Future<void> setLaunched() async {
+  static Future<void> setFirstLaunch() async{
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool(_keyFirstLaunch, false);
   }

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:notiskku/data/major_data.dart';
-import 'package:notiskku/models/major.dart';
 import 'package:notiskku/providers/user/user_provider.dart';
 import 'package:notiskku/widget/dialog/dialog_limit_major.dart';
 import 'package:notiskku/widget/search/search_major.dart';
@@ -16,27 +15,38 @@ class ListMajor extends ConsumerWidget {
     final userNotifier = ref.read(userProvider.notifier);
 
     // 전공 리스트를 검색어 기준으로 필터링하고 가나다순 정렬
-       // 1) 검색어로 필터링하고 가나다순 정렬
-    final filteredAndSorted = majors
-        .where((m) => m.major
-            .toLowerCase()
-            .contains(userState.currentSearchText.toLowerCase()))
-        .toList()
-      ..sort((a, b) => a.major.compareTo(b.major));
+    // 1) 검색어로 필터링하고 가나다순 정렬
+    final filteredAndSorted =
+        majors
+            .where(
+              (m) => m.major.toLowerCase().contains(
+                userState.currentSearchText.toLowerCase(),
+              ),
+            )
+            .toList()
+          ..sort((a, b) => a.major.compareTo(b.major));
 
     // 2) 선택된 학과와 선택되지 않은 학과로 분리
-    final selected   = filteredAndSorted
-        .where((m) => userState.selectedMajors
-            .any((selected) => selected.major == m.major))
-        .toList();
-    final unselected = filteredAndSorted
-        .where((m) => userState.selectedMajors
-            .every((selected) => selected.major != m.major))
-        .toList();
+    final selected =
+        filteredAndSorted
+            .where(
+              (m) => userState.selectedMajors.any(
+                (selected) => selected.major == m.major,
+              ),
+            )
+            .toList();
+    final unselected =
+        filteredAndSorted
+            .where(
+              (m) => userState.selectedMajors.every(
+                (selected) => selected.major != m.major,
+              ),
+            )
+            .toList();
 
     // 3) 선택된 학과 먼저, 그 다음 선택되지 않은 학과
     final displayMajors = [...selected, ...unselected];
-    
+
     return Column(
       children: [
         Padding(
@@ -48,10 +58,11 @@ class ListMajor extends ConsumerWidget {
             padding: EdgeInsets.symmetric(horizontal: 30.w, vertical: 10.h),
             itemCount: displayMajors.length,
             itemBuilder: (context, index) {
-              final majorObj   = displayMajors[index];
-              final major      = majorObj.major;
-              final isSelected = userState.selectedMajors
-                  .any((m) => m.major == major);
+              final majorObj = displayMajors[index];
+              final major = majorObj.major;
+              final isSelected = userState.selectedMajors.any(
+                (m) => m.major == major,
+              );
 
               return GestureDetector(
                 onTap: () {
