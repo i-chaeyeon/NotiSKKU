@@ -7,11 +7,11 @@ class ScreenIntroTwo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 36.w),
+      padding: EdgeInsets.symmetric(horizontal: 35.w),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(height: 40.h),
+          SizedBox(height: 65.h),
           RichText(
             text: TextSpan(
               style: TextStyle(
@@ -32,7 +32,7 @@ class ScreenIntroTwo extends StatelessWidget {
               ],
             ),
           ),
-          SizedBox(height: 6.h),
+          SizedBox(height: 2.h),
           Text(
             '원하는 소식만 확인할 수 있어요.',
             style: TextStyle(

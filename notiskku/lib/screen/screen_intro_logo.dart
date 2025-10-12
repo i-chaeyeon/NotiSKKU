@@ -29,22 +29,22 @@ class _ScreenLogoIntroState extends State<ScreenLogoIntro> {
     });
 
     Future.delayed(const Duration(seconds: 1), () async {
-      final isFirst = await AppPreferences.isFirstLaunch();
+      // final isFirst = await AppPreferences.isFirstLaunch();
 
-      if (isFirst) {
-        await AppPreferences.isFirstLaunch();
-        if (!mounted) return;
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const ScreenIntroOne()),
-        );
-      } else {
-        if (!mounted) return;
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const ScreenMainTabs()),
-        );
-      }
+      // if (isFirst) {
+      // await AppPreferences.isFirstLaunch();
+      // if (!mounted) return;
+      // Navigator.pushReplacement(
+      //   context,
+      //   MaterialPageRoute(builder: (context) => const ScreenIntro()),
+      // );
+      // } else {
+      //   if (!mounted) return;
+      //   Navigator.pushReplacement(
+      //     context,
+      //     MaterialPageRoute(builder: (context) => const ScreenMainTabs()),
+      //   );
+      // }
     });
   }
 

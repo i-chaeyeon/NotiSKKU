@@ -25,21 +25,20 @@ class ScreenIntroAlarm extends ConsumerWidget {
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
+        scrolledUnderElevation: 0,
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.black, size: 24.w),
           onPressed: () => Navigator.pop(context),
         ),
       ),
-      
+
       backgroundColor: Colors.white,
       body: Column(
         children: [
-          SizedBox(height: 20.h),
-
           Align(
             alignment: Alignment.centerLeft,
             child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 40.w),
+              padding: EdgeInsets.symmetric(horizontal: 31.w),
               child: Text(
                 '알림 받을 학과와 키워드를 선택해주세요😀\n미선택 시 알림이 발송되지 않습니다.',
                 textAlign: TextAlign.left,
@@ -52,7 +51,7 @@ class ScreenIntroAlarm extends ConsumerWidget {
               ),
             ),
           ),
-          SizedBox(height: 20.h),
+          SizedBox(height: 26.h),
 
           Align(
             alignment: Alignment.centerLeft,
@@ -71,7 +70,7 @@ class ScreenIntroAlarm extends ConsumerWidget {
           SizedBox(height: 10.h),
           const ListAlarmMajor(),
 
-          SizedBox(height: 13.h),
+          SizedBox(height: 26.h),
 
           Align(
             alignment: Alignment.centerLeft,
@@ -90,20 +89,24 @@ class ScreenIntroAlarm extends ConsumerWidget {
           SizedBox(height: 10.h),
           const GridAlarmKeyword(),
 
-          WideGreen(
-            text: '설정 완료',
-            onPressed: () {
-              if (selectedMajors.every((m) => m.receiveNotification == false) &&
-                  selectedKeywords.every(
-                    (k) => k.receiveNotification == false,
-                  )) {
-                _showNoAlarmDialog(context);
-              } else {
-                _goToNext(context);
-              }
-            },
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: 20.h),
+            child: WideGreen(
+              text: '설정 완료',
+              onPressed: () {
+                if (selectedMajors.every(
+                      (m) => m.receiveNotification == false,
+                    ) &&
+                    selectedKeywords.every(
+                      (k) => k.receiveNotification == false,
+                    )) {
+                  _showNoAlarmDialog(context);
+                } else {
+                  _goToNext(context);
+                }
+              },
+            ),
           ),
-          SizedBox(height: 30.h),
         ],
       ),
     );

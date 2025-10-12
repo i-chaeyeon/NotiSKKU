@@ -42,7 +42,7 @@ class ScreenIntroReady extends StatelessWidget {
               ],
             ),
             Padding(
-              padding: EdgeInsets.only(bottom: 40.h), // 반응형 하단 여백
+              padding: EdgeInsets.symmetric(vertical: 20.h),
               child: WideGreen(
                 text: '나의 공지 보러가기',
                 onPressed: () {
