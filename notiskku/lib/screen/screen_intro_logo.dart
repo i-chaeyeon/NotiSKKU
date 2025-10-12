@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:notiskku/screen/screen_intro.dart';
-import 'package:notiskku/screen/screen_main_tabs.dart';
-import 'package:notiskku/services/preferences_app.dart';
 // import 'package:notiskku/screen/screen_main_tabs.dart';
 // import 'package:notiskku/services/preferences_app.dart';
 
