@@ -59,17 +59,17 @@ class _SearchMajorState extends ConsumerState<SearchMajor> {
                       _controller.clear();
                       ref.read(userProvider.notifier).updateSearchText('');
                     },
-                    icon: const Icon(Icons.cancel, color: Color(0xff979797)),
+                    icon: const Icon(Icons.cancel, color: Color(0xffd9d9d9)),
                     padding: EdgeInsets.zero,
                     splashRadius: 10.w, // 터치 효과 반경 설정
                   ),
                 ),
                 Align(
                   alignment: Alignment.centerRight,
-                  child: GestureDetector(
+                  child: InkWell(
                     onTap: () {
                       _controller.clear();
-                    },
+                    }, // 검색 버튼 클릭 시 실행
                     child: Padding(
                       padding: const EdgeInsets.all(9.0),
                       child: Image.asset(
