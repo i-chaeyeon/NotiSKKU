@@ -43,7 +43,7 @@
   <img src="assets/architecture/system_architecture.png" width="80%"/>
 </p>
 
-NotiSKKU는 **Flutter 기반 MVVM 패턴**으로 구현되었으며, Firebase와 Google Sheets API를 활용합니다.
+NotiSKKU는 **Flutter 기반**으로 구현되었으며, Firebase와 Google Sheets API를 활용합니다.
 
 ### 주요 구성 요소
 - **Frontend**: Flutter (Dart) + Riverpod 상태 관리
