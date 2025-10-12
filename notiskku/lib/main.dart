@@ -1,18 +1,18 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:notiskku/firebase_options.dart';
+import 'package:notiskku/firebase/firebase_options.dart';
 import 'package:notiskku/screen/screen_intro_logo.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart'; // ProviderScope 추가
 
-import 'api/firebase_api.dart';
+import 'firebase/notification_provider.dart';
 
 final navigatorKey = GlobalKey<NavigatorState>();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  await FirebaseApi().initNotifications();
+  await NotificationProvider().init();
 
   runApp(const ProviderScope(child: MyApp()));
 }
