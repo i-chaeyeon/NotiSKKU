@@ -1,11 +1,16 @@
 # NotiSKKU
 
-> **노티스꾸**: 성균관대학교 맞춤형 공지사항 알림 애플리케이션
+> **노티스꾸**: 성균관대학교 맞춤형 공지사항 알림 애플리케이션   
 > 학과별, 키워드별 공지를 받아보고 학사일정을 한눈에 확인하세요!
+
+_본 레포지토리는 NotiSKKU 프로젝트의 프론트엔드 및 푸시알림 레포지토리입니다._    
+→ [NotiSKKU Backend Repository 바로가기](https://github.com/Team-Notiskku/backend)
+
+<img src="screenshots/app_overview_ver2.png"/>
 
 <br/>
 
-## 📸 주요 기능 스크린샷
+## ✨ 주요 기능
 
 ### 맞춤형 키워드 및 알림 설정하기!
 <p align="center">
@@ -34,6 +39,22 @@
 
 성균관대학교의 모든 학사일정을 캘린더로 확인하세요.
 날짜를 탭하면 해당 일의 상세 일정을 바로 볼 수 있습니다.
+
+<br/>
+
+## 🏛️ 시스템 아키텍처
+
+<p align="center">
+  <img src="screenshots/system_architecture.jpg" width="100%"/>
+</p>
+
+NotiSKKU는 **Flutter 기반**으로 구현되었으며, Firebase와 Google Sheets API를 활용합니다.
+
+### 주요 구성 요소
+- **Frontend**: Flutter (Dart) + Riverpod 상태 관리
+- **Backend**: Firebase (Firestore, FCM) + Google Sheets API
+- **Local Storage**: SharedPreferences
+- **Architecture Pattern**: MVVM + Repository Pattern
 
 <br/>
 
