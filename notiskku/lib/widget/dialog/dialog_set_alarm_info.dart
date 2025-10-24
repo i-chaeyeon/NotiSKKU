@@ -15,14 +15,19 @@ class DialogSetAlarmInfo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
+      backgroundColor: Colors.white,
       title: Text(
         '편집이 완료되었습니다!',
-        style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w700),
+        style: TextStyle(
+          fontSize: 16.sp,
+          fontWeight: FontWeight.bold,
+          color: const Color(0xFF0B5B42),
+        ),
       ),
       content: Text(
-        '새로 추가한 학과/키워드에 대한 알림은\n'
-        '더보기 > 학과 및 키워드 알림 설정에서\n설정할 수 있습니다 😄',
+        '새로 추가된 학과/키워드에 대한 알림은\n'
+        '\'더보기 > 학과 및 키워드 알림 설정\'에서\n설정할 수 있습니다.',
         style: TextStyle(fontSize: 12.sp),
       ),
       actionsAlignment: MainAxisAlignment.spaceBetween,
@@ -38,23 +43,20 @@ class DialogSetAlarmInfo extends StatelessWidget {
             '알림 설정 바로가기',
             style: TextStyle(
               color: const Color(0xFF979797),
-              fontWeight: FontWeight.w700,
+              fontWeight: FontWeight.w500,
             ),
           ),
         ),
         TextButton(
-          style: TextButton.styleFrom(
-            padding: EdgeInsets.all(3.0.w),
-            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-            minimumSize: Size.zero,
-          ),
+          // style: TextButton.styleFrom(
+          //   padding: EdgeInsets.all(3.0.w),
+          //   tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+          //   minimumSize: Size.zero,
+          // ),
           onPressed: onTapOk,
-          child: const Text(
+          child: Text(
             '확인',
-            style: TextStyle(
-              color: Color(0xFF0B5B42),
-              fontWeight: FontWeight.w500,
-            ),
+            style: TextStyle(fontSize: 16.sp, color: const Color(0xFF0B5B42)),
           ),
         ),
       ],
