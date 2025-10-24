@@ -3,7 +3,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 //import 'package:notiskku/notice_functions/launch_url.dart'; // LaunchUrlService import 추가
-import 'package:url_launcher/url_launcher.dart';
+// import 'package:url_launcher/url_launcher.dart'; // 안드로이드 미지원 이슈로 다른 패키지로 대체
+import 'package:app_settings/app_settings.dart';
 
 import 'package:notiskku/screen/screen_intro_alarm.dart';
 
@@ -22,14 +23,14 @@ class ScreenMainOthers extends StatelessWidget {
   const ScreenMainOthers({super.key});
 
   Future<void> _openSettings() async {
-    final uri = Uri.parse(
-      Platform.isAndroid ? 'app-settings:' : 'app-settings:',
-    );
-
-    if (await canLaunchUrl(uri)) {
-      await launchUrl(uri);
+    if (Platform.isAndroid) {
+      // Android → 앱 설정으로 바로 이동
+      AppSettings.openAppSettings();
+    } else if (Platform.isIOS) {
+      // iOS → 시스템 설정으로 이동
+      AppSettings.openAppSettings();
     } else {
-      debugPrint("This platform does not support settings redirection.");
+      debugPrint("⚠️ This platform does not support settings redirection.");
     }
   }
 
@@ -214,11 +215,6 @@ class ScreenMainOthers extends StatelessWidget {
             builder: (BuildContext context) => const ServiceIntroPopup(),
           );
         } else if (openSettings) {
-          _openSettings();
-        }
-        // 알림 설정 화면으로 이동
-
-        if (openSettings) {
           _openSettings();
         }
       },
