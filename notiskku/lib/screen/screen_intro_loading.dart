@@ -11,8 +11,17 @@ import 'package:notiskku/screen/screen_main_tabs.dart';
 import 'package:notiskku/services/preferences_app.dart';
 
 class ScreenIntroLoading extends ConsumerStatefulWidget {
-  const ScreenIntroLoading({super.key, this.isFromOthers = false});
+  const ScreenIntroLoading({
+    super.key,
+    this.isFromOthers = false,
+    this.isFromAlarm = false, // 추가
+  });
+
+  /// 기존 로직 유지
   final bool isFromOthers;
+
+  /// 알림 설정 화면에서 진입했는지 여부 (팝업 비표시)
+  final bool isFromAlarm; // 추가
 
   @override
   ConsumerState<ScreenIntroLoading> createState() => _ScreenIntroLoadingState();
@@ -22,7 +31,6 @@ class _ScreenIntroLoadingState extends ConsumerState<ScreenIntroLoading> {
   @override
   void initState() {
     super.initState();
-    // 스낵바/네비게이션 안전 위해 첫 프레임 이후 실행
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _initSubscriptions();
     });
@@ -31,7 +39,6 @@ class _ScreenIntroLoadingState extends ConsumerState<ScreenIntroLoading> {
   Future<void> _initSubscriptions() async {
     final user = ref.read(userProvider);
 
-    // 디버그용: 현재 선택 및 ON 항목 로그
     final enabledMajors =
         user.selectedMajors
             .where((m) => m.receiveNotification == true)
@@ -43,24 +50,22 @@ class _ScreenIntroLoadingState extends ConsumerState<ScreenIntroLoading> {
 
     debugPrint('✅ [ScreenIntroLoading] isFromOthers: ${widget.isFromOthers}');
     debugPrint(
-      '✅ [ScreenIntroLoading] majors (all): '
-      '${user.selectedMajors.map((m) => m.major).join(", ")}',
+      '✅ [ScreenIntroLoading] isFromAlarm: ${widget.isFromAlarm}',
+    ); // ✅ 로그 추가
+    debugPrint(
+      '✅ [ScreenIntroLoading] majors (all): ${user.selectedMajors.map((m) => m.major).join(", ")}',
     );
     debugPrint(
-      '✅ [ScreenIntroLoading] majors (ON): '
-      '${enabledMajors.map((m) => m.major).join(", ")}',
+      '✅ [ScreenIntroLoading] majors (ON): ${enabledMajors.map((m) => m.major).join(", ")}',
     );
     debugPrint(
-      '✅ [ScreenIntroLoading] keywords (all): '
-      '${user.selectedKeywords.map((k) => k.keyword).join(", ")}',
+      '✅ [ScreenIntroLoading] keywords (all): ${user.selectedKeywords.map((k) => k.keyword).join(", ")}',
     );
     debugPrint(
-      '✅ [ScreenIntroLoading] keywords (ON): '
-      '${enabledKeywords.map((k) => k.keyword).join(", ")}',
+      '✅ [ScreenIntroLoading] keywords (ON): ${enabledKeywords.map((k) => k.keyword).join(", ")}',
     );
 
     try {
-      // 🔁 해지 → ON만 재구독 (정합성 보장)
       await TopicSubscription.syncAll(
         majors: user.selectedMajors,
         keywords: user.selectedKeywords,
@@ -71,10 +76,13 @@ class _ScreenIntroLoadingState extends ConsumerState<ScreenIntroLoading> {
 
       _showSnack('알림 구독이 완료되었습니다.');
 
-      final next =
-          widget.isFromOthers
-              ? const ScreenMainTabs(showPostLoadNotice: true)
-              : const ScreenIntroReady();
+      // 분기 정리: isFromAlarm > isFromOthers > 온보딩
+      final Widget next =
+          widget.isFromAlarm
+              ? const ScreenMainTabs(showPostLoadNotice: false)
+              : (widget.isFromOthers
+                  ? const ScreenMainTabs(showPostLoadNotice: true)
+                  : const ScreenIntroReady());
 
       Navigator.of(
         context,
@@ -85,10 +93,12 @@ class _ScreenIntroLoadingState extends ConsumerState<ScreenIntroLoading> {
 
       _showSnack('알림 구독에 실패했습니다: $e', isError: true);
 
-      final next =
-          widget.isFromOthers
-              ? const ScreenMainTabs(showPostLoadNotice: true)
-              : const ScreenIntroReady();
+      final Widget next =
+          widget.isFromAlarm
+              ? const ScreenMainTabs(showPostLoadNotice: false) // 실패 케이스도 동일 분기
+              : (widget.isFromOthers
+                  ? const ScreenMainTabs(showPostLoadNotice: true)
+                  : const ScreenIntroReady());
 
       Navigator.of(
         context,
@@ -97,6 +107,7 @@ class _ScreenIntroLoadingState extends ConsumerState<ScreenIntroLoading> {
   }
 
   void _showSnack(String message, {bool isError = false}) {
+    if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
@@ -155,7 +166,6 @@ class _ScreenIntroLoadingState extends ConsumerState<ScreenIntroLoading> {
                     child: const CircularProgressIndicator(
                       strokeWidth: 3.0,
                       valueColor: AlwaysStoppedAnimation<Color>(spinnerColor),
-                      // iOS/Android 공통으로 자연스러운 기본 애니메이션
                     ),
                   ),
                 ],
