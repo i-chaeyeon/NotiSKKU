@@ -108,6 +108,8 @@ class _ScreenIntroLoadingState extends ConsumerState<ScreenIntroLoading> {
 
   @override
   Widget build(BuildContext context) {
+    const spinnerColor = Color(0xFF979797);
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -125,13 +127,38 @@ class _ScreenIntroLoadingState extends ConsumerState<ScreenIntroLoading> {
               ),
               SizedBox(height: 23.h),
               Text(
-                '로딩 중...',
+                '설정을 완료하는 중입니다!',
                 style: TextStyle(
                   color: const Color(0xFF0B5B42),
-                  fontSize: 24.sp,
+                  fontSize: 20.sp,
                   fontFamily: 'Inter',
                   fontWeight: FontWeight.w700,
                 ),
+              ),
+              SizedBox(height: 8.h),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    '잠시만 기다려 주세요...',
+                    style: TextStyle(
+                      color: spinnerColor,
+                      fontSize: 18.sp,
+                      fontFamily: 'Inter',
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  SizedBox(width: 10.w),
+                  SizedBox(
+                    height: 16.w,
+                    width: 16.w,
+                    child: const CircularProgressIndicator(
+                      strokeWidth: 3.0,
+                      valueColor: AlwaysStoppedAnimation<Color>(spinnerColor),
+                      // iOS/Android 공통으로 자연스러운 기본 애니메이션
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
