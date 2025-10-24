@@ -73,7 +73,7 @@ class _ScreenIntroLoadingState extends ConsumerState<ScreenIntroLoading> {
 
       final next =
           widget.isFromOthers
-              ? const ScreenMainTabs()
+              ? const ScreenMainTabs(showPostLoadNotice: true)
               : const ScreenIntroReady();
 
       Navigator.of(
@@ -87,7 +87,7 @@ class _ScreenIntroLoadingState extends ConsumerState<ScreenIntroLoading> {
 
       final next =
           widget.isFromOthers
-              ? const ScreenMainTabs()
+              ? const ScreenMainTabs(showPostLoadNotice: true)
               : const ScreenIntroReady();
 
       Navigator.of(

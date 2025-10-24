@@ -6,6 +6,7 @@ import 'package:notiskku/providers/user/user_provider.dart';
 import 'package:notiskku/widget/button/wide_condition.dart';
 import 'package:notiskku/widget/search/search_keyword.dart';
 import 'package:notiskku/widget/list/list_keyword.dart';
+import 'package:notiskku/screen/screen_intro_loading.dart'; // ✅ 추가
 
 class ScreenMainKeywordEdit extends ConsumerWidget {
   const ScreenMainKeywordEdit({super.key});
@@ -13,9 +14,11 @@ class ScreenMainKeywordEdit extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final userState = ref.watch(userProvider);
-    // "설정 완료" 버튼 활성화 조건 (예시로 선택된 키워드가 있거나 '선택하지 않음'이면 활성화)
+
+    // "설정 완료" 버튼 활성화 조건
     final isButtonEnabled =
         userState.selectedKeywords.isNotEmpty || userState.doNotSelectKeywords;
+
     final searchText = userState.currentSearchText;
 
     return Scaffold(
@@ -32,13 +35,12 @@ class ScreenMainKeywordEdit extends ConsumerWidget {
           ),
         ),
         centerTitle: true,
-        iconTheme: IconThemeData(color: Colors.black), // 뒤로가기 아이콘 색상
+        iconTheme: const IconThemeData(color: Colors.black),
       ),
       backgroundColor: Colors.white,
       body: Column(
         children: [
           SizedBox(height: 10.h),
-          // 안내 문구 추가
           Align(
             alignment: Alignment.centerLeft,
             child: Padding(
@@ -56,27 +58,59 @@ class ScreenMainKeywordEdit extends ConsumerWidget {
             ),
           ),
           SizedBox(height: 10.h),
-          // 2) 검색창
+
+          // 검색창
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 30.w, vertical: 10.h),
-            child: SearchKeyword(), // 검색 위젯
+            child: const SearchKeyword(),
           ),
 
-          // 3) 키워드 리스트 (검색어 provider.currentSearchText 를 넘겨줌)
+          // 키워드 리스트
           Expanded(child: ListKeyword(searchText: searchText)),
+
           SizedBox(height: 30.h),
-          // 설정 완료 버튼
+
+          // 설정 완료 버튼 (동일 로직 적용)
           WideCondition(
             text: '설정 완료',
             isEnabled: isButtonEnabled,
             onPressed:
                 isButtonEnabled
-                    ? () {
-                      // "설정 완료" 시 필요한 로직 (예: 선택된 키워드 저장, 이전 화면 복귀)
-                      Navigator.pop(context);
+                    ? () async {
+                      final user = ref.read(userProvider);
+
+                      // 🔍 디버깅 로그
+                      debugPrint('-----------------------------');
+                      debugPrint(
+                        '⚙️ [ScreenMainKeywordEdit] 키워드 편집 완료 → 로딩 화면으로 이동',
+                      );
+                      debugPrint(
+                        '선택된 키워드: ${user.selectedKeywords.join(", ")}',
+                      );
+                      debugPrint(
+                        '선택하지 않음(doNotSelectKeywords): ${user.doNotSelectKeywords}',
+                      );
+                      debugPrint(
+                        '현재 검색어(currentSearchText): ${user.currentSearchText}',
+                      );
+                      debugPrint('-----------------------------');
+
+                      // ✅ 로딩 화면으로 이동 (해당 화면에서 syncAll 수행)
+                      if (context.mounted) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder:
+                                (_) => const ScreenIntroLoading(
+                                  isFromOthers: true, // 편집 경유 플래그 (옵션)
+                                ),
+                          ),
+                        );
+                      }
                     }
                     : null,
           ),
+
           SizedBox(height: 30.h),
         ],
       ),
