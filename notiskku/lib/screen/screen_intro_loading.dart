@@ -1,11 +1,14 @@
+// lib/screen/screen_intro_loading.dart
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 import 'package:notiskku/firebase/topic_subscription.dart';
 import 'package:notiskku/providers/user/user_provider.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:notiskku/screen/screen_intro_ready.dart';
-import 'package:notiskku/services/preferences_app.dart';
 import 'package:notiskku/screen/screen_main_tabs.dart';
+import 'package:notiskku/services/preferences_app.dart';
 
 class ScreenIntroLoading extends ConsumerStatefulWidget {
   const ScreenIntroLoading({super.key, this.isFromOthers = false});
@@ -19,24 +22,51 @@ class _ScreenIntroLoadingState extends ConsumerState<ScreenIntroLoading> {
   @override
   void initState() {
     super.initState();
-    // 빌드가 시작된 뒤에 초기화 로직 실행 (스낵바/네비게이션 안전)
+    // 스낵바/네비게이션 안전 위해 첫 프레임 이후 실행
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _initSubscriptions();
     });
   }
 
   Future<void> _initSubscriptions() async {
-    final majors = ref.read(userProvider).selectedMajors;
-    final keywords = ref.read(userProvider).selectedKeywords;
+    final user = ref.read(userProvider);
+
+    // 디버그용: 현재 선택 및 ON 항목 로그
+    final enabledMajors =
+        user.selectedMajors
+            .where((m) => m.receiveNotification == true)
+            .toList();
+    final enabledKeywords =
+        user.selectedKeywords
+            .where((k) => k.receiveNotification == true)
+            .toList();
+
+    debugPrint('✅ [ScreenIntroLoading] isFromOthers: ${widget.isFromOthers}');
+    debugPrint(
+      '✅ [ScreenIntroLoading] majors (all): '
+      '${user.selectedMajors.map((m) => m.major).join(", ")}',
+    );
+    debugPrint(
+      '✅ [ScreenIntroLoading] majors (ON): '
+      '${enabledMajors.map((m) => m.major).join(", ")}',
+    );
+    debugPrint(
+      '✅ [ScreenIntroLoading] keywords (all): '
+      '${user.selectedKeywords.map((k) => k.keyword).join(", ")}',
+    );
+    debugPrint(
+      '✅ [ScreenIntroLoading] keywords (ON): '
+      '${enabledKeywords.map((k) => k.keyword).join(", ")}',
+    );
 
     try {
-      await TopicSubscription.subscribeToAll(
-        keywords: keywords,
-        majors: majors,
+      // 🔁 해지 → ON만 재구독 (정합성 보장)
+      await TopicSubscription.syncAll(
+        majors: user.selectedMajors,
+        keywords: user.selectedKeywords,
       );
 
       await AppPreferences.setFirstLaunch();
-
       if (!mounted) return;
 
       _showSnack('알림 구독이 완료되었습니다.');
@@ -51,7 +81,6 @@ class _ScreenIntroLoadingState extends ConsumerState<ScreenIntroLoading> {
       ).pushReplacement(MaterialPageRoute(builder: (_) => next));
     } catch (e) {
       await AppPreferences.setFirstLaunch();
-
       if (!mounted) return;
 
       _showSnack('알림 구독에 실패했습니다: $e', isError: true);
@@ -68,7 +97,6 @@ class _ScreenIntroLoadingState extends ConsumerState<ScreenIntroLoading> {
   }
 
   void _showSnack(String message, {bool isError = false}) {
-    // 이미 addPostFrameCallback으로 보장되지만, Scaffold 준비 전 호출 방지용
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
