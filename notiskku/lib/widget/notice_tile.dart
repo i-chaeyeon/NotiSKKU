@@ -18,6 +18,9 @@ class NoticeTile extends ConsumerStatefulWidget {
 class _NoticeTileState extends ConsumerState<NoticeTile> {
   final launchUrlService = LaunchUrlService();
 
+  // 메인 홈 탭 인덱스(필요 시 프로젝트에 맞게 변경)
+  static const int MAIN_HOME_TAB_INDEX = 0;
+
   @override
   Widget build(BuildContext context) {
     final hash = widget.notice['hash'] ?? '';
@@ -26,8 +29,19 @@ class _NoticeTileState extends ConsumerState<NoticeTile> {
     final views = widget.notice['views'] ?? '';
     final link = widget.notice['url'] ?? '';
 
-    final starredNotices = ref.watch(userProvider).starredNotices;
+    final userState = ref.watch(userProvider);
+    final starredNotices = userState.starredNotices;
     final currentTab = ref.watch(tabIndexProvider);
+
+    // 현재 별 상태가 "채움"인지 판정
+    // (기존 아이콘 렌더링 로직과 동일하게 맞춰서 판정)
+    final bool isFilledNow =
+        (currentTab == 2)
+            ? !tempStarredNotices.contains(hash)
+            : (starredNotices.contains(hash) ||
+                tempStarredNotices.contains(hash));
+
+    final bool isMainHome = (currentTab == MAIN_HOME_TAB_INDEX);
 
     return Column(
       children: [
@@ -38,14 +52,35 @@ class _NoticeTileState extends ConsumerState<NoticeTile> {
             style: TextStyle(fontSize: 14.sp, color: Colors.grey),
           ),
           trailing: GestureDetector(
-            onTap: () {
-              setState(() {
-                if (tempStarredNotices.contains(hash)) {
+            onTap: () async {
+              // 규칙:
+              // 1) 메인 홈 && 채운 별 → 빈 별 : 즉시 영구 반영 (unstar)
+              // 2) 그 외: 기존 로직 유지 (tempStarredNotices 토글만)
+              if (isMainHome && isFilledNow) {
+                try {
+                  // 영구 삭제
+                  ref.read(userProvider.notifier).unstarNotice(hash);
+
+                  // 화면상 임시상태가 남아있지 않도록 안전 제거
                   tempStarredNotices.remove(hash);
-                } else {
-                  tempStarredNotices.add(hash);
+
+                  if (mounted) setState(() {});
+                } catch (e) {
+                  // 혹시 실패하면 기존 임시 토글로 폴백
+                  setState(() {
+                    tempStarredNotices.remove(hash);
+                  });
                 }
-              });
+              } else {
+                // 기존 임시 토글 유지
+                setState(() {
+                  if (tempStarredNotices.contains(hash)) {
+                    tempStarredNotices.remove(hash);
+                  } else {
+                    tempStarredNotices.add(hash);
+                  }
+                });
+              }
             },
             child: Image.asset(
               (currentTab == 2)
