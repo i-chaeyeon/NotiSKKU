@@ -287,8 +287,8 @@ class _ScreenMainCalenderState extends State<ScreenMainCalender> {
                                 },
 
                         // ───────── Month Cell Builder ─────────
-                        // 모달이 열린 상태에선 점만 표시, 닫혀 있으면 상세 표시
-                        monthCellBuilder: _collapsed ? _buildCustomCell : null,
+                        // 일관된 스타일 적용을 위해 항상 커스텀 셀 사용
+                        monthCellBuilder: _buildCustomCell,
                       ),
                     ),
                   ),
@@ -453,19 +453,19 @@ class _ScreenMainCalenderState extends State<ScreenMainCalender> {
         children: [
           // 일자 표시 영역
           Padding( // ← ✅ 상단 여백을 위해 Padding 추가
-            padding: EdgeInsets.only(top: 4.h), // 기본 셀과 비슷하게
+            padding: EdgeInsets.only(top: 6.h), // 기본 셀과 비슷하게
             child: Text(
               '${day.day}',
               style: TextStyle(
                 color: textColor,
-                fontSize: 12.sp,
-                fontWeight: FontWeight.w500,
+                fontSize: 11.5.sp,
+                fontWeight: FontWeight.w300,
               ),
             ),
           ),
 
-          // 일정 있으면 점 표시
-          if (totalEvents > 0)
+          // 바텀시트가 열려있을 때만 일정 있으면 점 표시
+          if (_collapsed && totalEvents > 0)
             Padding(
               padding: EdgeInsets.only(top: 2.h),
               child: Text(
