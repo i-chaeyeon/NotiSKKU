@@ -7,23 +7,12 @@ import 'package:notiskku/models/major.dart';
 class TopicSubscription {
   // ===== Helpers =====
 
-  // Firebase topic은 안전한 문자만 사용 권장. (영문/숫자/언더스코어/하이픈)
-  static String _sanitize(String raw) {
-    var s = raw.trim();
-    s = s.replaceAll(RegExp(r'\s+'), '-'); // 공백류 → '-'
-    s = s.replaceAll(RegExp(r'[^a-zA-Z0-9_-]'), ''); // 허용 외 문자 제거
-    return s.toLowerCase(); // 소문자 통일
+  static String _majorToTopic(Major m) {
+    return m.id;
   }
 
-  static String _majorTopic(Major m) {
-    // id가 존재하면 id, 없으면 이름 사용
-    final key = m.id.isNotEmpty ? m.id : m.major;
-    return _sanitize('major_$key');
-  }
-
-  static String _keywordTopic(Keyword k) {
-    final key = k.id.isNotEmpty ? k.id : k.keyword;
-    return _sanitize('keyword_$key');
+  static String _keywordToTopic(Keyword k) {
+    return k.id;
   }
 
   // ===== Public APIs =====
@@ -38,13 +27,13 @@ class TopicSubscription {
     final majorTopics =
         majors
             .where((m) => m.receiveNotification == true)
-            .map(_majorTopic)
+            .map(_majorToTopic)
             .toSet();
 
     final keywordTopics =
         keywords
             .where((k) => k.receiveNotification == true)
-            .map(_keywordTopic)
+            .map(_keywordToTopic)
             .toSet();
 
     await Future.wait([
@@ -60,8 +49,8 @@ class TopicSubscription {
   }) async {
     final fcm = FirebaseMessaging.instance;
 
-    final majorTopics = majors.map(_majorTopic).toSet();
-    final keywordTopics = keywords.map(_keywordTopic).toSet();
+    final majorTopics = majors.map(_majorToTopic).toSet();
+    final keywordTopics = keywords.map(_keywordToTopic).toSet();
 
     await Future.wait([
       ...majorTopics.map(fcm.unsubscribeFromTopic),
@@ -79,8 +68,8 @@ class TopicSubscription {
     final fcm = FirebaseMessaging.instance;
 
     // 1️⃣ 모든 토픽 해지
-    final allMajorTopics = majors.map(_majorTopic).toSet();
-    final allKeywordTopics = keywords.map(_keywordTopic).toSet();
+    final allMajorTopics = majors.map(_majorToTopic).toSet();
+    final allKeywordTopics = keywords.map(_keywordToTopic).toSet();
 
     await Future.wait([
       ...allMajorTopics.map(fcm.unsubscribeFromTopic),
@@ -91,13 +80,13 @@ class TopicSubscription {
     final enabledMajorTopics =
         majors
             .where((m) => m.receiveNotification == true)
-            .map(_majorTopic)
+            .map(_majorToTopic)
             .toSet();
 
     final enabledKeywordTopics =
         keywords
             .where((k) => k.receiveNotification == true)
-            .map(_keywordTopic)
+            .map(_keywordToTopic)
             .toSet();
 
     if (enabledMajorTopics.isEmpty && enabledKeywordTopics.isEmpty) {
