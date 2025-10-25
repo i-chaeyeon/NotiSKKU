@@ -43,7 +43,6 @@ class _ScreenMainBoxState extends ConsumerState<ScreenMainBox> {
                         style: TextStyle(
                           fontSize: 18.sp,
                           fontWeight: FontWeight.bold,
-                          color: Colors.black,
                         ),
                       ),
                     ),
@@ -58,11 +57,7 @@ class _ScreenMainBoxState extends ConsumerState<ScreenMainBox> {
                 ),
         title: Text(
           '즐겨찾기',
-          style: TextStyle(
-            fontSize: 20.sp,
-            fontWeight: FontWeight.bold,
-            color: Colors.black,
-          ),
+          style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
         actions: [
@@ -81,11 +76,7 @@ class _ScreenMainBoxState extends ConsumerState<ScreenMainBox> {
               },
               child: Text(
                 '편집',
-                style: TextStyle(
-                  fontSize: 14.sp,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
-                ),
+                style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.bold),
               ),
             ),
           ),

@@ -14,7 +14,7 @@ class ScreenIntroTwo extends StatelessWidget {
           SizedBox(height: 65.h),
           RichText(
             text: TextSpan(
-              style: TextStyle(fontSize: 24.sp, color: Colors.black),
+              style: TextStyle(fontSize: 24.sp),
               children: [
                 TextSpan(text: '공지사항도 내 스타일로! '),
                 WidgetSpan(

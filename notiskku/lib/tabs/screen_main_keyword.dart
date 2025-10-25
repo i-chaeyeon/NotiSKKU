@@ -54,11 +54,7 @@ class ScreenMainKeyword extends ConsumerWidget {
         ),
         title: Text(
           '키워드',
-          style: TextStyle(
-            fontSize: 20.sp,
-            fontWeight: FontWeight.bold,
-            color: Colors.black,
-          ),
+          style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
       ),

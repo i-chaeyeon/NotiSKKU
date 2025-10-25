@@ -104,7 +104,6 @@ class ScreenMainSearchState extends ConsumerState<ScreenMainSearch> {
                       child: Text(
                         isSearched ? "‘$searchText’에 대한 검색 결과" : '최근 검색 내역',
                         style: TextStyle(
-                          color: Colors.black,
                           fontSize: 18.sp,
                           fontWeight: FontWeight.w600,
                         ),
@@ -142,11 +141,7 @@ class ScreenMainSearchState extends ConsumerState<ScreenMainSearch> {
       title: Text(
         '검색',
         textAlign: TextAlign.center,
-        style: TextStyle(
-          fontSize: 20.sp,
-          fontWeight: FontWeight.bold,
-          color: Colors.black,
-        ),
+        style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.bold),
       ),
       centerTitle: true,
       actions: [SizedBox(width: 40.w)],

@@ -76,16 +76,12 @@ class _ScreenMainMajorEditState extends ConsumerState<ScreenMainMajorEdit> {
           elevation: 0,
           scrolledUnderElevation: 0,
           leading: IconButton(
-            icon: Icon(Icons.arrow_back, color: Colors.black, size: 24.w),
+            icon: Icon(Icons.arrow_back, size: 24.w),
             onPressed: _handleBack, // ✅ 앱바 뒤로가기도 동일 처리
           ),
           title: Text(
             '학과 선택 편집',
-            style: TextStyle(
-              fontSize: 17.sp,
-              fontWeight: FontWeight.bold,
-              color: Colors.black,
-            ),
+            style: TextStyle(fontSize: 17.sp, fontWeight: FontWeight.bold),
           ),
           centerTitle: true,
           iconTheme: const IconThemeData(color: Colors.black),
@@ -101,7 +97,6 @@ class _ScreenMainMajorEditState extends ConsumerState<ScreenMainMajorEdit> {
                   '관심 학과를 선택해주세요😀\n(학과는 최대 2개까지 가능)',
                   textAlign: TextAlign.left,
                   style: TextStyle(
-                    color: Colors.black,
                     fontSize: 14.sp,
                     fontWeight: FontWeight.w500,
                   ),

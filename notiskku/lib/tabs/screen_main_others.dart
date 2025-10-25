@@ -49,11 +49,7 @@ class ScreenMainOthers extends StatelessWidget {
         ),
         title: Text(
           '더보기',
-          style: TextStyle(
-            fontSize: 20.sp,
-            fontWeight: FontWeight.bold,
-            color: Colors.black,
-          ),
+          style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.bold),
         ),
         centerTitle: true, // 타이틀 중앙 정렬
       ),
@@ -169,11 +165,8 @@ class ScreenMainOthers extends StatelessWidget {
     VoidCallback? onTap,
   }) {
     return ListTile(
-      title: Text(
-        title,
-        style: TextStyle(fontSize: 19.sp, color: Colors.black),
-      ),
-      trailing: const Icon(Icons.arrow_forward_ios, color: Colors.black),
+      title: Text(title, style: TextStyle(fontSize: 19.sp)),
+      trailing: const Icon(Icons.arrow_forward_ios),
       onTap: () {
         // 우선 onTap 콜백이 있으면 우선 실행 후 return
         if (onTap != null) {

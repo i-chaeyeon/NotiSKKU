@@ -34,7 +34,6 @@ class ScreenIntroOne extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 17.sp,
                     fontWeight: FontWeight.w500,
-                    color: Colors.black,
                   ),
                 ),
               ],

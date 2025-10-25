@@ -60,7 +60,7 @@ class FeedbackPopup extends StatelessWidget {
               child: const Text(
                 'https://open.kakao.com/o/gKYMY3Wg',
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 16, color: Colors.black),
+                style: TextStyle(fontSize: 16),
               ),
             ),
           ),

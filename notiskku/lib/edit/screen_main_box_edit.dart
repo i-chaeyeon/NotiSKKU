@@ -72,21 +72,13 @@ class _ScreenMainBoxEditState extends ConsumerState<ScreenMainBoxEdit> {
           child: Center(
             child: Text(
               '취소',
-              style: TextStyle(
-                fontSize: 14.sp,
-                fontWeight: FontWeight.bold,
-                color: Colors.black,
-              ),
+              style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.bold),
             ),
           ),
         ),
         title: Text(
           '공지 편집',
-          style: TextStyle(
-            fontSize: 20.sp,
-            fontWeight: FontWeight.bold,
-            color: Colors.black,
-          ),
+          style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
         actions: [
@@ -158,10 +150,7 @@ class _ScreenMainBoxEditState extends ConsumerState<ScreenMainBoxEdit> {
                               },
                               title: Text(
                                 title,
-                                style: TextStyle(
-                                  fontSize: 15.sp,
-                                  color: Colors.black,
-                                ),
+                                style: TextStyle(fontSize: 15.sp),
                               ),
                               subtitle: Text(
                                 '$date | 조회수: $views',

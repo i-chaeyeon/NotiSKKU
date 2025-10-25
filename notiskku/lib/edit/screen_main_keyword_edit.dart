@@ -123,16 +123,12 @@ class _ScreenMainKeywordEditState extends ConsumerState<ScreenMainKeywordEdit> {
           elevation: 0,
           scrolledUnderElevation: 0,
           leading: IconButton(
-            icon: Icon(Icons.arrow_back, color: Colors.black, size: 24.w),
+            icon: Icon(Icons.arrow_back, size: 24.w),
             onPressed: _handleBack, // ✅ 앱바 뒤로가기와 동일 처리
           ),
           title: Text(
             '키워드 선택 편집',
-            style: TextStyle(
-              fontSize: 17.sp,
-              fontWeight: FontWeight.bold,
-              color: Colors.black,
-            ),
+            style: TextStyle(fontSize: 17.sp, fontWeight: FontWeight.bold),
           ),
           centerTitle: true,
           iconTheme: const IconThemeData(color: Colors.black),
@@ -148,7 +144,6 @@ class _ScreenMainKeywordEditState extends ConsumerState<ScreenMainKeywordEdit> {
                   '관심 키워드를 선택해주세요😀',
                   textAlign: TextAlign.left,
                   style: TextStyle(
-                    color: Colors.black,
                     fontSize: 15.sp,
                     fontWeight: FontWeight.w500,
                   ),

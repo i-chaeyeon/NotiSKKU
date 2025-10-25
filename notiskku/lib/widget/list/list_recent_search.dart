@@ -39,7 +39,7 @@ class ListRecentSearchState extends ConsumerState<ListRecentSearch> {
                 children: [
                   Text(
                     searchedTexts[reversedIndex],
-                    style: TextStyle(color: Colors.black, fontSize: 15.sp),
+                    style: TextStyle(fontSize: 15.sp),
                   ),
                   GestureDetector(
                     onTap: () {
@@ -47,7 +47,7 @@ class ListRecentSearchState extends ConsumerState<ListRecentSearch> {
                           .read(userProvider.notifier)
                           .deleteRecentSearch(searchedTexts[reversedIndex]);
                     },
-                    child: Icon(Icons.close, color: Colors.black, size: 20.w),
+                    child: Icon(Icons.close, size: 20.w),
                   ),
                 ],
               ),

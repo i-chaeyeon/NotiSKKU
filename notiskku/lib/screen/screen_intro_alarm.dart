@@ -133,7 +133,7 @@ class _ScreenIntroAlarmState extends ConsumerState<ScreenIntroAlarm> {
           elevation: 0,
           scrolledUnderElevation: 0,
           leading: IconButton(
-            icon: Icon(Icons.arrow_back, color: Colors.black, size: 24.w),
+            icon: Icon(Icons.arrow_back, size: 24.w),
             onPressed: _handleBack, // ✅ 앱바 뒤로가기와 동일 처리
           ),
         ),
@@ -147,7 +147,6 @@ class _ScreenIntroAlarmState extends ConsumerState<ScreenIntroAlarm> {
                   '알림 받을 학과와 키워드를 선택해주세요😀\n미선택 시 알림이 발송되지 않습니다.',
                   textAlign: TextAlign.left,
                   style: TextStyle(
-                    color: Colors.black.withAlpha(229),
                     fontSize: 14.sp,
                     fontWeight: FontWeight.w500,
                   ),

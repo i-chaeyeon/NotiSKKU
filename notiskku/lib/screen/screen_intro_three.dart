@@ -14,7 +14,7 @@ class ScreenIntroThree extends StatelessWidget {
           SizedBox(height: 65.h),
           RichText(
             text: TextSpan(
-              style: TextStyle(fontSize: 24.sp, color: Colors.black),
+              style: TextStyle(fontSize: 24.sp),
               children: [
                 TextSpan(text: '중요한 소식, 내가 먼저!'),
                 WidgetSpan(
