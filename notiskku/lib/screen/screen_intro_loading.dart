@@ -122,7 +122,6 @@ class _ScreenIntroLoadingState extends ConsumerState<ScreenIntroLoading> {
     const spinnerColor = Color(0xFF979797);
 
     return Scaffold(
-      backgroundColor: Colors.white,
       body: SafeArea(
         child: Center(
           child: Column(

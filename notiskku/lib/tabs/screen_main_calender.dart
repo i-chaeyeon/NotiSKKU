@@ -186,7 +186,6 @@ class _ScreenMainCalenderState extends State<ScreenMainCalender> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
         elevation: 0,
         centerTitle: true,
         leading: const Padding(
@@ -205,7 +204,6 @@ class _ScreenMainCalenderState extends State<ScreenMainCalender> {
           ),
         ),
       ),
-      backgroundColor: Colors.white,
       body:
           _appointments.isEmpty
               ? const Center(child: CircularProgressIndicator())
@@ -278,7 +276,6 @@ class _ScreenMainCalenderState extends State<ScreenMainCalender> {
                         headerHeight: 50,
                         headerStyle: CalendarHeaderStyle(
                           textAlign: TextAlign.center,
-                          backgroundColor: Colors.white,
                           textStyle: TextStyle(
                             fontSize: 18.sp,
                             fontWeight: FontWeight.bold,
@@ -446,7 +443,8 @@ class _ScreenMainCalenderState extends State<ScreenMainCalender> {
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           // 일자 표시 영역
-          Padding( // ← ✅ 상단 여백을 위해 Padding 추가
+          Padding(
+            // ← ✅ 상단 여백을 위해 Padding 추가
             padding: EdgeInsets.only(top: 4.h), // 기본 셀과 비슷하게
             child: Text(
               '${day.day}',

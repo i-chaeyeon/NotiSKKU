@@ -130,7 +130,6 @@ class _ScreenIntroAlarmState extends ConsumerState<ScreenIntroAlarm> {
       },
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: Colors.white,
           elevation: 0,
           scrolledUnderElevation: 0,
           leading: IconButton(
@@ -138,7 +137,6 @@ class _ScreenIntroAlarmState extends ConsumerState<ScreenIntroAlarm> {
             onPressed: _handleBack, // ✅ 앱바 뒤로가기와 동일 처리
           ),
         ),
-        backgroundColor: Colors.white,
         body: Column(
           children: [
             Align(

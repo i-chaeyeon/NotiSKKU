@@ -25,7 +25,6 @@ class ScreenIntroSelect extends ConsumerWidget {
             userState.selectedKeywords.isNotEmpty);
 
     return Scaffold(
-      backgroundColor: Colors.white,
       body: SafeArea(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,

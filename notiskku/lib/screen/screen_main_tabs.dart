@@ -118,7 +118,6 @@ class _ScreenMainTabsState extends ConsumerState<ScreenMainTabs> {
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         elevation: 0,
-        backgroundColor: Colors.white,
         items: _navItems,
         currentIndex: currentIndex,
         selectedItemColor: const Color(0xFF0B5B42),

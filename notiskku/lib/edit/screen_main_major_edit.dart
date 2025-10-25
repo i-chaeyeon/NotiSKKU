@@ -73,7 +73,6 @@ class _ScreenMainMajorEditState extends ConsumerState<ScreenMainMajorEdit> {
       },
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: Colors.white,
           elevation: 0,
           scrolledUnderElevation: 0,
           leading: IconButton(
@@ -91,7 +90,6 @@ class _ScreenMainMajorEditState extends ConsumerState<ScreenMainMajorEdit> {
           centerTitle: true,
           iconTheme: const IconThemeData(color: Colors.black),
         ),
-        backgroundColor: Colors.white,
         body: Column(
           children: [
             SizedBox(height: 10.h),

@@ -10,7 +10,6 @@ class DialogNoAlarm extends StatelessWidget {
   Widget build(BuildContext context) {
     return AlertDialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
-      backgroundColor: Colors.white,
       title: Text(
         '알림 설정 안내',
         style: TextStyle(

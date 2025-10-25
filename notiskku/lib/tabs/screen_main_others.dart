@@ -41,7 +41,6 @@ class ScreenMainOthers extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
         elevation: 0,
         scrolledUnderElevation: 0,
         leading: Padding(
@@ -58,7 +57,6 @@ class ScreenMainOthers extends StatelessWidget {
         ),
         centerTitle: true, // 타이틀 중앙 정렬
       ),
-      backgroundColor: Colors.white,
       body: Column(
         children: [
           Expanded(

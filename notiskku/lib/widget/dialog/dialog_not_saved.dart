@@ -10,7 +10,6 @@ class DialogNotSaved extends StatelessWidget {
   Widget build(BuildContext context) {
     return AlertDialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
-      backgroundColor: Colors.white,
       title: Text(
         '편집을 종료하시겠습니까?',
         style: TextStyle(

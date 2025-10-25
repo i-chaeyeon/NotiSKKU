@@ -18,7 +18,6 @@ class PopupUi extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      backgroundColor: Colors.white,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.r)),
       contentPadding: EdgeInsets.fromLTRB(20.w, 10.h, 20.w, 20.h),
       content: ConstrainedBox(

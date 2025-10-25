@@ -24,7 +24,6 @@ class _ScreenMainBoxState extends ConsumerState<ScreenMainBox> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
         elevation: 0,
         scrolledUnderElevation: 0,
         leading:
@@ -92,7 +91,6 @@ class _ScreenMainBoxState extends ConsumerState<ScreenMainBox> {
           ),
         ],
       ),
-      backgroundColor: Colors.white,
       body: Column(
         children: [
           SizedBox(height: 10.h),

@@ -45,7 +45,6 @@ class ScreenMainSearchState extends ConsumerState<ScreenMainSearch> {
 
     return Scaffold(
       appBar: _buildAppBar(context),
-      backgroundColor: Colors.white,
       body: Column(
         children: [
           BarNotices(),
@@ -135,7 +134,6 @@ class ScreenMainSearchState extends ConsumerState<ScreenMainSearch> {
 
   PreferredSizeWidget _buildAppBar(BuildContext context) {
     return AppBar(
-      backgroundColor: Colors.white,
       elevation: 0,
       leading: IconButton(
         icon: Icon(Icons.arrow_back_ios, color: Color(0xFF979797)),

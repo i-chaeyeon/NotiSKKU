@@ -65,7 +65,6 @@ class _ScreenMainBoxEditState extends ConsumerState<ScreenMainBoxEdit> {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
         elevation: 0,
         scrolledUnderElevation: 0,
         leading: GestureDetector(
@@ -120,7 +119,6 @@ class _ScreenMainBoxEditState extends ConsumerState<ScreenMainBoxEdit> {
           ),
         ],
       ),
-      backgroundColor: Colors.white,
       body:
           _noticeDocs == null
               ? const Center(child: CircularProgressIndicator())

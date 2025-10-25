@@ -34,7 +34,6 @@ class DialogLimitMajor extends StatelessWidget {
 
     return AlertDialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
-      backgroundColor: Colors.white,
       title: Text(
         '⚠️ 전공 선택 제한',
         style: TextStyle(

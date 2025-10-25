@@ -120,7 +120,6 @@ class _ScreenMainKeywordEditState extends ConsumerState<ScreenMainKeywordEdit> {
       },
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: Colors.white,
           elevation: 0,
           scrolledUnderElevation: 0,
           leading: IconButton(
@@ -138,7 +137,6 @@ class _ScreenMainKeywordEditState extends ConsumerState<ScreenMainKeywordEdit> {
           centerTitle: true,
           iconTheme: const IconThemeData(color: Colors.black),
         ),
-        backgroundColor: Colors.white,
         body: Column(
           children: [
             SizedBox(height: 10.h),
