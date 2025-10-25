@@ -11,6 +11,9 @@ class GridAlarmKeyword extends ConsumerWidget {
     final userState = ref.watch(userProvider);
     final userNotifier = ref.read(userProvider.notifier);
 
+    final scheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+
     final selectedKeywords = userState.selectedKeywords;
 
     return Expanded(
@@ -21,7 +24,10 @@ class GridAlarmKeyword extends ConsumerWidget {
                 ? Center(
                   child: Text(
                     '선택된 키워드가 없습니다.',
-                    style: TextStyle(fontSize: 16.sp, color: Colors.grey),
+                    style: textTheme.bodyMedium?.copyWith(
+                      fontSize: 16.sp,
+                      color: scheme.onSurface.withOpacity(0.60),
+                    ),
                   ),
                 )
                 : GridView.builder(
@@ -36,15 +42,22 @@ class GridAlarmKeyword extends ConsumerWidget {
                     final keyword = selectedKeywords[index];
                     final isSelectedForAlarm = keyword.receiveNotification;
 
+                    final bgColor =
+                        isSelectedForAlarm
+                            ? scheme.primary
+                            : scheme.outlineVariant;
+                    final fgColor =
+                        isSelectedForAlarm
+                            ? scheme.onPrimary
+                            : scheme.onSurface.withOpacity(0.70);
                     return GestureDetector(
                       onTap: () => userNotifier.toggleKeywordAlarm(keyword),
                       child: Container(
+                        width: 86.w,
+                        height: 37.h,
                         padding: EdgeInsets.symmetric(vertical: 6.h),
                         decoration: BoxDecoration(
-                          color:
-                              isSelectedForAlarm
-                                  ? const Color(0xB20B5B42)
-                                  : const Color(0x99D9D9D9),
+                          color: bgColor,
                           borderRadius: BorderRadius.circular(20.r),
                         ),
                         child: Center(
@@ -53,13 +66,9 @@ class GridAlarmKeyword extends ConsumerWidget {
                             child: Text(
                               keyword.keyword,
                               textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontSize: 19.sp,
-                                color:
-                                    isSelectedForAlarm
-                                        ? Colors.white
-                                        : const Color(0xFF979797),
-                                fontWeight: FontWeight.w700,
+                              style: textTheme.headlineLarge?.copyWith(
+                                fontSize: 18.sp,
+                                color: fgColor,
                               ),
                             ),
                           ),

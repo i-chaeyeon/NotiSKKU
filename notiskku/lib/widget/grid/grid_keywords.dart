@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:notiskku/models/keyword.dart';
 import 'package:notiskku/data/keyword_data.dart';
 import 'package:notiskku/providers/user/user_provider.dart';
 
@@ -13,11 +12,14 @@ class GridKeywords extends ConsumerWidget {
     final userState = ref.watch(userProvider);
     final userNotifier = ref.read(userProvider.notifier);
 
+    final scheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+
     return Column(
       children: [
         SizedBox(height: 10.h),
 
-        // '선택하지 않음' 버튼 - 로컬 위젯으로 포함
+        // '선택하지 않음' 버튼
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 30.w),
           child: _DoNotSelectButton(
@@ -40,38 +42,38 @@ class GridKeywords extends ConsumerWidget {
             itemCount: keywords.length,
             itemBuilder: (context, index) {
               final keyword = keywords[index].keyword;
-              Keyword matchedKeyword = keywords.firstWhere(
+              final matchedKeyword = keywords.firstWhere(
                 (k) => k.keyword == keyword,
               );
               final isSelected = userState.selectedKeywords.contains(
                 matchedKeyword,
               );
+
+              final bgColor =
+                  isSelected ? scheme.primary : scheme.outlineVariant;
+              final fgColor =
+                  isSelected
+                      ? scheme.onPrimary
+                      : scheme.onSurface.withOpacity(0.70); // 비선택 가독성
+
               return GestureDetector(
                 onTap: () => userNotifier.toggleKeyword(matchedKeyword),
                 child: Container(
                   width: 86.w,
                   height: 37.h,
-                  padding: EdgeInsets.symmetric(vertical: 6.h), // 내부 패딩 조정
                   decoration: BoxDecoration(
-                    color:
-                        isSelected
-                            ? const Color(0xB20B5B42)
-                            : const Color(0x99D9D9D9),
+                    color: bgColor,
                     borderRadius: BorderRadius.circular(20.r),
                   ),
                   child: Center(
                     child: FittedBox(
-                      fit: BoxFit.scaleDown, // 글자가 너무 크면 자동으로 축소
+                      fit: BoxFit.scaleDown,
                       child: Text(
                         keyword,
                         textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 19.sp,
-                          color:
-                              isSelected
-                                  ? Colors.white
-                                  : const Color(0xFF979797),
-                          fontWeight: FontWeight.w700,
+                        style: textTheme.headlineLarge?.copyWith(
+                          fontSize: 18.sp,
+                          color: fgColor,
                         ),
                       ),
                     ),
@@ -86,7 +88,7 @@ class GridKeywords extends ConsumerWidget {
   }
 }
 
-// GridKeywords 안에만 쓰는 private 위젯으로 정의
+// GridKeywords 안에만 쓰는 private 위젯
 class _DoNotSelectButton extends StatelessWidget {
   final bool isSelected;
   final VoidCallback onPressed;
@@ -95,31 +97,40 @@ class _DoNotSelectButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+
+    // WideCondition과 동일한 원리: primary/onPrimary vs outlineVariant/onSurface
+    final bgColor = isSelected ? scheme.primary : scheme.outlineVariant;
+    final fgColor =
+        isSelected ? scheme.onPrimary : scheme.onSurface.withOpacity(0.70);
+
     return SizedBox(
       width: 282.w,
       height: 36.h,
-      child: ElevatedButton(
+      child: TextButton(
         onPressed: onPressed,
-        style: ElevatedButton.styleFrom(
-          elevation: 0,
-          shadowColor: Colors.transparent,
-          backgroundColor:
-              isSelected ? const Color(0xB20B5B42) : const Color(0x99D9D9D9),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20.r),
+        style: ButtonStyle(
+          backgroundColor: WidgetStateProperty.all(bgColor),
+          foregroundColor: WidgetStateProperty.all(fgColor),
+          shape: WidgetStateProperty.all(
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.r)),
           ),
+          // WideCondition과의 일관성: 잔상 제거(필요시)
+          overlayColor: WidgetStateProperty.resolveWith((states) {
+            if (states.contains(WidgetState.pressed)) {
+              return fgColor.withOpacity(0.08);
+            }
+            return null;
+          }),
         ),
-        child: Padding(
-          padding: EdgeInsets.symmetric(vertical: 6.h), // 버튼 내부 패딩 조절
-          child: FittedBox(
-            fit: BoxFit.scaleDown, // 글자가 너무 크면 자동으로 축소
-            child: Text(
-              '선택하지 않음',
-              style: TextStyle(
-                fontSize: 19.sp,
-                color: isSelected ? Colors.white : const Color(0xFF979797),
-                fontWeight: FontWeight.w700,
-              ),
+        child: FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Text(
+            '선택하지 않음',
+            style: textTheme.headlineLarge?.copyWith(
+              fontSize: 18.sp,
+              color: fgColor,
             ),
           ),
         ),
