@@ -71,7 +71,11 @@ ThemeData buildLightTheme({String fontFamily = 'NanumSquareNeo'}) {
     useMaterial3: true,
     colorScheme: scheme,
     scaffoldBackgroundColor: LightPalette.greenBackground,
-    textTheme: text,
+    textTheme: text.copyWith(
+      bodyLarge: text.headlineSmall,
+      bodyMedium: text.headlineSmall,
+      bodySmall: text.headlineSmall,
+    ),
 
     // ===== AppBarTheme
     appBarTheme: AppBarTheme(
@@ -82,6 +86,7 @@ ThemeData buildLightTheme({String fontFamily = 'NanumSquareNeo'}) {
       iconTheme: const IconThemeData(color: LightPalette.textPrimary),
       titleTextStyle: text.headlineMedium,
     ),
+
     dividerTheme: const DividerThemeData(
       color: LightPalette.lineGray,
       thickness: 1,

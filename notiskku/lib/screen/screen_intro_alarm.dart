@@ -165,7 +165,6 @@ class _ScreenIntroAlarmState extends ConsumerState<ScreenIntroAlarm> {
                 child: Text(
                   '알림 받을 학과와 키워드를 선택해주세요😀\n미선택 시 알림이 발송되지 않습니다.',
                   textAlign: TextAlign.left,
-                  style: textTheme.headlineSmall,
                 ),
               ),
             ),

@@ -23,6 +23,10 @@ class _NoticeTileState extends ConsumerState<NoticeTile> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final textTheme = theme.textTheme;
+    final scheme = theme.colorScheme;
+
     final hash = widget.notice['hash'] ?? '';
     final title = widget.notice['title'] ?? '';
     final date = widget.notice['date'] ?? '';
@@ -46,10 +50,22 @@ class _NoticeTileState extends ConsumerState<NoticeTile> {
     return Column(
       children: [
         ListTile(
-          title: Text(title, style: TextStyle(fontSize: 15.sp)),
-          subtitle: Text(
-            views == 'null' ? '$date | 조회수: -' : '$date | 조회수: $views',
-            style: TextStyle(fontSize: 14.sp),
+          title: Padding(
+            padding: const EdgeInsets.all(1.0),
+            child: Text(
+              title,
+              style: TextStyle(height: 1.4, fontWeight: FontWeight.w700),
+            ),
+          ),
+          subtitle: Padding(
+            padding: const EdgeInsets.only(top: 4.0),
+            child: Text(
+              views == 'null' ? '$date | 조회수: -' : '$date | 조회수: $views',
+              style: textTheme.labelSmall?.copyWith(
+                fontSize: 12.sp,
+                fontWeight: FontWeight.w400,
+              ),
+            ),
           ),
           trailing: GestureDetector(
             onTap: () async {

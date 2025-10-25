@@ -47,7 +47,7 @@ class _ScreenMainCalenderState extends State<ScreenMainCalender> {
           builder: (context, scrollCtrl) {
             return Container(
               decoration: const BoxDecoration(
-                color: Color(0xFFE8E8E8),
+                color: Colors.white,
                 borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
               ),
               child: CustomScrollView(
@@ -94,7 +94,7 @@ class _ScreenMainCalenderState extends State<ScreenMainCalender> {
                     itemCount: _selectedDayEvents.length,
                     separatorBuilder:
                         (_, __) => const Divider(
-                          color: Color(0XFF979797),
+                          color: Color(0xFFD9D9D9),
                           thickness: 1.5,
                         ),
                     itemBuilder: (_, i) {
@@ -184,6 +184,10 @@ class _ScreenMainCalenderState extends State<ScreenMainCalender> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final textTheme = theme.textTheme;
+    final scheme = theme.colorScheme;
+
     return Scaffold(
       appBar: AppBar(
         leading: const Padding(
@@ -193,14 +197,7 @@ class _ScreenMainCalenderState extends State<ScreenMainCalender> {
             width: 40,
           ),
         ),
-        title: Text(
-          '학사일정',
-          style: TextStyle(
-            fontSize: 20.sp,
-            fontWeight: FontWeight.bold,
-            color: Colors.black,
-          ),
-        ),
+        title: Text('학사일정'),
       ),
       body:
           _appointments.isEmpty
@@ -273,12 +270,9 @@ class _ScreenMainCalenderState extends State<ScreenMainCalender> {
                         showNavigationArrow: true,
                         headerHeight: 50,
                         headerStyle: CalendarHeaderStyle(
+                          backgroundColor: scheme.surface,
                           textAlign: TextAlign.center,
-                          textStyle: TextStyle(
-                            fontSize: 18.sp,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
-                          ),
+                          textStyle: textTheme.headlineMedium,
                         ),
                         dataSource: EventDataSource(_appointments),
                         onTap: _handleTap,
@@ -369,7 +363,7 @@ class _ScreenMainCalenderState extends State<ScreenMainCalender> {
                                           horizontal: 4.w,
                                         ),
                                         decoration: BoxDecoration(
-                                          color: const Color(0xB20B5B42),
+                                          color: scheme.primary.withAlpha(200),
                                           borderRadius: BorderRadius.circular(
                                             4,
                                           ),
@@ -379,7 +373,7 @@ class _ScreenMainCalenderState extends State<ScreenMainCalender> {
                                           maxLines: 1,
                                           overflow: TextOverflow.ellipsis,
                                           style: TextStyle(
-                                            color: Colors.white,
+                                            color: scheme.surface,
                                             fontSize: 8.sp,
                                             fontWeight: FontWeight.w500,
                                           ),
@@ -403,6 +397,10 @@ class _ScreenMainCalenderState extends State<ScreenMainCalender> {
   }
 
   Widget _buildCustomCell(BuildContext context, MonthCellDetails details) {
+    final theme = Theme.of(context);
+    final textTheme = theme.textTheme;
+    final scheme = theme.colorScheme;
+
     final day = details.date;
 
     // 해당 날짜의 이벤트 수집
@@ -431,11 +429,11 @@ class _ScreenMainCalenderState extends State<ScreenMainCalender> {
 
     final totalEvents = eventsOnDay.length;
     final isThisMonth = day.month == details.visibleDates[15].month;
-    final textColor = isThisMonth ? Colors.black : Colors.grey;
+    final textColor = isThisMonth ? scheme.onPrimary : scheme.secondary;
 
     return Container(
       decoration: BoxDecoration(
-        border: Border.all(color: Colors.grey.withOpacity(0.2), width: 0.5),
+        border: Border.all(color: scheme.secondary, width: 0.5),
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -464,7 +462,7 @@ class _ScreenMainCalenderState extends State<ScreenMainCalender> {
                   '●',
                   style: TextStyle(
                     fontSize: 8.sp,
-                    color: const Color(0xB20B5B42),
+                    color: scheme.primary.withAlpha(200),
                   ),
                 ),
               )

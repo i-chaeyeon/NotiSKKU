@@ -65,6 +65,9 @@ class _ScreenMainMajorEditState extends ConsumerState<ScreenMainMajorEdit> {
     final userState = ref.watch(userProvider);
     final isButtonEnabled = userState.selectedMajors.isNotEmpty;
 
+    final theme = Theme.of(context);
+    final textTheme = theme.textTheme;
+
     return PopScope(
       canPop: false, // ⛳️ 뒤로가기를 우리가 직접 처리
       onPopInvoked: (didPop) {
@@ -77,10 +80,7 @@ class _ScreenMainMajorEditState extends ConsumerState<ScreenMainMajorEdit> {
             icon: Icon(Icons.arrow_back, size: 24.w),
             onPressed: _handleBack, // ✅ 앱바 뒤로가기도 동일 처리
           ),
-          title: Text(
-            '학과 선택 편집',
-            style: TextStyle(fontSize: 17.sp, fontWeight: FontWeight.bold),
-          ),
+          title: Text('학과 선택 편집'),
           centerTitle: true,
           iconTheme: const IconThemeData(color: Colors.black),
         ),
@@ -94,10 +94,6 @@ class _ScreenMainMajorEditState extends ConsumerState<ScreenMainMajorEdit> {
                 child: Text(
                   '관심 학과를 선택해주세요😀\n(학과는 최대 2개까지 가능)',
                   textAlign: TextAlign.left,
-                  style: TextStyle(
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.w500,
-                  ),
                 ),
               ),
             ),

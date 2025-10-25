@@ -122,14 +122,9 @@ class _ScreenMainKeywordEditState extends ConsumerState<ScreenMainKeywordEdit> {
         appBar: AppBar(
           leading: IconButton(
             icon: Icon(Icons.arrow_back, size: 24.w),
-            onPressed: _handleBack, // ✅ 앱바 뒤로가기와 동일 처리
+            onPressed: _handleBack,
           ),
-          title: Text(
-            '키워드 선택 편집',
-            style: TextStyle(fontSize: 17.sp, fontWeight: FontWeight.bold),
-          ),
-          centerTitle: true,
-          iconTheme: const IconThemeData(color: Colors.black),
+          title: Text('키워드 선택 편집'),
         ),
         body: Column(
           children: [
@@ -138,14 +133,7 @@ class _ScreenMainKeywordEditState extends ConsumerState<ScreenMainKeywordEdit> {
               alignment: Alignment.centerLeft,
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: 40.w),
-                child: Text(
-                  '관심 키워드를 선택해주세요😀',
-                  textAlign: TextAlign.left,
-                  style: TextStyle(
-                    fontSize: 15.sp,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
+                child: Text('관심 키워드를 선택해주세요😀', textAlign: TextAlign.left),
               ),
             ),
             SizedBox(height: 10.h),

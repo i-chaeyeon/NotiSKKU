@@ -59,7 +59,7 @@ class FeedbackPopup extends StatelessWidget {
             onTap: _launchChat,
             child: Container(
               padding: const EdgeInsets.all(10),
-              color: scheme.secondary?.withAlpha(150),
+              color: scheme.secondary.withAlpha(150),
               child: Text(
                 'https://open.kakao.com/o/gKYMY3Wg',
                 textAlign: TextAlign.center,

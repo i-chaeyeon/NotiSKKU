@@ -40,7 +40,6 @@ class ScreenIntroSelect extends ConsumerWidget {
                 child: Text(
                   '관심 학과와 키워드를 선택해주세요😀\n(학과는 최대 2개까지 가능)',
                   textAlign: TextAlign.left,
-                  style: textTheme.headlineSmall,
                 ),
               ),
             ),

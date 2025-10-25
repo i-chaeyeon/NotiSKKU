@@ -43,7 +43,7 @@ class _BarKeywordsState extends ConsumerState<BarKeywords> {
             padding: EdgeInsets.symmetric(horizontal: 11.w),
             child: Text(
               '키워드 별 보기',
-              style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600),
+              style: textTheme.headlineMedium?.copyWith(fontSize: 16.sp),
             ),
           ),
         ),
