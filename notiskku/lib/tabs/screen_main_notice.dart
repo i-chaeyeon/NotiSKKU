@@ -49,8 +49,6 @@ class _NoticeAppBar extends ConsumerWidget implements PreferredSizeWidget {
                 .major;
 
     return AppBar(
-      elevation: 0,
-      scrolledUnderElevation: 0,
       leading: Padding(
         padding: EdgeInsets.all(10.0),
         child: Image.asset('assets/images/greenlogo_fix.png', width: 40),

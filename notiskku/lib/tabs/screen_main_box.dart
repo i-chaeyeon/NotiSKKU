@@ -24,8 +24,6 @@ class _ScreenMainBoxState extends ConsumerState<ScreenMainBox> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        elevation: 0,
-        scrolledUnderElevation: 0,
         leading:
             editMode
                 ? Padding(

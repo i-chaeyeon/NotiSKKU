@@ -65,8 +65,6 @@ class _ScreenMainBoxEditState extends ConsumerState<ScreenMainBoxEdit> {
 
     return Scaffold(
       appBar: AppBar(
-        elevation: 0,
-        scrolledUnderElevation: 0,
         leading: GestureDetector(
           onTap: () => Navigator.pop(context),
           child: Center(

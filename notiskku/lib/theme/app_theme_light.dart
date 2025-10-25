@@ -46,7 +46,7 @@ TextTheme lightTextTheme(String fontFamily) => TextTheme(
   labelSmall: TextStyle(
     fontFamily: fontFamily,
     fontWeight: FontWeight.w100,
-    fontSize: 10.sp,
+    fontSize: 13.sp,
     color: LightPalette.lineGray,
   ),
 );
@@ -72,10 +72,12 @@ ThemeData buildLightTheme({String fontFamily = 'NanumSquareNeo'}) {
     colorScheme: scheme,
     scaffoldBackgroundColor: LightPalette.greenBackground,
     textTheme: text,
+
     // ===== AppBarTheme
     appBarTheme: AppBarTheme(
       backgroundColor: LightPalette.greenBackground,
       elevation: 0,
+      scrolledUnderElevation: 0,
       centerTitle: true,
       iconTheme: const IconThemeData(color: LightPalette.textPrimary),
       titleTextStyle: text.headlineMedium,
@@ -89,3 +91,9 @@ ThemeData buildLightTheme({String fontFamily = 'NanumSquareNeo'}) {
 
   return base;
 }
+
+/*
+final theme = Theme.of(context);
+final textTheme = theme.textTheme;
+final scheme = theme.colorScheme;
+ */

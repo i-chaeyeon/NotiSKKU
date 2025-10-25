@@ -73,8 +73,6 @@ class _ScreenMainMajorEditState extends ConsumerState<ScreenMainMajorEdit> {
       },
       child: Scaffold(
         appBar: AppBar(
-          elevation: 0,
-          scrolledUnderElevation: 0,
           leading: IconButton(
             icon: Icon(Icons.arrow_back, size: 24.w),
             onPressed: _handleBack, // ✅ 앱바 뒤로가기도 동일 처리

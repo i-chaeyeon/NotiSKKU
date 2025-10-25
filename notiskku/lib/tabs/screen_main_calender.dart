@@ -186,8 +186,6 @@ class _ScreenMainCalenderState extends State<ScreenMainCalender> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        elevation: 0,
-        centerTitle: true,
         leading: const Padding(
           padding: EdgeInsets.all(10),
           child: Image(

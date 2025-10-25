@@ -46,8 +46,6 @@ class ScreenMainKeyword extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        elevation: 0,
-        scrolledUnderElevation: 0,
         leading: Padding(
           padding: EdgeInsets.all(10.0),
           child: Image.asset('assets/images/greenlogo_fix.png', width: 40.w),
