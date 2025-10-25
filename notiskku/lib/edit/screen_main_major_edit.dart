@@ -105,7 +105,6 @@ class _ScreenMainMajorEditState extends ConsumerState<ScreenMainMajorEdit> {
                   style: TextStyle(
                     color: Colors.black,
                     fontSize: 14.sp,
-                    fontFamily: 'GmarketSans',
                     fontWeight: FontWeight.w500,
                   ),
                 ),

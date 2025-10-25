@@ -15,11 +15,7 @@ class ScreenIntroOne extends StatelessWidget {
           SizedBox(height: 65.h),
           Text(
             '성균관대 공지사항 어플',
-            style: TextStyle(
-              fontSize: 17.sp,
-              fontFamily: 'GmarketSans',
-              fontWeight: FontWeight.w500,
-            ),
+            style: TextStyle(fontSize: 17.sp, fontWeight: FontWeight.w500),
           ),
           SizedBox(height: 2.h),
           Text.rich(
@@ -29,7 +25,6 @@ class ScreenIntroOne extends StatelessWidget {
                   text: 'NotiSKKU',
                   style: TextStyle(
                     fontSize: 24.sp,
-                    fontFamily: 'GmarketSans',
                     fontWeight: FontWeight.w700,
                     color: const Color(0xff0b5b42),
                   ),
@@ -38,7 +33,6 @@ class ScreenIntroOne extends StatelessWidget {
                   text: '를 소개합니다!',
                   style: TextStyle(
                     fontSize: 17.sp,
-                    fontFamily: 'GmarketSans',
                     fontWeight: FontWeight.w500,
                     color: Colors.black,
                   ),

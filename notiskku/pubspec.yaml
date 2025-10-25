@@ -127,14 +127,6 @@ flutter:
   # list giving the asset and other descriptors for the font. For
   # example:
   fonts:
-    - family: GmarketSans
-      fonts:
-        - asset: assets/fonts/GmarketSansTTFLight.ttf
-          weight: 300
-        - asset: assets/fonts/GmarketSansTTFMedium.ttf
-          weight: 500
-        - asset: assets/fonts/GmarketSansTTFBold.ttf
-          weight: 700
     - family: NanumSquareNeoVar
       fonts:
         - asset: assets/fonts/NanumSquareNeo-Variable.ttf

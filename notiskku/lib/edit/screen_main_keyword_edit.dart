@@ -152,7 +152,6 @@ class _ScreenMainKeywordEditState extends ConsumerState<ScreenMainKeywordEdit> {
                   style: TextStyle(
                     color: Colors.black,
                     fontSize: 15.sp,
-                    fontFamily: 'GmarketSans',
                     fontWeight: FontWeight.w500,
                   ),
                 ),

@@ -151,7 +151,6 @@ class _ScreenIntroAlarmState extends ConsumerState<ScreenIntroAlarm> {
                   style: TextStyle(
                     color: Colors.black.withAlpha(229),
                     fontSize: 14.sp,
-                    fontFamily: 'GmarketSans',
                     fontWeight: FontWeight.w500,
                   ),
                 ),

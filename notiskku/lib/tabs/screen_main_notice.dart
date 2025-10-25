@@ -49,7 +49,6 @@ class _NoticeAppBar extends ConsumerWidget implements PreferredSizeWidget {
                 .major;
 
     return AppBar(
-      backgroundColor: Colors.white,
       elevation: 0,
       scrolledUnderElevation: 0,
       leading: Padding(
@@ -62,7 +61,7 @@ class _NoticeAppBar extends ConsumerWidget implements PreferredSizeWidget {
           // 좌측 화살표
           userState.selectedMajors.length > 1
               ? IconButton(
-                icon: Icon(Icons.chevron_left, color: Colors.black, size: 24.w),
+                icon: Icon(Icons.chevron_left, size: 24.w),
                 onPressed: () {
                   _updateMajorIndex(ref, true, userState.selectedMajors.length);
                   ref
@@ -82,7 +81,6 @@ class _NoticeAppBar extends ConsumerWidget implements PreferredSizeWidget {
                     style: TextStyle(
                       fontSize: 15.sp,
                       fontWeight: FontWeight.bold,
-                      color: Colors.black,
                     ),
                   ),
                 ),
@@ -95,7 +93,6 @@ class _NoticeAppBar extends ConsumerWidget implements PreferredSizeWidget {
                     style: TextStyle(
                       fontSize: 18.sp,
                       fontWeight: FontWeight.bold,
-                      color: Colors.black,
                     ),
                   ),
                 ),
@@ -103,11 +100,7 @@ class _NoticeAppBar extends ConsumerWidget implements PreferredSizeWidget {
           // 우측 화살표
           userState.selectedMajors.length > 1
               ? IconButton(
-                icon: Icon(
-                  Icons.chevron_right,
-                  color: Colors.black,
-                  size: 24.w,
-                ),
+                icon: Icon(Icons.chevron_right, size: 24.w),
                 onPressed: () {
                   _updateMajorIndex(
                     ref,
@@ -255,7 +248,7 @@ class ScreenMainNotice extends ConsumerWidget {
               SizedBox(height: 16.h),
               Text(
                 '학과 선택 후 단과대/학과별 공지를 볼 수 있어요🥲',
-                style: TextStyle(fontSize: 14.sp, color: Colors.grey),
+                style: TextStyle(fontSize: 14.sp),
                 textAlign: TextAlign.center,
               ),
               SizedBox(height: 16.h),
@@ -272,7 +265,6 @@ class ScreenMainNotice extends ConsumerWidget {
                   '→ 학과 선택하러 가기',
                   style: TextStyle(
                     fontSize: 20.sp,
-                    color: Color(0xFF0B5B42),
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -313,7 +305,7 @@ class ScreenMainNotice extends ConsumerWidget {
               children: [
                 Text(
                   '공지를 불러올 수 없는 학과입니다.\n하단 링크를 통해 직접 접속해 확인해주세요! 🥲',
-                  style: TextStyle(fontSize: 14.sp, color: Colors.grey),
+                  style: TextStyle(fontSize: 14.sp),
                   textAlign: TextAlign.center,
                 ),
                 SizedBox(height: 16.h),
@@ -325,7 +317,6 @@ class ScreenMainNotice extends ConsumerWidget {
                     '→ 학과 게시판 바로가기',
                     style: TextStyle(
                       fontSize: 20.sp,
-                      color: Color(0xFF0B5B42),
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -363,7 +354,6 @@ class ScreenMainNotice extends ConsumerWidget {
 
     return Scaffold(
       appBar: const _NoticeAppBar(),
-      backgroundColor: Colors.white,
       body: Column(
         children: [
           BarNotices(),
