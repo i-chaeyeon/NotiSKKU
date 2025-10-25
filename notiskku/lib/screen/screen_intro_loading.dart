@@ -170,6 +170,16 @@ class _ScreenIntroLoadingState extends ConsumerState<ScreenIntroLoading> {
                   ),
                 ],
               ),
+              SizedBox(height: 5.h),
+              Text(
+                '이 작업은 몇 분 정도 걸릴 수 있습니다.',
+                style: TextStyle(
+                  color: spinnerColor,
+                  fontSize: 12.sp,
+                  fontFamily: 'Inter',
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
             ],
           ),
         ),

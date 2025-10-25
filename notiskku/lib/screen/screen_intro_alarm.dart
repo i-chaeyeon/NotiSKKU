@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import 'package:notiskku/models/keyword.dart';
+import 'package:notiskku/models/major.dart';
 import 'package:notiskku/providers/user/user_provider.dart';
 import 'package:notiskku/screen/screen_intro_loading.dart';
 import 'package:notiskku/widget/grid/grid_alarm_keyword.dart';
@@ -8,118 +11,77 @@ import 'package:notiskku/widget/list/list_alarm_major.dart';
 import 'package:notiskku/widget/button/wide_green.dart';
 import 'package:notiskku/widget/dialog/dialog_no_alarm.dart';
 
-// AppPreferences 사용해 이후 어플 최초 실행인지 상태 관리 구현 필요
-// AppPreferences는 구현 완료 (세팅하고 쓰면 됨)
-// 제거되는 부분: isFromOthers
-class ScreenIntroAlarm extends ConsumerWidget {
+class ScreenIntroAlarm extends ConsumerStatefulWidget {
   const ScreenIntroAlarm({super.key, this.isFromOthers = false});
   final bool isFromOthers;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final selectedMajors = ref.watch(userProvider).selectedMajors;
-    final selectedKeywords = ref.watch(userProvider).selectedKeywords;
+  ConsumerState<ScreenIntroAlarm> createState() => _ScreenIntroAlarmState();
+}
 
-    return Scaffold(
-      // ▶ AppBar 추가
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        scrolledUnderElevation: 0,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.black, size: 24.w),
-          onPressed: () => Navigator.pop(context),
-        ),
-      ),
+class _ScreenIntroAlarmState extends ConsumerState<ScreenIntroAlarm> {
+  // 입장 시 스냅샷
+  late final List<Major> _originalMajors;
+  late final List<Keyword> _originalKeywords;
+  late final bool _originalDoNotSelect;
 
-      backgroundColor: Colors.white,
-      body: Column(
-        children: [
-          Align(
-            alignment: Alignment.centerLeft,
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 31.w),
-              child: Text(
-                '알림 받을 학과와 키워드를 선택해주세요😀\n미선택 시 알림이 발송되지 않습니다.',
-                textAlign: TextAlign.left,
-                style: TextStyle(
-                  color: Colors.black.withAlpha(229),
-                  fontSize: 14.sp,
-                  fontFamily: 'GmarketSans',
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ),
+  bool _committed = false; // 완료 눌렀는지 (원복 방지)
+  bool _restoring = false; // 원복 중 가드
+
+  @override
+  void initState() {
+    super.initState();
+    final user = ref.read(userProvider);
+
+    // ✅ deep copy (필수 필드 모두 복사)
+    _originalMajors = user.selectedMajors
+        .map(
+          (m) => Major(
+            id: m.id,
+            department: m.department,
+            major: m.major,
+            receiveNotification: m.receiveNotification,
           ),
-          SizedBox(height: 26.h),
+        )
+        .toList(growable: false);
 
-          Align(
-            alignment: Alignment.centerLeft,
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 40.w),
-              child: Text(
-                '선택한 학과',
-                style: TextStyle(
-                  fontSize: 19.sp,
-                  fontFamily: 'Inter',
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ),
+    _originalKeywords = user.selectedKeywords
+        .map(
+          (k) => Keyword(
+            id: k.id,
+            keyword: k.keyword,
+            defined: k.defined,
+            receiveNotification: k.receiveNotification,
           ),
-          SizedBox(height: 10.h),
-          const ListAlarmMajor(),
+        )
+        .toList(growable: false);
 
-          SizedBox(height: 26.h),
-
-          Align(
-            alignment: Alignment.centerLeft,
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 40.w),
-              child: Text(
-                '선택한 키워드',
-                style: TextStyle(
-                  fontSize: 19.sp,
-                  fontFamily: 'Inter',
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ),
-          ),
-          SizedBox(height: 10.h),
-          const GridAlarmKeyword(),
-
-          Padding(
-            padding: EdgeInsets.symmetric(vertical: 20.h),
-            child: WideGreen(
-              text: '설정 완료',
-              onPressed: () {
-                if (selectedMajors.every(
-                      (m) => m.receiveNotification == false,
-                    ) &&
-                    selectedKeywords.every(
-                      (k) => k.receiveNotification == false,
-                    )) {
-                  _showNoAlarmDialog(context);
-                } else {
-                  _goToNext(context);
-                }
-              },
-            ),
-          ),
-        ],
-      ),
-    );
+    _originalDoNotSelect = user.doNotSelectKeywords;
   }
 
-  // void _goToNext(BuildContext context) {
-  //   Navigator.push(
-  //     context,
-  //     MaterialPageRoute(builder: (context) => const ScreenIntroReady()),
-  //   );
-  // }
+  void _restoreIfNotCommitted() {
+    if (_committed || _restoring) return;
+    _restoring = true;
+
+    // 선택(알림 포함) 복원
+    ref.read(userProvider.notifier).replaceSelectedMajors(_originalMajors);
+    ref.read(userProvider.notifier).replaceSelectedKeywords(_originalKeywords);
+
+    // replaceSelectedKeywords가 doNotSelectKeywords를 false로 만들기 때문에,
+    // 원래가 true였다면 한 프레임 뒤에 토글해 원상 복원
+    final now = ref.read(userProvider).doNotSelectKeywords;
+    if (now != _originalDoNotSelect) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        ref.read(userProvider.notifier).toggleDoNotSelectKeywords();
+        _restoring = false;
+      });
+    } else {
+      _restoring = false;
+    }
+  }
+
   void _goToNext(BuildContext context) {
-    // isFromOthers 여부에 따라 Loading으로 진입 (플래그 전달)
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -132,6 +94,113 @@ class ScreenIntroAlarm extends ConsumerWidget {
     showDialog(
       context: context,
       builder: (context) => DialogNoAlarm(onConfirm: () => _goToNext(context)),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final selectedMajors = ref.watch(userProvider).selectedMajors;
+    final selectedKeywords = ref.watch(userProvider).selectedKeywords;
+
+    return PopScope(
+      canPop: true,
+      onPopInvoked: (didPop) {
+        // 뒤로가기(제스처/버튼/시스템) 시 원복
+        _restoreIfNotCommitted();
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.white,
+          elevation: 0,
+          scrolledUnderElevation: 0,
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back, color: Colors.black, size: 24.w),
+            onPressed: () => Navigator.pop(context),
+          ),
+        ),
+        backgroundColor: Colors.white,
+        body: Column(
+          children: [
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 31.w),
+                child: Text(
+                  '알림 받을 학과와 키워드를 선택해주세요😀\n미선택 시 알림이 발송되지 않습니다.',
+                  textAlign: TextAlign.left,
+                  style: TextStyle(
+                    color: Colors.black.withAlpha(229),
+                    fontSize: 14.sp,
+                    fontFamily: 'GmarketSans',
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(height: 26.h),
+
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 40.w),
+                child: Text(
+                  '선택한 학과',
+                  style: TextStyle(
+                    fontSize: 19.sp,
+                    fontFamily: 'Inter',
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(height: 10.h),
+            const ListAlarmMajor(),
+
+            SizedBox(height: 26.h),
+
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 40.w),
+                child: Text(
+                  '선택한 키워드',
+                  style: TextStyle(
+                    fontSize: 19.sp,
+                    fontFamily: 'Inter',
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(height: 10.h),
+            const GridAlarmKeyword(),
+
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 20.h),
+              child: WideGreen(
+                text: '설정 완료',
+                onPressed: () {
+                  // 완료 → 원복 방지
+                  _committed = true;
+
+                  final noMajorAlarms = selectedMajors.every(
+                    (m) => m.receiveNotification == false,
+                  );
+                  final noKeywordAlarms = selectedKeywords.every(
+                    (k) => k.receiveNotification == false,
+                  );
+
+                  if (noMajorAlarms && noKeywordAlarms) {
+                    _showNoAlarmDialog(context);
+                  } else {
+                    _goToNext(context);
+                  }
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
