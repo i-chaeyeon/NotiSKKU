@@ -90,7 +90,7 @@ class _SearchNoticeState extends ConsumerState<SearchNotice> {
                       _titleController.clear();
                       _onTextChanged('');
                     },
-                    icon: const Icon(Icons.cancel, color: Color(0xff979797)),
+                    icon: const Icon(Icons.cancel, color: Color(0xFFD9D9D9)),
                     padding: EdgeInsets.zero,
                     splashRadius: 10.w, // 터치 효과 반경 설정
                   ),

@@ -5,19 +5,36 @@ class VersionNoticePopup extends StatelessWidget {
   const VersionNoticePopup({super.key});
 
   Widget _buildVersionContent() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+    return
+    // Column(
+    //   crossAxisAlignment: CrossAxisAlignment.start,
+    //   children: [
+    //     _buildNotice('서버 정기점검 (완료)', '2024.08.21', 'NotiSKKU 정기점검 완료되었습니다.'),
+    //     _buildNotice(
+    //       '서버 정기점검 (완료)',
+    //       '2024.06.15',
+    //       'NotiSKKU 서버 점검이 성공적으로 완료되었습니다.',
+    //     ),
+    //     _buildNotice(
+    //       '서버 정기점검 (완료)',
+    //       '2024.04.10',
+    //       'NotiSKKU의 점검 작업이 정상적으로 완료되었습니다.',
+    //     ),
+    //   ],
+    // );
+    Column(
       children: [
-        _buildNotice('서버 정기점검 (완료)', '2024.08.21', 'NotiSKKU 정기점검 완료되었습니다.'),
-        _buildNotice(
-          '서버 정기점검 (완료)',
-          '2024.06.15',
-          'NotiSKKU 서버 점검이 성공적으로 완료되었습니다.',
+        const SizedBox(height: 15),
+        Image.asset(
+          'assets/images/to_be_implemented_fix.png',
+          width: 80,
+          height: 80,
+          color: Colors.grey,
         ),
-        _buildNotice(
-          '서버 정기점검 (완료)',
-          '2024.04.10',
-          'NotiSKKU의 점검 작업이 정상적으로 완료되었습니다.',
+        const SizedBox(height: 20),
+        const Text(
+          '업데이트 준비 중입니다',
+          style: TextStyle(color: Colors.grey, fontSize: 18),
         ),
       ],
     );

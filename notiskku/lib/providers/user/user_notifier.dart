@@ -97,6 +97,15 @@ class UserNotifier extends StateNotifier<UserState> {
     UserPreferences.saveKeywords(updatedKeywords);
   }
 
+  /// 즐겨찾기 '제거'를 명시적으로 수행
+  /// (메인 홈에서 채운 별 -> 빈 별 전환 시 이 메서드를 호출)
+  void unstarNotice(String hash) {
+    if (!state.starredNotices.contains(hash)) return;
+    final next = List<String>.from(state.starredNotices)..remove(hash);
+    state = state.copyWith(starredNotices: next);
+    UserPreferences.saveStarred(next);
+  }
+
   // 별표 등록/제거
   void toggleStarredNotice(String hash) async {
     final currentStarredList = List<String>.from(state.starredNotices);

@@ -14,7 +14,7 @@ class DialogNoAlarm extends StatelessWidget {
       title: Text(
         '알림 설정 안내',
         style: TextStyle(
-          // fontSize: 18.sp,
+          fontSize: 16.sp,
           fontWeight: FontWeight.bold,
           color: const Color(0xFF0B5B42),
         ),
@@ -26,14 +26,20 @@ class DialogNoAlarm extends StatelessWidget {
       actions: [
         TextButton(
           onPressed: () => Navigator.of(context).pop(),
-          child: Text('취소', style: TextStyle(fontSize: 14.sp, color: Colors.red)),
+          child: Text(
+            '취소',
+            style: TextStyle(fontSize: 16.sp, color: const Color(0xFFE64343)),
+          ),
         ),
         TextButton(
           onPressed: () {
             Navigator.of(context).pop();
             onConfirm(); // 확인 누르면 다음 화면 이동
           },
-          child: Text('확인', style: TextStyle(fontSize: 14.sp, color: Colors.black)),
+          child: Text(
+            '확인',
+            style: TextStyle(fontSize: 16.sp, color: const Color(0xFF0B5B42)),
+          ),
         ),
       ],
     );

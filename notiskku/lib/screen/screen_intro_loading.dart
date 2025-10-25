@@ -1,16 +1,27 @@
+// lib/screen/screen_intro_loading.dart
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 import 'package:notiskku/firebase/topic_subscription.dart';
 import 'package:notiskku/providers/user/user_provider.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:notiskku/screen/screen_intro_ready.dart';
+import 'package:notiskku/screen/screen_main_tabs.dart';
 import 'package:notiskku/services/preferences_app.dart';
 
-// 여기서 토큰도 날려야 함
-// 만약에 학과, 키워드 설정 안했으면 주제 구독은 안하고, 토큰만 날림
-
 class ScreenIntroLoading extends ConsumerStatefulWidget {
-  const ScreenIntroLoading({super.key});
+  const ScreenIntroLoading({
+    super.key,
+    this.isFromOthers = false,
+    this.isFromAlarm = false, // 추가
+  });
+
+  /// 기존 로직 유지
+  final bool isFromOthers;
+
+  /// 알림 설정 화면에서 진입했는지 여부 (팝업 비표시)
+  final bool isFromAlarm; // 추가
 
   @override
   ConsumerState<ScreenIntroLoading> createState() => _ScreenIntroLoadingState();
@@ -20,85 +31,147 @@ class _ScreenIntroLoadingState extends ConsumerState<ScreenIntroLoading> {
   @override
   void initState() {
     super.initState();
-    _initSubscriptions();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _initSubscriptions();
+    });
   }
 
   Future<void> _initSubscriptions() async {
-    final majors = ref.read(userProvider).selectedMajors;
-    final keywords = ref.read(userProvider).selectedKeywords;
+    final user = ref.read(userProvider);
+
+    final enabledMajors =
+        user.selectedMajors
+            .where((m) => m.receiveNotification == true)
+            .toList();
+    final enabledKeywords =
+        user.selectedKeywords
+            .where((k) => k.receiveNotification == true)
+            .toList();
+
+    debugPrint('✅ [ScreenIntroLoading] isFromOthers: ${widget.isFromOthers}');
+    debugPrint(
+      '✅ [ScreenIntroLoading] isFromAlarm: ${widget.isFromAlarm}',
+    ); // ✅ 로그 추가
+    debugPrint(
+      '✅ [ScreenIntroLoading] majors (all): ${user.selectedMajors.map((m) => m.major).join(", ")}',
+    );
+    debugPrint(
+      '✅ [ScreenIntroLoading] majors (ON): ${enabledMajors.map((m) => m.major).join(", ")}',
+    );
+    debugPrint(
+      '✅ [ScreenIntroLoading] keywords (all): ${user.selectedKeywords.map((k) => k.keyword).join(", ")}',
+    );
+    debugPrint(
+      '✅ [ScreenIntroLoading] keywords (ON): ${enabledKeywords.map((k) => k.keyword).join(", ")}',
+    );
 
     try {
-      await TopicSubscription.subscribeToAll(
-        keywords: keywords,
-        majors: majors,
+      await TopicSubscription.syncAll(
+        majors: user.selectedMajors,
+        keywords: user.selectedKeywords,
       );
 
-      // 구독 성공 후 바로 다음 화면으로 이동
-      if (mounted) {
-        await AppPreferences.setFirstLaunch();
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (_) => const ScreenIntroReady()),
-        );
+      await AppPreferences.setFirstLaunch();
+      if (!mounted) return;
 
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('알림 구독이 완료되었습니다.'),
-            duration: Duration(seconds: 2),
-          ),
-        );
-      }
+      _showSnack('알림 구독이 완료되었습니다.');
+
+      // 분기 정리: isFromAlarm > isFromOthers > 온보딩
+      final Widget next =
+          widget.isFromAlarm
+              ? const ScreenMainTabs(showPostLoadNotice: false)
+              : (widget.isFromOthers
+                  ? const ScreenMainTabs(showPostLoadNotice: true)
+                  : const ScreenIntroReady());
+
+      Navigator.of(
+        context,
+      ).pushReplacement(MaterialPageRoute(builder: (_) => next));
     } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('알림 구독에 실패했습니다: $e'),
-            backgroundColor: Colors.red,
-            duration: const Duration(seconds: 3),
-          ),
-        );
+      await AppPreferences.setFirstLaunch();
+      if (!mounted) return;
 
-        // 개발/테스트용 !!! 일단 화면 넘겨....
-        await AppPreferences.setFirstLaunch();
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (_) => const ScreenIntroReady()),
-        );
-      }
+      _showSnack('알림 구독에 실패했습니다: $e', isError: true);
+
+      final Widget next =
+          widget.isFromAlarm
+              ? const ScreenMainTabs(showPostLoadNotice: false) // 실패 케이스도 동일 분기
+              : (widget.isFromOthers
+                  ? const ScreenMainTabs(showPostLoadNotice: true)
+                  : const ScreenIntroReady());
+
+      Navigator.of(
+        context,
+      ).pushReplacement(MaterialPageRoute(builder: (_) => next));
     }
+  }
+
+  void _showSnack(String message, {bool isError = false}) {
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: isError ? Colors.red : null,
+        duration: const Duration(seconds: 2),
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
+    const spinnerColor = Color(0xFF979797);
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
-        child: Column(
-          children: [
-            Expanded(
-              child: Column(
+        child: Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Image.asset(
+                'assets/images/fourth_fix.png',
+                height: 170.h,
+                width: 170.h,
+                fit: BoxFit.contain,
+              ),
+              SizedBox(height: 23.h),
+              Text(
+                '설정을 완료하는 중입니다!',
+                style: TextStyle(
+                  color: const Color(0xFF0B5B42),
+                  fontSize: 20.sp,
+                  fontFamily: 'Inter',
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              SizedBox(height: 8.h),
+              Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Image.asset(
-                    'assets/images/fourth_fix.png',
-                    height: 170.h,
-                    width: 170.h,
-                    fit: BoxFit.contain,
-                  ),
-                  SizedBox(height: 23.h),
                   Text(
-                    '로딩 중...',
+                    '잠시만 기다려 주세요...',
                     style: TextStyle(
-                      color: Color(0xFF0B5B42),
-                      fontSize: 24.sp,
+                      color: spinnerColor,
+                      fontSize: 18.sp,
                       fontFamily: 'Inter',
-                      fontWeight: FontWeight.w700,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  SizedBox(width: 10.w),
+                  SizedBox(
+                    height: 16.w,
+                    width: 16.w,
+                    child: const CircularProgressIndicator(
+                      strokeWidth: 3.0,
+                      valueColor: AlwaysStoppedAnimation<Color>(spinnerColor),
                     ),
                   ),
                 ],
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

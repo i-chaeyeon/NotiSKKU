@@ -6,7 +6,7 @@ class FeedbackPopup extends StatelessWidget {
   const FeedbackPopup({super.key});
 
   Future<void> _launchChat() async {
-    final Uri uri = Uri.parse('https://open.kakao.com/o/gKYMv3Wg');
+    final Uri uri = Uri.parse('https://open.kakao.com/o/sxNn0mIh');
 
     if (await canLaunchUrl(uri)) {
       await launchUrl(uri, mode: LaunchMode.externalApplication);
@@ -23,12 +23,13 @@ class FeedbackPopup extends StatelessWidget {
     String fullText = '';
     List<String> words = text.split(' ');
     for (var i = 0; i < words.length; i++) {
-      fullText += emoji.hasMatch(words[i])
-          ? words[i]
-          : words[i].replaceAllMapped(
-              RegExp(r'(\S)(?=\S)'),
-              (m) => '${m[1]}\u200D',
-            );
+      fullText +=
+          emoji.hasMatch(words[i])
+              ? words[i]
+              : words[i].replaceAllMapped(
+                RegExp(r'(\S)(?=\S)'),
+                (m) => '${m[1]}\u200D',
+              );
       if (i < words.length - 1) fullText += ' ';
     }
     return fullText;

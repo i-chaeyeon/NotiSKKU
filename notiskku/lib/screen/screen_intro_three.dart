@@ -34,7 +34,7 @@ class ScreenIntroThree extends StatelessWidget {
           ),
           SizedBox(height: 2.h),
           Text(
-            '띠링~ 필요한 알림만 받을 수 있어요.',
+            '필요한 알림만 받을 수 있어요.',
             style: TextStyle(
               fontFamily: 'GmarketSans',
               fontSize: 17.sp,
