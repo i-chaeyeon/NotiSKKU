@@ -21,7 +21,8 @@ class DialogNoAlarm extends StatelessWidget {
       ),
       actions: [
         TextButton(
-          onPressed: () => Navigator.of(context).pop(),
+          // 취소: false 반환 → 호출부에서 복원 로직 수행
+          onPressed: () => Navigator.of(context).pop(false),
           child: Text(
             '취소',
             style: textTheme.headlineMedium?.copyWith(
@@ -32,9 +33,10 @@ class DialogNoAlarm extends StatelessWidget {
           ),
         ),
         TextButton(
+          // 확인: true 반환 → 호출부에서 커밋 & 다음 화면 이동
           onPressed: () {
-            Navigator.of(context).pop();
-            onConfirm(); // 확인 누르면 다음 화면 이동
+            Navigator.of(context).pop(true);
+            onConfirm(); // 필요 시 부가 사이드 이펙트 유지
           },
           child: Text(
             '확인',

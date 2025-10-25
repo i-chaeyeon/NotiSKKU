@@ -10,7 +10,7 @@ import 'package:notiskku/widget/grid/grid_alarm_keyword.dart';
 import 'package:notiskku/widget/list/list_alarm_major.dart';
 import 'package:notiskku/widget/button/wide_green.dart';
 import 'package:notiskku/widget/dialog/dialog_no_alarm.dart';
-import 'package:notiskku/widget/dialog/dialog_not_saved.dart'; // ✅ 추가
+import 'package:notiskku/widget/dialog/dialog_not_saved.dart';
 
 class ScreenIntroAlarm extends ConsumerStatefulWidget {
   const ScreenIntroAlarm({super.key, this.isFromOthers = false});
@@ -110,11 +110,29 @@ class _ScreenIntroAlarmState extends ConsumerState<ScreenIntroAlarm> {
     );
   }
 
-  void _showNoAlarmDialog(BuildContext context) {
-    showDialog(
+  Future<void> _showNoAlarmDialog(BuildContext context) async {
+    final result = await showDialog<bool>(
       context: context,
-      builder: (context) => DialogNoAlarm(onConfirm: () => _goToNext(context)),
+      barrierDismissible: true, // 바깥 탭으로 닫기 허용 → null 반환
+      builder:
+          (context) => DialogNoAlarm(
+            // 확인 버튼 로직은 다이얼로그 내부에서 Navigator.pop(true) 호출
+            onConfirm: () {
+              // 다이얼로그 내부에서 pop(true)만 하고 여기선 추가 없음
+            },
+          ),
     );
+
+    if (!mounted) return;
+
+    if (result == true) {
+      // ✅ 사용자가 '확인' 선택 → 다음 화면으로 이동
+      _committed = true; // 이제 원복 방지
+      _goToNext(context);
+    } else {
+      // ✅ 취소/닫기(null 포함) → 원상복구
+      _restoreIfNotCommitted();
+    }
   }
 
   @override
@@ -191,9 +209,7 @@ class _ScreenIntroAlarmState extends ConsumerState<ScreenIntroAlarm> {
               padding: EdgeInsets.symmetric(vertical: 20.h),
               child: WideGreen(
                 text: '설정 완료',
-                onPressed: () {
-                  _committed = true; // 완료 → 원복 방지
-
+                onPressed: () async {
                   final noMajorAlarms = selectedMajors.every(
                     (m) => m.receiveNotification == false,
                   );
@@ -202,8 +218,11 @@ class _ScreenIntroAlarmState extends ConsumerState<ScreenIntroAlarm> {
                   );
 
                   if (noMajorAlarms && noKeywordAlarms) {
-                    _showNoAlarmDialog(context);
+                    // 다이얼로그 결과에 따라 진행/복원
+                    await _showNoAlarmDialog(context);
                   } else {
+                    // 알림 하나라도 있으면 바로 진행 + 커밋
+                    _committed = true;
                     _goToNext(context);
                   }
                 },
