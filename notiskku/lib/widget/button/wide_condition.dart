@@ -36,7 +36,6 @@ class WideCondition extends StatelessWidget {
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 18.sp,
-                fontFamily: 'Inter',
                 fontWeight: FontWeight.w400,
               ),
             ),

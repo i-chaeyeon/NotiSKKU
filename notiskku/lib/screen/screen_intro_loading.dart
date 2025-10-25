@@ -142,7 +142,6 @@ class _ScreenIntroLoadingState extends ConsumerState<ScreenIntroLoading> {
                 style: TextStyle(
                   color: const Color(0xFF0B5B42),
                   fontSize: 20.sp,
-                  fontFamily: 'Inter',
                   fontWeight: FontWeight.w700,
                 ),
               ),
@@ -155,7 +154,6 @@ class _ScreenIntroLoadingState extends ConsumerState<ScreenIntroLoading> {
                     style: TextStyle(
                       color: spinnerColor,
                       fontSize: 18.sp,
-                      fontFamily: 'Inter',
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -176,7 +174,6 @@ class _ScreenIntroLoadingState extends ConsumerState<ScreenIntroLoading> {
                 style: TextStyle(
                   color: spinnerColor,
                   fontSize: 12.sp,
-                  fontFamily: 'Inter',
                   fontWeight: FontWeight.w400,
                 ),
               ),
@@ -185,7 +182,6 @@ class _ScreenIntroLoadingState extends ConsumerState<ScreenIntroLoading> {
                 style: TextStyle(
                   color: spinnerColor,
                   fontSize: 10.sp,
-                  fontFamily: 'Inter',
                   fontWeight: FontWeight.w400,
                 ),
               ),

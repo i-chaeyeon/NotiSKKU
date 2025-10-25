@@ -167,7 +167,6 @@ class _ScreenIntroAlarmState extends ConsumerState<ScreenIntroAlarm> {
                   '선택한 학과',
                   style: TextStyle(
                     fontSize: 19.sp,
-                    fontFamily: 'Inter',
                     fontWeight: FontWeight.w600,
                   ),
                 ),
@@ -186,7 +185,6 @@ class _ScreenIntroAlarmState extends ConsumerState<ScreenIntroAlarm> {
                   '선택한 키워드',
                   style: TextStyle(
                     fontSize: 19.sp,
-                    fontFamily: 'Inter',
                     fontWeight: FontWeight.w600,
                   ),
                 ),

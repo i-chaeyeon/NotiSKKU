@@ -32,7 +32,6 @@ class ScreenIntroReady extends StatelessWidget {
                       style: TextStyle(
                         color: Color(0xFF0B5B42),
                         fontSize: 24.sp,
-                        fontFamily: 'Inter',
                         fontWeight: FontWeight.w700,
                       ),
                     ),

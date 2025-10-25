@@ -228,7 +228,6 @@ class _ScreenMainBoxEditState extends ConsumerState<ScreenMainBoxEdit> {
                                 fontSize: 18.sp,
                                 color: Colors.white,
                                 fontWeight: FontWeight.w400,
-                                fontFamily: 'Inter',
                               ),
                             ),
                           ),

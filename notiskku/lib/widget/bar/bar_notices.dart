@@ -63,7 +63,6 @@ class BarNotices extends ConsumerWidget {
                                 ? FontWeight.w900
                                 : FontWeight.w400,
                         fontSize: 14.sp,
-                        // fontFamily: 'Inter',
                       ),
                     ),
                   ),

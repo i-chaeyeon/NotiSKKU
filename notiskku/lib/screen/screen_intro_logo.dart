@@ -69,7 +69,6 @@ class _ScreenLogoIntroState extends State<ScreenLogoIntro> {
                 style: TextStyle(
                   fontSize: 44.sp, // 반응형 폰트 크기
                   color: Colors.white,
-                  fontFamily: 'Inter',
                   fontWeight: FontWeight.w400,
                 ),
               ),
