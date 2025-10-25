@@ -72,15 +72,15 @@ class _PillSelectButton extends StatelessWidget {
       child: TextButton(
         onPressed: onPressed,
         style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all(bgColor),
-          foregroundColor: MaterialStateProperty.all(fgColor),
-          shape: MaterialStateProperty.all(
+          backgroundColor: WidgetStateProperty.all(bgColor),
+          foregroundColor: WidgetStateProperty.all(fgColor),
+          shape: WidgetStateProperty.all(
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.r)),
           ),
-          padding: MaterialStateProperty.all(
+          padding: WidgetStateProperty.all(
             EdgeInsets.symmetric(horizontal: 8.w, vertical: 6.h),
           ),
-          minimumSize: MaterialStateProperty.all(Size(width, height)),
+          minimumSize: WidgetStateProperty.all(Size(width, height)),
           alignment: Alignment.center,
         ),
         child: FittedBox(

@@ -71,9 +71,9 @@ class ListMajor extends ConsumerWidget {
                     horizontal: 10.w,
                   ),
                   margin: EdgeInsets.symmetric(horizontal: 10.w),
-                  decoration: const BoxDecoration(
+                  decoration: BoxDecoration(
                     border: Border(
-                      bottom: BorderSide(color: Color(0xFFD9D9D9), width: 1.5),
+                      bottom: BorderSide(color: scheme.secondary, width: 1.5),
                     ),
                   ),
                   child: Row(
