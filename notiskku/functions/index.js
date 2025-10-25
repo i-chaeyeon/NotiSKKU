@@ -32,7 +32,7 @@ exports.scheduledPushNotification = onSchedule(
 
       for (const doc of notices.docs) {
         const data = doc.data();
-        const { title, major, department } = data;
+        const { title, major, department, url } = data;
 
         if (!title) {
           logger.warn(`공지 ${doc.id}에 title 누락`);
@@ -73,6 +73,9 @@ exports.scheduledPushNotification = onSchedule(
             notification: {
               title: `${mappedName} 관련 공지사항`,
               body: title,
+            },
+            data: {
+              link: url, 
             },
             topic: topicId,
           };

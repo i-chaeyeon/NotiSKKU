@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:notiskku/screen/screen_main_tabs.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../main.dart'; // navigatorKey
 
 final notificationProvider = ChangeNotifierProvider<NotificationProvider>(
@@ -68,10 +69,18 @@ class NotificationProvider extends ChangeNotifier {
   }
 
   void _navigateToScreen() {
-    // 프레임 끝에서 내비게이션
     Future.microtask(() {
       final nav = navigatorKey.currentState;
       if (nav == null) return;
+
+      final data = _message?.data ?? {};
+      final url = data['url'];
+
+      if (url != null && url.isNotEmpty) {
+        launchUrl(Uri.parse(url));
+        return;
+      }
+
       nav.push(MaterialPageRoute(builder: (_) => const ScreenMainTabs()));
     });
   }
