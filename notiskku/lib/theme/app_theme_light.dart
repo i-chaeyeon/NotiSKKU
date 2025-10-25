@@ -39,7 +39,7 @@ TextTheme lightTextTheme(String fontFamily) => TextTheme(
 
   bodyMedium: TextStyle(
     fontFamily: fontFamily,
-    fontWeight: FontWeight.w300,
+    fontWeight: FontWeight.w400,
     fontSize: 15.sp,
     color: LightPalette.textPrimary,
   ),

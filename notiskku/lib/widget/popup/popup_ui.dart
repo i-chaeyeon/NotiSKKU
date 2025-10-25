@@ -17,6 +17,10 @@ class PopupUi extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final textTheme = theme.textTheme;
+    final scheme = theme.colorScheme;
+
     return AlertDialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.r)),
       contentPadding: EdgeInsets.fromLTRB(20.w, 10.h, 20.w, 20.h),
@@ -32,10 +36,9 @@ class PopupUi extends StatelessWidget {
               /// Title
               Text(
                 title,
-                style: TextStyle(
-                  fontSize: 20.sp,
-                  fontWeight: FontWeight.w600,
-                  color: const Color(0xFF0B5B42),
+                style: textTheme.headlineMedium?.copyWith(
+                  fontWeight: FontWeight.w800,
+                  color: scheme.primary,
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -56,7 +59,7 @@ class PopupUi extends StatelessWidget {
                 alignment: Alignment.center,
                 child: SizedBox(
                   width: 80.w,
-                  height: 27.h,
+                  height: 30.h,
                   child: ElevatedButton(
                     onPressed: onConfirm,
                     style: ElevatedButton.styleFrom(
@@ -69,7 +72,10 @@ class PopupUi extends StatelessWidget {
                       fit: BoxFit.scaleDown,
                       child: Text(
                         confirmText,
-                        style: TextStyle(color: Colors.white, fontSize: 15.sp),
+                        style: textTheme.headlineSmall?.copyWith(
+                          color: scheme.surface,
+                          fontWeight: FontWeight.w700,
+                        ),
                       ),
                     ),
                   ),
