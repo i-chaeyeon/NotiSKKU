@@ -8,6 +8,9 @@ class ScreenIntroReady extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final textTheme = theme.textTheme;
+    final scheme = theme.colorScheme;
     return Scaffold(
       body: SafeArea(
         child: Column(
@@ -27,14 +30,12 @@ class ScreenIntroReady extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      '이제 준비가 완료되었습니다!',
-                      style: TextStyle(
-                        color: Color(0xFF0B5B42),
-                        fontSize: 24.sp,
-                        fontWeight: FontWeight.w700,
+                      '이제 준비가 완료되었습니다! ',
+                      style: textTheme.headlineMedium?.copyWith(
+                        color: scheme.primary,
                       ),
                     ),
-                    Text('🎉', style: TextStyle(fontSize: 24.sp)),
+                    Text('🎉', style: TextStyle(fontSize: 16.sp)),
                   ],
                 ),
               ],

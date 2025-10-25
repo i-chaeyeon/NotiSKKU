@@ -99,9 +99,7 @@ class _ScreenMainTabsState extends ConsumerState<ScreenMainTabs> {
               Navigator.of(ctx).pop();
               Navigator.push(
                 context,
-                MaterialPageRoute(
-                  builder: (_) => const ScreenIntroAlarm(isFromOthers: true),
-                ),
+                MaterialPageRoute(builder: (_) => const ScreenIntroAlarm()),
               );
             },
             onTapOk: () => Navigator.of(ctx).pop(),

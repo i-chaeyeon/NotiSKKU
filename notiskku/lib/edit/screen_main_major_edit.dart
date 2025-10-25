@@ -129,7 +129,7 @@ class _ScreenMainMajorEditState extends ConsumerState<ScreenMainMajorEdit> {
                           MaterialPageRoute(
                             builder:
                                 (_) => const ScreenIntroLoading(
-                                  isFromOthers: true,
+                                  isFromAlarm: false,
                                 ),
                           ),
                         );

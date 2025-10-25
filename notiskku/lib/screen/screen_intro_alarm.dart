@@ -13,8 +13,8 @@ import 'package:notiskku/widget/dialog/dialog_no_alarm.dart';
 import 'package:notiskku/widget/dialog/dialog_not_saved.dart';
 
 class ScreenIntroAlarm extends ConsumerStatefulWidget {
-  const ScreenIntroAlarm({super.key, this.isFromOthers = false});
-  final bool isFromOthers;
+  const ScreenIntroAlarm({super.key, this.isFromIntro = false});
+  final bool isFromIntro;
 
   @override
   ConsumerState<ScreenIntroAlarm> createState() => _ScreenIntroAlarmState();
@@ -105,7 +105,11 @@ class _ScreenIntroAlarmState extends ConsumerState<ScreenIntroAlarm> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => ScreenIntroLoading(isFromAlarm: true),
+        builder:
+            (context) => ScreenIntroLoading(
+              isFromIntro: widget.isFromIntro,
+              isFromAlarm: true,
+            ),
       ),
     );
   }

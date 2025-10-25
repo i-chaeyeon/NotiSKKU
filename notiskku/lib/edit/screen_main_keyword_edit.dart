@@ -178,7 +178,7 @@ class _ScreenMainKeywordEditState extends ConsumerState<ScreenMainKeywordEdit> {
                           MaterialPageRoute(
                             builder:
                                 (_) => const ScreenIntroLoading(
-                                  isFromOthers: true,
+                                  isFromAlarm: false,
                                 ),
                           ),
                         );

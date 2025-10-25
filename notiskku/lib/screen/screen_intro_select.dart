@@ -65,7 +65,9 @@ class ScreenIntroSelect extends ConsumerWidget {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => const ScreenIntroAlarm(),
+                              builder:
+                                  (context) =>
+                                      const ScreenIntroAlarm(isFromIntro: true),
                             ),
                           );
                         }

@@ -65,9 +65,7 @@ class ScreenMainOthers extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder:
-                            (context) =>
-                                const ScreenIntroAlarm(isFromOthers: true),
+                        builder: (context) => const ScreenIntroAlarm(),
                       ),
                     );
                   },

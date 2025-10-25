@@ -13,15 +13,13 @@ import 'package:notiskku/services/preferences_app.dart';
 class ScreenIntroLoading extends ConsumerStatefulWidget {
   const ScreenIntroLoading({
     super.key,
-    this.isFromOthers = false,
-    this.isFromAlarm = false, // 추가
+    this.isFromAlarm = false,
+    this.isFromIntro = false, // 추가
   });
 
   /// 기존 로직 유지
-  final bool isFromOthers;
-
-  /// 알림 설정 화면에서 진입했는지 여부 (팝업 비표시)
-  final bool isFromAlarm; // 추가
+  final bool isFromIntro;
+  final bool isFromAlarm;
 
   @override
   ConsumerState<ScreenIntroLoading> createState() => _ScreenIntroLoadingState();
@@ -48,9 +46,9 @@ class _ScreenIntroLoadingState extends ConsumerState<ScreenIntroLoading> {
             .where((k) => k.receiveNotification == true)
             .toList();
 
-    debugPrint('✅ [ScreenIntroLoading] isFromOthers: ${widget.isFromOthers}');
+    debugPrint('✅ [ScreenIntroLoading] isFromAlarm: ${widget.isFromAlarm}');
     debugPrint(
-      '✅ [ScreenIntroLoading] isFromAlarm: ${widget.isFromAlarm}',
+      '✅ [ScreenIntroLoading] isFromIntro: ${widget.isFromIntro}',
     ); // ✅ 로그 추가
     debugPrint(
       '✅ [ScreenIntroLoading] majors (all): ${user.selectedMajors.map((m) => m.major).join(", ")}',
@@ -76,13 +74,12 @@ class _ScreenIntroLoadingState extends ConsumerState<ScreenIntroLoading> {
 
       _showSnack('알림 구독이 완료되었습니다.');
 
-      // 분기 정리: isFromAlarm > isFromOthers > 온보딩
       final Widget next =
-          widget.isFromAlarm
-              ? const ScreenMainTabs(showPostLoadNotice: false)
-              : (widget.isFromOthers
-                  ? const ScreenMainTabs(showPostLoadNotice: true)
-                  : const ScreenIntroReady());
+          widget.isFromIntro
+              ? const ScreenIntroReady()
+              : (widget.isFromAlarm
+                  ? const ScreenMainTabs(showPostLoadNotice: false)
+                  : const ScreenMainTabs(showPostLoadNotice: true));
 
       Navigator.of(
         context,
@@ -94,11 +91,11 @@ class _ScreenIntroLoadingState extends ConsumerState<ScreenIntroLoading> {
       _showSnack('알림 구독에 실패했습니다: $e', isError: true);
 
       final Widget next =
-          widget.isFromAlarm
-              ? const ScreenMainTabs(showPostLoadNotice: false) // 실패 케이스도 동일 분기
-              : (widget.isFromOthers
-                  ? const ScreenMainTabs(showPostLoadNotice: true)
-                  : const ScreenIntroReady());
+          widget.isFromIntro
+              ? const ScreenIntroReady()
+              : (widget.isFromAlarm
+                  ? const ScreenMainTabs(showPostLoadNotice: false)
+                  : const ScreenMainTabs(showPostLoadNotice: true));
 
       Navigator.of(
         context,
