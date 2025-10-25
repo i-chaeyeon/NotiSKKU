@@ -3,8 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:notiskku/notice_functions/launch_url.dart';
 import 'package:notiskku/screen/screen_main_tabs.dart';
-import 'package:url_launcher/url_launcher.dart';
 import '../main.dart'; // navigatorKey
 
 final notificationProvider = ChangeNotifierProvider<NotificationProvider>(
@@ -68,20 +68,20 @@ class NotificationProvider extends ChangeNotifier {
     }
   }
 
-  void _navigateToScreen() {
-    Future.microtask(() {
-      final nav = navigatorKey.currentState;
-      if (nav == null) return;
+  void _navigateToScreen() async {
+    await Future.delayed(Duration(milliseconds: 300));
+    final nav = navigatorKey.currentState;
+    if (nav == null) return;
 
-      final data = _message?.data ?? {};
-      final url = data['url'];
+    final data = _message?.data ?? {};
+    final url = data['link'];
 
-      if (url != null && url.isNotEmpty) {
-        launchUrl(Uri.parse(url));
-        return;
-      }
+    if (url != null && url.isNotEmpty) {
+      final launchUrlService = LaunchUrlService();
+      await launchUrlService.launchURL(url);
+      return;
+    }
 
-      nav.push(MaterialPageRoute(builder: (_) => const ScreenMainTabs()));
-    });
+    nav.push(MaterialPageRoute(builder: (_) => const ScreenMainTabs()));
   }
 }

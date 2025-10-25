@@ -75,7 +75,7 @@ exports.scheduledPushNotification = onSchedule(
               body: title,
             },
             data: {
-              link: url, 
+              url: url, 
             },
             topic: topicId,
           };
