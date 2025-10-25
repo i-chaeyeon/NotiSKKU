@@ -12,18 +12,21 @@ class GridKeywords extends ConsumerWidget {
     final userState = ref.watch(userProvider);
     final userNotifier = ref.read(userProvider.notifier);
 
-    final scheme = Theme.of(context).colorScheme;
-    final textTheme = Theme.of(context).textTheme;
+    final theme = Theme.of(context);
+    final textTheme = theme.textTheme;
 
     return Column(
       children: [
         SizedBox(height: 10.h),
 
-        // '선택하지 않음' 버튼
+        // '선택하지 않음' 버튼 (기존과 동일)
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 30.w),
-          child: _DoNotSelectButton(
+          child: _PillSelectButton(
+            label: '선택하지 않음',
             isSelected: userState.doNotSelectKeywords,
+            width: 282.w,
+            height: 36.h,
             onPressed: () => userNotifier.toggleDoNotSelectKeywords(),
           ),
         ),
@@ -49,36 +52,14 @@ class GridKeywords extends ConsumerWidget {
                 matchedKeyword,
               );
 
-              final bgColor =
-                  isSelected ? scheme.primary : scheme.outlineVariant;
-              final fgColor =
-                  isSelected
-                      ? scheme.onPrimary
-                      : scheme.onSurface.withOpacity(0.70); // 비선택 가독성
-
-              return GestureDetector(
-                onTap: () => userNotifier.toggleKeyword(matchedKeyword),
-                child: Container(
-                  width: 86.w,
-                  height: 37.h,
-                  decoration: BoxDecoration(
-                    color: bgColor,
-                    borderRadius: BorderRadius.circular(20.r),
-                  ),
-                  child: Center(
-                    child: FittedBox(
-                      fit: BoxFit.scaleDown,
-                      child: Text(
-                        keyword,
-                        textAlign: TextAlign.center,
-                        style: textTheme.headlineLarge?.copyWith(
-                          fontSize: 18.sp,
-                          color: fgColor,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
+              return _PillSelectButton(
+                label: keyword,
+                isSelected: isSelected,
+                width: 86.w,
+                height: 37.h,
+                // _DoNotSelectButton과 동일한 스타일/색 로직이 자동 적용됨
+                textStyle: textTheme.headlineMedium?.copyWith(fontSize: 18.sp),
+                onPressed: () => userNotifier.toggleKeyword(matchedKeyword),
               );
             },
           ),
@@ -88,26 +69,32 @@ class GridKeywords extends ConsumerWidget {
   }
 }
 
-// GridKeywords 안에만 쓰는 private 위젯
-class _DoNotSelectButton extends StatelessWidget {
+/// 공통 Pill 버튼: `_DoNotSelectButton`과 동일 스타일을 재사용
+class _PillSelectButton extends StatelessWidget {
+  final String label;
   final bool isSelected;
   final VoidCallback onPressed;
+  final double width;
+  final double height;
+  final TextStyle? textStyle;
 
-  const _DoNotSelectButton({required this.isSelected, required this.onPressed});
+  const _PillSelectButton({
+    required this.label,
+    required this.isSelected,
+    required this.onPressed,
+    required this.width,
+    required this.height,
+    this.textStyle,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
-    final textTheme = Theme.of(context).textTheme;
-
-    // WideCondition과 동일한 원리: primary/onPrimary vs outlineVariant/onSurface
-    final bgColor = isSelected ? scheme.primary : scheme.outlineVariant;
-    final fgColor =
-        isSelected ? scheme.onPrimary : scheme.onSurface.withOpacity(0.70);
+    final theme = Theme.of(context);
+    final (bgColor, fgColor) = _pillColors(theme, isSelected);
 
     return SizedBox(
-      width: 282.w,
-      height: 36.h,
+      width: width,
+      height: height,
       child: TextButton(
         onPressed: onPressed,
         style: ButtonStyle(
@@ -116,19 +103,17 @@ class _DoNotSelectButton extends StatelessWidget {
           shape: WidgetStateProperty.all(
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.r)),
           ),
-          // WideCondition과의 일관성: 잔상 제거(필요시)
-          overlayColor: WidgetStateProperty.resolveWith((states) {
-            if (states.contains(WidgetState.pressed)) {
-              return fgColor.withOpacity(0.08);
-            }
-            return null;
-          }),
+          padding: WidgetStateProperty.all(
+            EdgeInsets.symmetric(horizontal: 8.w),
+          ),
+          minimumSize: WidgetStateProperty.all(Size(width, height)),
         ),
         child: FittedBox(
           fit: BoxFit.scaleDown,
           child: Text(
-            '선택하지 않음',
-            style: textTheme.headlineLarge?.copyWith(
+            label,
+            textAlign: TextAlign.center,
+            style: (textStyle ?? theme.textTheme.headlineMedium)?.copyWith(
               fontSize: 18.sp,
               color: fgColor,
             ),
@@ -137,4 +122,14 @@ class _DoNotSelectButton extends StatelessWidget {
       ),
     );
   }
+}
+
+(Color, Color) _pillColors(ThemeData theme, bool isSelected) {
+  final scheme = theme.colorScheme;
+  final bgColor =
+      isSelected
+          ? scheme.primary.withOpacity(0.7)
+          : scheme.secondary.withOpacity(0.6);
+  final fgColor = isSelected ? scheme.surface : scheme.outline;
+  return (bgColor, fgColor);
 }

@@ -20,9 +20,9 @@ class WideCondition extends StatelessWidget {
     final scheme = theme.colorScheme;
 
     final Color enabledBg = scheme.primary; // 메인 초록
-    final Color disabledBg = scheme.outline; // 라인 그레이
-    final Color enabledFg = scheme.onPrimary; // 텍스트 프라이머리
-    final Color disabledFg = theme.disabledColor; // 회색 텍스트
+    final Color disabledBg = scheme.secondary; // 라인 그레이
+    final Color enabledFg = scheme.surface; // 텍스트 프라이머리
+    final Color disabledFg = scheme.outline; // 회색 텍스트
 
     return ConstrainedBox(
       constraints: BoxConstraints(minHeight: 40.h, minWidth: 301.w),

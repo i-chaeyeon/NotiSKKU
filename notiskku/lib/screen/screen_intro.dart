@@ -36,6 +36,9 @@ class _ScreenIntroSliderState extends State<ScreenIntro> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
+
     return Scaffold(
       body: SafeArea(
         child: Column(
@@ -67,8 +70,8 @@ class _ScreenIntroSliderState extends State<ScreenIntro> {
                       shape: BoxShape.circle,
                       color:
                           _currentPage == index
-                              ? const Color(0xff0b5b42)
-                              : Colors.grey,
+                              ? scheme.primary
+                              : scheme.outline,
                     ),
                   ),
                 );

@@ -28,13 +28,11 @@ class BarSettings extends ConsumerWidget {
     final isSelected = ref.watch(settingsProvider) == settings;
 
     final theme = Theme.of(context);
-    final primary = theme.primaryColor;
-    final underlineIdle = theme.disabledColor;
-    final baseTextColor = theme.disabledColor;
+    final textTheme = theme.textTheme;
+    final scheme = theme.colorScheme;
 
     // 선택/비선택 색상 결정
-    final underlineColor = isSelected ? primary : underlineIdle;
-    final textColor = isSelected ? primary : baseTextColor;
+    final textColor = isSelected ? scheme.primary : scheme.outline;
 
     return GestureDetector(
       onTap: () => ref.read(settingsProvider.notifier).state = settings,
@@ -43,19 +41,15 @@ class BarSettings extends ConsumerWidget {
         padding: EdgeInsets.symmetric(vertical: 6.5.h),
         decoration: BoxDecoration(
           border: Border(
-            bottom: BorderSide(
-              color: underlineColor,
-              width: isSelected ? 2.h : 1.h,
-            ),
+            bottom: BorderSide(color: textColor, width: isSelected ? 2.h : 1.h),
           ),
         ),
         child: Center(
           child: Text(
             text,
-            style: theme.textTheme.headlineLarge?.copyWith(
-              fontSize: 20.sp,
-              fontWeight: isSelected ? FontWeight.w700 : FontWeight.w300,
+            style: textTheme.headlineMedium?.copyWith(
               color: textColor,
+              fontSize: 20.sp,
             ),
           ),
         ),

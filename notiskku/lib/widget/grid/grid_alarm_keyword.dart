@@ -11,8 +11,9 @@ class GridAlarmKeyword extends ConsumerWidget {
     final userState = ref.watch(userProvider);
     final userNotifier = ref.read(userProvider.notifier);
 
-    final scheme = Theme.of(context).colorScheme;
-    final textTheme = Theme.of(context).textTheme;
+    final theme = Theme.of(context);
+    final textTheme = theme.textTheme;
+    final scheme = theme.colorScheme;
 
     final selectedKeywords = userState.selectedKeywords;
 
@@ -42,42 +43,85 @@ class GridAlarmKeyword extends ConsumerWidget {
                     final keyword = selectedKeywords[index];
                     final isSelectedForAlarm = keyword.receiveNotification;
 
-                    final bgColor =
-                        isSelectedForAlarm
-                            ? scheme.primary
-                            : scheme.outlineVariant;
-                    final fgColor =
-                        isSelectedForAlarm
-                            ? scheme.onPrimary
-                            : scheme.onSurface.withOpacity(0.70);
-                    return GestureDetector(
-                      onTap: () => userNotifier.toggleKeywordAlarm(keyword),
-                      child: Container(
-                        width: 86.w,
-                        height: 37.h,
-                        padding: EdgeInsets.symmetric(vertical: 6.h),
-                        decoration: BoxDecoration(
-                          color: bgColor,
-                          borderRadius: BorderRadius.circular(20.r),
-                        ),
-                        child: Center(
-                          child: FittedBox(
-                            fit: BoxFit.scaleDown,
-                            child: Text(
-                              keyword.keyword,
-                              textAlign: TextAlign.center,
-                              style: textTheme.headlineLarge?.copyWith(
-                                fontSize: 18.sp,
-                                color: fgColor,
-                              ),
-                            ),
-                          ),
-                        ),
+                    return _PillSelectButton(
+                      label: keyword.keyword,
+                      isSelected: isSelectedForAlarm,
+                      width: 86.w,
+                      height: 37.h,
+                      textStyle: textTheme.headlineMedium?.copyWith(
+                        fontSize: 18.sp,
                       ),
+                      onPressed: () => userNotifier.toggleKeywordAlarm(keyword),
                     );
                   },
                 ),
       ),
     );
   }
+}
+
+/// ====== 아래 두 개는 GridKeywords에 쓰던 코드와 동일 스타일 ======
+
+class _PillSelectButton extends StatelessWidget {
+  final String label;
+  final bool isSelected;
+  final VoidCallback onPressed;
+  final double width;
+  final double height;
+  final TextStyle? textStyle;
+
+  const _PillSelectButton({
+    required this.label,
+    required this.isSelected,
+    required this.onPressed,
+    required this.width,
+    required this.height,
+    this.textStyle,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final (bgColor, fgColor) = _pillColors(theme, isSelected);
+
+    return SizedBox(
+      width: width,
+      height: height,
+      child: TextButton(
+        onPressed: onPressed,
+        style: ButtonStyle(
+          backgroundColor: MaterialStateProperty.all(bgColor),
+          foregroundColor: MaterialStateProperty.all(fgColor),
+          shape: MaterialStateProperty.all(
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.r)),
+          ),
+          padding: MaterialStateProperty.all(
+            EdgeInsets.symmetric(horizontal: 8.w),
+          ),
+          minimumSize: MaterialStateProperty.all(Size(width, height)),
+        ),
+        child: FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Text(
+            label,
+            textAlign: TextAlign.center,
+            style: (textStyle ?? theme.textTheme.headlineMedium)?.copyWith(
+              fontSize: 18.sp,
+              color: fgColor,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+(Color, Color) _pillColors(ThemeData theme, bool isSelected) {
+  final scheme = theme.colorScheme;
+  final bgColor =
+      isSelected
+          ? scheme.primary.withOpacity(0.7)
+          : scheme.secondary.withOpacity(0.6);
+  final fgColor = isSelected ? scheme.surface : scheme.outline;
+  return (bgColor, fgColor);
 }

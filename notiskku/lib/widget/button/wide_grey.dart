@@ -14,8 +14,8 @@ class WideGrey extends StatelessWidget {
     final scheme = theme.colorScheme;
 
     // 항상 동일한 회색/흰색(비활성화여도 동일)
-    final Color bg = scheme.outline; // 밝은 회색 배경
-    final Color fg = scheme.onPrimary; // 흰색 텍스트
+    final Color bg = scheme.secondary; // 밝은 회색 배경
+    final Color fg = scheme.outline; // 흰색 텍스트
 
     return ConstrainedBox(
       constraints: BoxConstraints(minHeight: 40.h, minWidth: 301.w),
@@ -26,7 +26,6 @@ class WideGrey extends StatelessWidget {
           onPressed: onPressed, // null이면 클릭만 비활성화, 색은 그대로 유지
           style: ButtonStyle(
             backgroundColor: WidgetStateProperty.all(bg),
-            foregroundColor: WidgetStateProperty.all(fg),
             shape: WidgetStateProperty.all(
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.r)),
             ),
@@ -42,7 +41,7 @@ class WideGrey extends StatelessWidget {
           child: Center(
             child: Text(
               text,
-              style: textTheme.headlineMedium, // 색은 style에서 고정해두었음
+              style: textTheme.headlineMedium?.copyWith(color: fg),
             ),
           ),
         ),
