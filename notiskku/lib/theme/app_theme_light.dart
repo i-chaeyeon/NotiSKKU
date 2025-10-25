@@ -47,7 +47,7 @@ TextTheme lightTextTheme(String fontFamily) => TextTheme(
     fontFamily: fontFamily,
     fontWeight: FontWeight.w100,
     fontSize: 13.sp,
-    color: LightPalette.lineGray,
+    color: LightPalette.textPrimary.withAlpha(200),
   ),
 );
 

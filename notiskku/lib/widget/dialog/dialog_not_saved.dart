@@ -8,26 +8,27 @@ class DialogNotSaved extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final textTheme = theme.textTheme;
+    final scheme = theme.colorScheme;
+
     return AlertDialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
-      title: Text(
-        '편집을 종료하시겠습니까?',
-        style: TextStyle(
-          fontSize: 16.sp,
-          fontWeight: FontWeight.bold,
-          color: const Color(0xFF0B5B42),
-        ),
-      ),
+      title: Text('편집을 종료하시겠습니까?', style: textTheme.headlineMedium),
       content: Text(
         '변경 사항이 저장되지 않습니다.\n계속하시겠습니까?',
-        style: TextStyle(fontSize: 12.sp),
+        style: textTheme.labelSmall?.copyWith(fontWeight: FontWeight.w700),
       ),
       actions: [
         TextButton(
           onPressed: () => Navigator.of(context).pop(),
           child: Text(
             '취소',
-            style: TextStyle(fontSize: 16.sp, color: const Color(0xFFE64343)),
+            style: textTheme.headlineMedium?.copyWith(
+              color: scheme.error,
+              fontSize: 15.sp,
+              fontWeight: FontWeight.w800,
+            ),
           ),
         ),
         TextButton(
@@ -37,7 +38,11 @@ class DialogNotSaved extends StatelessWidget {
           },
           child: Text(
             '확인',
-            style: TextStyle(fontSize: 16.sp, color: const Color(0xFF0B5B42)),
+            style: textTheme.headlineMedium?.copyWith(
+              color: scheme.primary,
+              fontSize: 15.sp,
+              fontWeight: FontWeight.w800,
+            ),
           ),
         ),
       ],
