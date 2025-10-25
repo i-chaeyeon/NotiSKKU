@@ -18,52 +18,34 @@ class _DarkPalette {
 /// ===== Typography =====
 TextTheme _darkTextTheme(String fontFamily) => TextTheme(
   displayLarge: TextStyle(
-    // h1 Heavy 25pt ≈ 33
+    // h1 Heavy
     fontFamily: fontFamily,
     fontWeight: FontWeight.w900,
-    fontSize: 33,
-    height: 1.15,
-    letterSpacing: -0.5,
     color: _DarkPalette.textPrimary,
   ),
   headlineMedium: TextStyle(
-    // h2 Bold 18pt ≈ 24
+    // h2 Bold
     fontFamily: fontFamily,
-    fontWeight: FontWeight.w700,
-    fontSize: 24,
-    height: 1.2,
+    fontWeight: FontWeight.w500,
     color: _DarkPalette.textPrimary,
   ),
   titleMedium: TextStyle(
-    // h3 Regular 13pt ≈ 17
+    // h3 Regular
     fontFamily: fontFamily,
-    fontWeight: FontWeight.w400,
-    fontSize: 17,
-    height: 1.35,
+    fontWeight: FontWeight.w300,
     color: _DarkPalette.textPrimary,
   ),
   titleLarge: TextStyle(
-    // Plain 15pt ≈ 20
+    // Plain
     fontFamily: fontFamily,
-    fontWeight: FontWeight.w400,
-    fontSize: 20,
-    height: 1.35,
+    fontWeight: FontWeight.w300,
     color: _DarkPalette.textPrimary,
   ),
   labelSmall: TextStyle(
-    // Caption 10pt ≈ 13
+    // Caption
     fontFamily: fontFamily,
-    fontWeight: FontWeight.w300,
-    fontSize: 13,
-    height: 1.25,
+    fontWeight: FontWeight.w100,
     color: _DarkPalette.gray,
-  ),
-  bodyMedium: TextStyle(
-    fontFamily: fontFamily,
-    fontWeight: FontWeight.w400,
-    fontSize: 16,
-    height: 1.38,
-    color: _DarkPalette.textPrimary,
   ),
 );
 
