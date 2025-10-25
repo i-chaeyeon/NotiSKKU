@@ -1,17 +1,32 @@
+// firebase/notification_provider.dart
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:notiskku/screen/screen_main_tabs.dart';
-
 import '../main.dart'; // navigatorKey
+
+final notificationProvider = ChangeNotifierProvider<NotificationProvider>(
+  (ref) => NotificationProvider(),
+);
 
 class NotificationProvider extends ChangeNotifier {
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
   RemoteMessage? _message;
+  bool _initialized = false;
 
   RemoteMessage? get message => _message;
 
+  RemoteMessage? takeMessage() {
+    final m = _message;
+    _message = null;
+    return m;
+  }
+
   Future<void> init() async {
+    if (_initialized) return;
+    _initialized = true;
+
     if (kIsWeb) {
       debugPrint('웹 환경에서는 Firebase Messaging을 초기화하지 않습니다.');
       return;

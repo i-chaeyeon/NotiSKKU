@@ -119,20 +119,13 @@ class ScreenIntroAlarm extends ConsumerWidget {
   //   );
   // }
   void _goToNext(BuildContext context) {
-    // Navigator.push(
-    //   context,
-    //   MaterialPageRoute(builder: (context) => const ScreenIntroReady()),
-    // );
-    if (isFromOthers) {
-      // screen_main_others에서 진입한 경우: 이전 화면으로 돌아감.
-      Navigator.pop(context);
-    } else {
-      // 초기 시작 시: ScreenIntroReady로 이동.
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const ScreenIntroLoading()),
-      );
-    }
+    // isFromOthers 여부에 따라 Loading으로 진입 (플래그 전달)
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ScreenIntroLoading(isFromAlarm: true),
+      ),
+    );
   }
 
   void _showNoAlarmDialog(BuildContext context) {

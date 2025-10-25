@@ -2,21 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-// MajorProvider와 ListMajor 위젯을 사용하기 위해 import
 import 'package:notiskku/providers/user/user_provider.dart';
 import 'package:notiskku/widget/button/wide_condition.dart';
 import 'package:notiskku/widget/list/list_major.dart';
+import 'package:notiskku/screen/screen_intro_loading.dart'; // ✅ 추가
 
 class ScreenMainMajorEdit extends ConsumerWidget {
   const ScreenMainMajorEdit({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // majorProvider 상태를 구독
     final userState = ref.watch(userProvider);
-
-    // 버튼 활성화 조건: 선택된 학과가 1개 이상일 때
-    // (필요에 따라 2개가 정확히 선택되어야만 활성화 등으로 바꿀 수도 있음)
     final isButtonEnabled = userState.selectedMajors.isNotEmpty;
 
     return Scaffold(
@@ -33,13 +29,12 @@ class ScreenMainMajorEdit extends ConsumerWidget {
           ),
         ),
         centerTitle: true,
-        iconTheme: const IconThemeData(color: Colors.black), // 뒤로가기 화살표 색상
+        iconTheme: const IconThemeData(color: Colors.black),
       ),
       backgroundColor: Colors.white,
       body: Column(
         children: [
           SizedBox(height: 10.h),
-          // 안내 문구
           Align(
             alignment: Alignment.centerLeft,
             child: Padding(
@@ -57,20 +52,42 @@ class ScreenMainMajorEdit extends ConsumerWidget {
             ),
           ),
           SizedBox(height: 10.h),
-          // 검색창 + 학과 리스트
-          Expanded(child: ListMajor()),
+          const Expanded(child: ListMajor()),
           SizedBox(height: 30.h),
-          // 설정 완료 버튼
           WideCondition(
             text: '설정 완료',
             isEnabled: isButtonEnabled,
             onPressed:
                 isButtonEnabled
-                    ? () {
-                      ref
-                          .read(userProvider.notifier)
-                          .updateSearchText(''); // 수동 초기화
-                      Navigator.pop(context);
+                    ? () async {
+                      final user = ref.read(userProvider);
+
+                      // 🔍 디버깅 로그
+                      debugPrint('-----------------------------');
+                      debugPrint(
+                        '⚙️ [ScreenMainMajorEdit] 학과 편집 완료 → 로딩 화면으로 이동',
+                      );
+                      debugPrint(
+                        '선택된 학과: ${user.selectedMajors.map((m) => m.major).join(", ")}',
+                      );
+                      debugPrint(
+                        '알림 설정(major): '
+                        '${user.selectedMajors.map((m) => "${m.major}=${m.receiveNotification}").join(", ")}',
+                      );
+                      debugPrint('-----------------------------');
+
+                      // ✅ 로딩 화면으로 이동 (해당 화면에서 syncAll 수행)
+                      if (context.mounted) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder:
+                                (_) => const ScreenIntroLoading(
+                                  isFromOthers: true, // 편집 경유 플래그 (옵션)
+                                ),
+                          ),
+                        );
+                      }
                     }
                     : null,
           ),

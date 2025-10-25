@@ -41,19 +41,17 @@ class ListStarredNotices extends ConsumerWidget {
       return ListNotices(notices: orderedNotices);
     }
 
-    return Expanded(
-      child: FutureBuilder<Widget>(
-        future: getStarredNoticesWidget(hashedStarredNotices),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('오류 발생: ${snapshot.error}'));
-          } else {
-            return snapshot.data ?? const Center(child: Text('공지 없음'));
-          }
-        },
-      ),
+    return FutureBuilder<Widget>(
+      future: getStarredNoticesWidget(hashedStarredNotices),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasError) {
+          return Center(child: Text('오류 발생: ${snapshot.error}'));
+        } else {
+          return snapshot.data ?? const Center(child: Text('공지 없음'));
+        }
+      },
     );
   }
 }

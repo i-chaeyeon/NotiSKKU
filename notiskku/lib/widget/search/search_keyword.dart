@@ -61,7 +61,7 @@ class _SearchKeywordState extends ConsumerState<SearchKeyword> {
                       _controller.clear();
                       ref.read(userProvider.notifier).updateSearchText('');
                     },
-                    icon: const Icon(Icons.cancel, color: Color(0xff979797)),
+                    icon: const Icon(Icons.cancel, color: Color(0xffd9d9d9)),
                     padding: EdgeInsets.zero,
                     splashRadius: 10.w, // 터치 효과 반경 설정
                   ),
@@ -69,7 +69,7 @@ class _SearchKeywordState extends ConsumerState<SearchKeyword> {
 
                 Align(
                   alignment: Alignment.centerRight,
-                  child: GestureDetector(
+                  child: InkWell(
                     onTap: () {
                       _controller.clear();
                     },

@@ -38,8 +38,9 @@ class DialogLimitMajor extends StatelessWidget {
       title: Text(
         '⚠️ 전공 선택 제한',
         style: TextStyle(
-          color: const Color(0xFF0B5B42),
+          fontSize: 16.sp,
           fontWeight: FontWeight.bold,
+          color: const Color(0xFF0B5B42),
         ),
       ),
       content: Column(
@@ -47,7 +48,7 @@ class DialogLimitMajor extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Text('전공은 최대 두 개까지 선택할 수 있습니다.', style: TextStyle(fontSize: 14.sp)),
-          Text(fixedInstruction, style: TextStyle(fontSize: 14.sp)),
+          Text(fixedInstruction, style: TextStyle(fontSize: 12.sp)),
           SizedBox(height: 10.h),
           Text(
             "선택한 전공:",
@@ -61,7 +62,7 @@ class DialogLimitMajor extends StatelessWidget {
           onPressed: () => Navigator.of(context).pop(),
           child: Text(
             '확인',
-            style: TextStyle(fontSize: 16.sp, color: Colors.black),
+            style: TextStyle(fontSize: 16.sp, color: const Color(0xFF0B5B42)),
           ),
         ),
       ],
