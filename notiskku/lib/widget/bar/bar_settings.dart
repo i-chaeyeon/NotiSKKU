@@ -11,9 +11,9 @@ class BarSettings extends ConsumerWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        _buildButton(ref, Settings.major, "학과", 130.w),
+        _buildButton(ref, Settings.major, "학과", 130.w, context),
         SizedBox(width: 12.w),
-        _buildButton(ref, Settings.keyword, "키워드", 130.w),
+        _buildButton(ref, Settings.keyword, "키워드", 130.w, context),
       ],
     );
   }
@@ -23,37 +23,39 @@ class BarSettings extends ConsumerWidget {
     Settings settings,
     String text,
     double buttonWidth,
+    BuildContext context,
   ) {
     final isSelected = ref.watch(settingsProvider) == settings;
 
+    final theme = Theme.of(context);
+    final primary = theme.primaryColor;
+    final underlineIdle = theme.disabledColor;
+    final baseTextColor = theme.disabledColor;
+
+    // 선택/비선택 색상 결정
+    final underlineColor = isSelected ? primary : underlineIdle;
+    final textColor = isSelected ? primary : baseTextColor;
+
     return GestureDetector(
-      onTap: () {
-        ref.read(settingsProvider.notifier).state = settings;
-      },
+      onTap: () => ref.read(settingsProvider.notifier).state = settings,
       child: Container(
         width: buttonWidth,
         padding: EdgeInsets.symmetric(vertical: 6.5.h),
         decoration: BoxDecoration(
           border: Border(
             bottom: BorderSide(
-              color:
-                  isSelected
-                      ? const Color(0xFF0B5B42)
-                      : const Color(0xFF979797),
-              width: isSelected ? 2.5.h : 1.h,
+              color: underlineColor,
+              width: isSelected ? 2.h : 1.h,
             ),
           ),
         ),
         child: Center(
           child: Text(
             text,
-            style: TextStyle(
+            style: theme.textTheme.headlineLarge?.copyWith(
               fontSize: 20.sp,
-              fontWeight: isSelected ? FontWeight.w800 : FontWeight.w300,
-              color:
-                  isSelected
-                      ? const Color(0xFF0B5B42)
-                      : const Color(0xFF979797),
+              fontWeight: isSelected ? FontWeight.w700 : FontWeight.w300,
+              color: textColor,
             ),
           ),
         ),

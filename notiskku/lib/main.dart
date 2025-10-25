@@ -53,8 +53,8 @@ class MyApp extends StatelessWidget {
           navigatorKey: navigatorKey,
 
           // 여기서 커스텀 테마 적용
-          theme: buildLightTheme(fontFamily: 'NanumSquareNeoVar'),
-          darkTheme: buildDarkTheme(fontFamily: 'NanumSquareNeoVar'),
+          theme: buildLightTheme(fontFamily: 'NanumSquareNeo'),
+          darkTheme: buildDarkTheme(fontFamily: 'NanumSquareNeo'),
           themeMode: ThemeMode.system, // 시스템 라이트/다크 따라가기
 
           debugShowCheckedModeBanner: false,

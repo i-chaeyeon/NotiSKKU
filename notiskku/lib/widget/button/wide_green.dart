@@ -9,37 +9,39 @@ class WideGreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
-    final textTheme = Theme.of(context).textTheme;
+    final theme = Theme.of(context);
+    final textTheme = theme.textTheme;
+    final scheme = theme.colorScheme;
 
-    return SizedBox(
-      width: 301.w,
-      height: 40.h,
-      child: TextButton(
-        onPressed: onPressed,
-        style: ButtonStyle(
-          backgroundColor: WidgetStateProperty.resolveWith((states) {
-            if (states.contains(WidgetState.disabled)) {
-              return scheme.outlineVariant; // 비활성화 배경
-            }
-            return scheme.primary; // 활성화 배경
-          }),
-          foregroundColor: WidgetStateProperty.resolveWith((states) {
-            if (states.contains(WidgetState.disabled)) {
-              return scheme.onSurface.withOpacity(0.38); // 비활성화 글자색
-            }
-            return scheme.onPrimary; // 활성화 글자색
-          }),
-          shape: WidgetStateProperty.all(
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.r)),
+    final Color bg = scheme.primary;
+    final Color fg = scheme.onPrimary; // 흰색 텍스트
+
+    return ConstrainedBox(
+      constraints: BoxConstraints(minHeight: 40.h, minWidth: 301.w),
+      child: SizedBox(
+        width: 301.w,
+        height: 40.h,
+        child: TextButton(
+          onPressed: onPressed, // null이면 클릭만 비활성화, 색은 그대로 유지
+          style: ButtonStyle(
+            backgroundColor: WidgetStateProperty.all(bg),
+            foregroundColor: WidgetStateProperty.all(fg),
+            shape: WidgetStateProperty.all(
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.r)),
+            ),
+            padding: WidgetStateProperty.all(EdgeInsets.zero),
+            minimumSize: WidgetStateProperty.all(Size(301.w, 40.h)),
+            // 필요 시 포인터만 금지 커서로
+            mouseCursor: WidgetStateProperty.resolveWith((states) {
+              return (onPressed == null)
+                  ? SystemMouseCursors.forbidden
+                  : SystemMouseCursors.click;
+            }),
           ),
-        ),
-        child: Center(
-          child: FittedBox(
-            fit: BoxFit.scaleDown,
+          child: Center(
             child: Text(
               text,
-              style: textTheme.headlineLarge?.copyWith(fontSize: 18.sp),
+              style: textTheme.headlineMedium, // 색은 style에서 고정해두었음
             ),
           ),
         ),

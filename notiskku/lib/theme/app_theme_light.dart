@@ -113,13 +113,13 @@ const _lightScheme = ColorScheme(
 );
 
 /// ===== Public builder =====
-ThemeData buildLightTheme({String fontFamily = 'NanumSquareNeoVar'}) {
+ThemeData buildLightTheme({String fontFamily = 'NanumSquareNeo'}) {
   final text = _lightTextTheme(fontFamily);
 
   final base = ThemeData(
     useMaterial3: true,
     colorScheme: _lightScheme,
-    scaffoldBackgroundColor: _lightScheme.background,
+    scaffoldBackgroundColor: _lightScheme.surface,
     textTheme: text,
   );
 

@@ -15,39 +15,43 @@ class WideCondition extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
-    final textTheme = Theme.of(context).textTheme;
+    final theme = Theme.of(context);
+    final textTheme = theme.textTheme;
+    final scheme = theme.colorScheme;
 
-    return SizedBox(
-      width: 301.w,
-      height: 40.h,
-      child: TextButton(
-        onPressed: isEnabled ? onPressed : null,
-        style: ButtonStyle(
-          // 배경/전경색을 Material 상태로 분기
-          backgroundColor: WidgetStateProperty.resolveWith((states) {
-            if (states.contains(WidgetState.disabled)) {
-              return scheme.outlineVariant;
-            }
-            return scheme.primary;
-          }),
-          foregroundColor: WidgetStateProperty.resolveWith((states) {
-            if (states.contains(WidgetState.disabled)) {
-              return scheme.onSurface.withOpacity(0.38);
-            }
-            return scheme.onPrimary; // 대비 좋은 흰색
-          }),
-          shape: WidgetStateProperty.all(
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.r)),
+    final Color enabledBg = scheme.primary; // 메인 초록
+    final Color disabledBg = scheme.outline; // 라인 그레이
+    final Color enabledFg = scheme.onPrimary; // 텍스트 프라이머리
+    final Color disabledFg = theme.disabledColor; // 회색 텍스트
+
+    return ConstrainedBox(
+      constraints: BoxConstraints(minHeight: 40.h, minWidth: 301.w),
+      child: SizedBox(
+        width: 301.w,
+        height: 40.h,
+        child: TextButton(
+          onPressed: isEnabled ? onPressed : null,
+          style: ButtonStyle(
+            // 배경색
+            backgroundColor: WidgetStateProperty.resolveWith((states) {
+              if (states.contains(WidgetState.disabled)) return disabledBg;
+              if (states.contains(WidgetState.pressed)) {
+                return enabledBg;
+              }
+              return enabledBg;
+            }),
+            // 전경(텍스트/아이콘) 색
+            foregroundColor: WidgetStateProperty.resolveWith((states) {
+              if (states.contains(WidgetState.disabled)) return disabledFg;
+              return enabledFg;
+            }),
           ),
-        ),
-        child: Center(
-          child: FittedBox(
-            fit: BoxFit.scaleDown,
+          child: Center(
             child: Text(
               text,
-              // 텍스트는 테마 타이포 사용
-              style: textTheme.headlineLarge?.copyWith(fontSize: 18.sp),
+              style: textTheme.headlineMedium?.copyWith(
+                color: isEnabled ? enabledFg : disabledFg,
+              ),
             ),
           ),
         ),
