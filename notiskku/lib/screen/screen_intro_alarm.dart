@@ -10,6 +10,7 @@ import 'package:notiskku/widget/grid/grid_alarm_keyword.dart';
 import 'package:notiskku/widget/list/list_alarm_major.dart';
 import 'package:notiskku/widget/button/wide_green.dart';
 import 'package:notiskku/widget/dialog/dialog_no_alarm.dart';
+import 'package:notiskku/widget/dialog/dialog_not_saved.dart'; // ✅ 추가
 
 class ScreenIntroAlarm extends ConsumerStatefulWidget {
   const ScreenIntroAlarm({super.key, this.isFromOthers = false});
@@ -33,7 +34,7 @@ class _ScreenIntroAlarmState extends ConsumerState<ScreenIntroAlarm> {
     super.initState();
     final user = ref.read(userProvider);
 
-    // ✅ deep copy (필수 필드 모두 복사)
+    // ✅ deep copy
     _originalMajors = user.selectedMajors
         .map(
           (m) => Major(
@@ -67,8 +68,7 @@ class _ScreenIntroAlarmState extends ConsumerState<ScreenIntroAlarm> {
     ref.read(userProvider.notifier).replaceSelectedMajors(_originalMajors);
     ref.read(userProvider.notifier).replaceSelectedKeywords(_originalKeywords);
 
-    // replaceSelectedKeywords가 doNotSelectKeywords를 false로 만들기 때문에,
-    // 원래가 true였다면 한 프레임 뒤에 토글해 원상 복원
+    // replaceSelectedKeywords가 doNotSelectKeywords를 false로 만들 수 있으니 원래 값 복원
     final now = ref.read(userProvider).doNotSelectKeywords;
     if (now != _originalDoNotSelect) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -79,6 +79,26 @@ class _ScreenIntroAlarmState extends ConsumerState<ScreenIntroAlarm> {
     } else {
       _restoring = false;
     }
+  }
+
+  Future<void> _handleBack() async {
+    if (_committed) {
+      if (mounted) Navigator.pop(context);
+      return;
+    }
+
+    // DialogNotSaved 사용
+    await showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder:
+          (ctx) => DialogNotSaved(
+            onConfirm: () {
+              _restoreIfNotCommitted();
+              if (mounted) Navigator.pop(context);
+            },
+          ),
+    );
   }
 
   void _goToNext(BuildContext context) {
@@ -103,10 +123,10 @@ class _ScreenIntroAlarmState extends ConsumerState<ScreenIntroAlarm> {
     final selectedKeywords = ref.watch(userProvider).selectedKeywords;
 
     return PopScope(
-      canPop: true,
+      canPop: false,
       onPopInvoked: (didPop) {
-        // 뒤로가기(제스처/버튼/시스템) 시 원복
-        _restoreIfNotCommitted();
+        if (didPop) return;
+        _handleBack();
       },
       child: Scaffold(
         appBar: AppBar(
@@ -115,7 +135,7 @@ class _ScreenIntroAlarmState extends ConsumerState<ScreenIntroAlarm> {
           scrolledUnderElevation: 0,
           leading: IconButton(
             icon: Icon(Icons.arrow_back, color: Colors.black, size: 24.w),
-            onPressed: () => Navigator.pop(context),
+            onPressed: _handleBack, // ✅ 앱바 뒤로가기와 동일 처리
           ),
         ),
         backgroundColor: Colors.white,
@@ -180,8 +200,7 @@ class _ScreenIntroAlarmState extends ConsumerState<ScreenIntroAlarm> {
               child: WideGreen(
                 text: '설정 완료',
                 onPressed: () {
-                  // 완료 → 원복 방지
-                  _committed = true;
+                  _committed = true; // 완료 → 원복 방지
 
                   final noMajorAlarms = selectedMajors.every(
                     (m) => m.receiveNotification == false,

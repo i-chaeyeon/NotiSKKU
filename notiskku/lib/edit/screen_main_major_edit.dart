@@ -7,6 +7,7 @@ import 'package:notiskku/providers/user/user_provider.dart';
 import 'package:notiskku/widget/button/wide_condition.dart';
 import 'package:notiskku/widget/list/list_major.dart';
 import 'package:notiskku/screen/screen_intro_loading.dart';
+import 'package:notiskku/widget/dialog/dialog_not_saved.dart'; // ✅ 추가
 
 class ScreenMainMajorEdit extends ConsumerStatefulWidget {
   const ScreenMainMajorEdit({super.key});
@@ -24,7 +25,6 @@ class _ScreenMainMajorEditState extends ConsumerState<ScreenMainMajorEdit> {
   void initState() {
     super.initState();
     final current = ref.read(userProvider).selectedMajors;
-    // deep copy (필요 시 copyWith 사용)
     _originalMajors = current
         .map(
           (m) => Major(
@@ -42,22 +42,44 @@ class _ScreenMainMajorEditState extends ConsumerState<ScreenMainMajorEdit> {
     ref.read(userProvider.notifier).replaceSelectedMajors(_originalMajors);
   }
 
+  Future<void> _handleBack() async {
+    if (_committed) {
+      if (mounted) Navigator.pop(context);
+      return;
+    }
+    await showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder:
+          (ctx) => DialogNotSaved(
+            onConfirm: () {
+              _restoreIfNotCommitted();
+              if (mounted) Navigator.pop(context);
+            },
+          ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final userState = ref.watch(userProvider);
     final isButtonEnabled = userState.selectedMajors.isNotEmpty;
 
     return PopScope(
-      canPop: true,
+      canPop: false, // ⛳️ 뒤로가기를 우리가 직접 처리
       onPopInvoked: (didPop) {
-        // 뒤로가기 발생 시 (제스처/앱바/시스템 백 포함) 호출
-        _restoreIfNotCommitted();
+        if (didPop) return;
+        _handleBack();
       },
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.white,
           elevation: 0,
           scrolledUnderElevation: 0,
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back, color: Colors.black, size: 24.w),
+            onPressed: _handleBack, // ✅ 앱바 뒤로가기도 동일 처리
+          ),
           title: Text(
             '학과 선택 편집',
             style: TextStyle(
@@ -113,7 +135,7 @@ class _ScreenMainMajorEditState extends ConsumerState<ScreenMainMajorEdit> {
                         );
                         debugPrint('-----------------------------');
 
-                        _committed = true; // 완료 확정 → 뒤로가기 복원 방지
+                        _committed = true; // ✅ 완료 확정 → 뒤로가기 시 원복/다이얼로그 방지
 
                         if (!mounted) return;
                         Navigator.push(

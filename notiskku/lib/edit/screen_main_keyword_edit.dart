@@ -4,11 +4,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:notiskku/models/keyword.dart';
 import 'package:notiskku/providers/user/user_provider.dart';
-import 'package:notiskku/providers/user/user_state.dart';
+// import 'package:notiskku/providers/user/user_state.dart';
 import 'package:notiskku/widget/button/wide_condition.dart';
 import 'package:notiskku/widget/search/search_keyword.dart';
 import 'package:notiskku/widget/list/list_keyword.dart';
 import 'package:notiskku/screen/screen_intro_loading.dart';
+import 'package:notiskku/widget/dialog/dialog_not_saved.dart'; // ✅ 추가
 
 class ScreenMainKeywordEdit extends ConsumerStatefulWidget {
   const ScreenMainKeywordEdit({super.key});
@@ -69,13 +70,31 @@ class _ScreenMainKeywordEditState extends ConsumerState<ScreenMainKeywordEdit> {
     });
   }
 
+  Future<void> _handleBack() async {
+    if (_committed) {
+      if (mounted) Navigator.pop(context);
+      return;
+    }
+
+    await showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder:
+          (ctx) => DialogNotSaved(
+            onConfirm: () {
+              _restoreIfNotCommitted(); // 원복
+              if (mounted) Navigator.pop(context); // 화면 닫기
+            },
+          ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final userState = ref.watch(userProvider);
 
     // ✅ 자동 토글: 선택 키워드가 0개가 되는 순간 doNotSelectKeywords = true
     ref.listen(userProvider, (prev, next) {
-      // 원복중/커밋후/이미 true면 동작 안 함
       if (_isRestoring || _committed || !mounted) return;
       final becameEmpty = next.selectedKeywords.isEmpty;
       final notYetFlag = !next.doNotSelectKeywords;
@@ -94,15 +113,20 @@ class _ScreenMainKeywordEditState extends ConsumerState<ScreenMainKeywordEdit> {
     final searchText = userState.currentSearchText;
 
     return PopScope(
-      canPop: true,
+      canPop: false, // ⛳️ 우리가 직접 뒤로가기 제어
       onPopInvoked: (didPop) {
-        _restoreIfNotCommitted();
+        if (didPop) return;
+        _handleBack();
       },
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.white,
           elevation: 0,
           scrolledUnderElevation: 0,
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back, color: Colors.black, size: 24.w),
+            onPressed: _handleBack, // ✅ 앱바 뒤로가기와 동일 처리
+          ),
           title: Text(
             '키워드 선택 편집',
             style: TextStyle(
