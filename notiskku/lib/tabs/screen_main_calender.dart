@@ -379,10 +379,33 @@ class _ScreenMainCalenderState extends State<ScreenMainCalender> {
                                               ),
                                       itemBuilder: (_, i) {
                                         final ev = _selectedDayEvents[i];
-                                        final time = ev.isAllDay
-                                            ? ''
-                                            : '${DateFormat.Hm().format(ev.startTime)} – '
-                                                '${DateFormat.Hm().format(ev.endTime)}';
+
+                                        // 날짜 범위 포맷팅
+                                        final startDate = DateTime(
+                                          ev.startTime.year,
+                                          ev.startTime.month,
+                                          ev.startTime.day,
+                                        );
+                                        final endDate = DateTime(
+                                          ev.endTime.year,
+                                          ev.endTime.month,
+                                          ev.endTime.day,
+                                        );
+
+                                        final isSameDay = startDate.year == endDate.year &&
+                                            startDate.month == endDate.month &&
+                                            startDate.day == endDate.day;
+
+                                        String dateRange;
+                                        if (isSameDay) {
+                                          // 하루짜리 이벤트
+                                          dateRange = DateFormat('M.d E', 'ko').format(startDate);
+                                        } else {
+                                          // 여러 날 이벤트
+                                          dateRange = '${DateFormat('M.d E', 'ko').format(startDate)} - '
+                                              '${DateFormat('M.d E', 'ko').format(endDate)}';
+                                        }
+
                                         return ListTile(
                                           title: Text(
                                             ev.subject,
@@ -393,7 +416,7 @@ class _ScreenMainCalenderState extends State<ScreenMainCalender> {
                                             overflow: TextOverflow.ellipsis,
                                           ),
                                           subtitle: Text(
-                                            time,
+                                            dateRange,
                                             style: const TextStyle(
                                               color: Colors.grey,
                                             ),
