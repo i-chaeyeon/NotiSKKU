@@ -131,14 +131,14 @@ class _ScreenIntroLoadingState extends ConsumerState<ScreenIntroLoading> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Image.asset(
-                'assets/images/fourth_fix.png',
+                'assets/images/loadinglogo.png',
                 height: 170.h,
                 width: 170.h,
                 fit: BoxFit.contain,
               ),
               SizedBox(height: 23.h),
               Text(
-                '설정을 완료하는 중입니다!',
+                '설정을 완료하는 중이에요.',
                 style: TextStyle(
                   color: const Color(0xFF0B5B42),
                   fontSize: 20.sp,
@@ -147,29 +147,16 @@ class _ScreenIntroLoadingState extends ConsumerState<ScreenIntroLoading> {
                 ),
               ),
               SizedBox(height: 8.h),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    '잠시만 기다려 주세요...',
-                    style: TextStyle(
-                      color: spinnerColor,
-                      fontSize: 18.sp,
-                      fontFamily: 'Inter',
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  SizedBox(width: 10.w),
-                  SizedBox(
-                    height: 16.w,
-                    width: 16.w,
-                    child: const CircularProgressIndicator(
-                      strokeWidth: 3.0,
-                      valueColor: AlwaysStoppedAnimation<Color>(spinnerColor),
-                    ),
-                  ),
-                ],
+              Text(
+                '조금만 더 기다려주세요 :)',
+                style: TextStyle(
+                  color: spinnerColor,
+                  fontSize: 18.sp,
+                  fontFamily: 'Inter',
+                  fontWeight: FontWeight.w500,
+                ),
               ),
+              SizedBox(height: 5.h),
             ],
           ),
         ),
