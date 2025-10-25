@@ -180,6 +180,15 @@ class _ScreenIntroLoadingState extends ConsumerState<ScreenIntroLoading> {
                   fontWeight: FontWeight.w400,
                 ),
               ),
+              Text(
+                '(인터넷 연결을 확인해주세요.)',
+                style: TextStyle(
+                  color: spinnerColor,
+                  fontSize: 10.sp,
+                  fontFamily: 'Inter',
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
             ],
           ),
         ),

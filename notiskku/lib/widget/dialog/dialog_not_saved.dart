@@ -20,7 +20,7 @@ class DialogNotSaved extends StatelessWidget {
         ),
       ),
       content: Text(
-        '변경 사항이 저장되지 않습니다. 계속하시겠습니까?',
+        '변경 사항이 저장되지 않습니다.\n계속하시겠습니까?',
         style: TextStyle(fontSize: 12.sp),
       ),
       actions: [
