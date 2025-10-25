@@ -443,15 +443,18 @@ class _ScreenMainCalenderState extends State<ScreenMainCalender> {
         border: Border.all(color: Colors.grey.withOpacity(0.2), width: 0.5),
       ),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          // 날짜
-          Text(
-            '${day.day}',
-            style: TextStyle(
-              color: textColor,
-              fontSize: 12.sp,
-              fontWeight: FontWeight.w500,
+          // 일자 표시 영역
+          Padding( // ← ✅ 상단 여백을 위해 Padding 추가
+            padding: EdgeInsets.only(top: 4.h), // 기본 셀과 비슷하게
+            child: Text(
+              '${day.day}',
+              style: TextStyle(
+                color: textColor,
+                fontSize: 12.sp,
+                fontWeight: FontWeight.w500,
+              ),
             ),
           ),
 
