@@ -84,6 +84,7 @@ class _SearchMajorState extends ConsumerState<SearchMajor> {
                         'assets/images/green_search.png',
                         width: 37.w,
                         fit: BoxFit.contain,
+                        color: scheme.primary,
                       ),
                     ),
                   ),

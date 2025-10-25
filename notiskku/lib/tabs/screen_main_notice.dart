@@ -33,6 +33,9 @@ class _NoticeAppBar extends ConsumerWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
+
     final userState = ref.watch(userProvider);
     final majorIndex = ref.watch(selectedMajorIndexProvider);
 
@@ -51,7 +54,11 @@ class _NoticeAppBar extends ConsumerWidget implements PreferredSizeWidget {
     return AppBar(
       leading: Padding(
         padding: EdgeInsets.all(10.0),
-        child: Image.asset('assets/images/greenlogo_fix.png', width: 40),
+        child: Image.asset(
+          'assets/images/greenlogo_fix.png',
+          width: 40,
+          color: scheme.primary,
+        ),
       ),
       title: Row(
         mainAxisSize: MainAxisSize.min,
@@ -127,7 +134,11 @@ class _NoticeAppBar extends ConsumerWidget implements PreferredSizeWidget {
                 MaterialPageRoute(builder: (context) => ScreenMainSearch()),
               );
             },
-            child: Image.asset('assets/images/search_fix.png', width: 30.w),
+            child: Image.asset(
+              'assets/images/search_fix.png',
+              width: 30.w,
+              color: scheme.outline,
+            ),
           ),
         ),
       ],

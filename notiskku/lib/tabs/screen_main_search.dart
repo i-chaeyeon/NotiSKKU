@@ -132,10 +132,13 @@ class ScreenMainSearchState extends ConsumerState<ScreenMainSearch> {
   }
 
   PreferredSizeWidget _buildAppBar(BuildContext context) {
+    final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
+
     return AppBar(
       elevation: 0,
       leading: IconButton(
-        icon: Icon(Icons.arrow_back_ios, color: Color(0xFF979797)),
+        icon: Icon(Icons.arrow_back_ios, color: scheme.outline),
         onPressed: () => Navigator.pop(context),
       ),
       title: Text(

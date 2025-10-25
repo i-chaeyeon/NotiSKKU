@@ -109,6 +109,8 @@ class _ScreenMainTabsState extends ConsumerState<ScreenMainTabs> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
     final currentIndex = ref.watch(tabIndexProvider);
 
     return Scaffold(
@@ -118,8 +120,8 @@ class _ScreenMainTabsState extends ConsumerState<ScreenMainTabs> {
         elevation: 0,
         items: _navItems,
         currentIndex: currentIndex,
-        selectedItemColor: const Color(0xFF0B5B42),
-        unselectedItemColor: Colors.grey,
+        selectedItemColor: scheme.primary,
+        unselectedItemColor: scheme.outline,
         selectedFontSize: 14.sp,
         unselectedFontSize: 14.sp,
         onTap: _onItemTapped,

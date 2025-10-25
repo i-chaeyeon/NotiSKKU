@@ -22,6 +22,9 @@ class _ScreenMainBoxState extends ConsumerState<ScreenMainBox> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
+
     return Scaffold(
       appBar: AppBar(
         leading:
@@ -51,6 +54,7 @@ class _ScreenMainBoxState extends ConsumerState<ScreenMainBox> {
                   child: Image.asset(
                     'assets/images/greenlogo_fix.png',
                     width: 40,
+                    color: scheme.primary,
                   ),
                 ),
         title: Text(

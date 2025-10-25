@@ -87,6 +87,7 @@ class _SearchKeywordState extends ConsumerState<SearchKeyword> {
                         'assets/images/green_search.png',
                         width: 37.w,
                         fit: BoxFit.contain,
+                        color: scheme.primary,
                       ),
                     ),
                   ),

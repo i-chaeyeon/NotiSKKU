@@ -38,12 +38,18 @@ class ScreenMainOthers extends StatelessWidget {
   Widget build(BuildContext context) {
     // final LaunchUrlService launchService =
     //     LaunchUrlService(); // LaunchUrlService 객체 생성
+    final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
 
     return Scaffold(
       appBar: AppBar(
         leading: Padding(
           padding: const EdgeInsets.all(10.0),
-          child: Image.asset('assets/images/greenlogo_fix.png', width: 40.w),
+          child: Image.asset(
+            'assets/images/greenlogo_fix.png',
+            width: 40.w,
+            color: scheme.primary,
+          ),
         ),
         title: Text('더보기'),
         centerTitle: true, // 타이틀 중앙 정렬

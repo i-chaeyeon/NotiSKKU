@@ -42,11 +42,7 @@ class PopupUi extends StatelessWidget {
                 ),
                 textAlign: TextAlign.center,
               ),
-              Divider(
-                color: const Color(0xFF0B5B42),
-                thickness: 2.h,
-                height: 10.h,
-              ),
+              Divider(color: scheme.primary, thickness: 2.h, height: 10.h),
               SizedBox(height: 10.h),
 
               /// Scrollable Content (only if too long)
@@ -63,7 +59,7 @@ class PopupUi extends StatelessWidget {
                   child: ElevatedButton(
                     onPressed: onConfirm,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF0B5B42),
+                      backgroundColor: scheme.primary,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10.r),
                       ),

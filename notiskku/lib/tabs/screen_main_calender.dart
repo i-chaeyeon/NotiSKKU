@@ -190,11 +190,12 @@ class _ScreenMainCalenderState extends State<ScreenMainCalender> {
 
     return Scaffold(
       appBar: AppBar(
-        leading: const Padding(
+        leading: Padding(
           padding: EdgeInsets.all(10),
           child: Image(
             image: AssetImage('assets/images/greenlogo_fix.png'),
             width: 40,
+            color: scheme.primary,
           ),
         ),
         title: Text('학사일정'),

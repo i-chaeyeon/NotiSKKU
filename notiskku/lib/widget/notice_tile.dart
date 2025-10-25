@@ -109,6 +109,7 @@ class _NoticeTileState extends ConsumerState<NoticeTile> {
                   : 'assets/images/emptystar_fix.png',
               width: 26.w,
               height: 26.h,
+              color: scheme.primary,
             ),
           ),
           onTap: () => launchUrlService.launchURL(link),

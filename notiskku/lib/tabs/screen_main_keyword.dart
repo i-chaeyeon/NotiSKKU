@@ -14,6 +14,8 @@ class ScreenMainKeyword extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
     final selectedKeyword = ref.watch(selectedKeywordProvider);
 
     Future<Widget> getNoticeByKeyword(Keyword keyword) async {
@@ -48,7 +50,11 @@ class ScreenMainKeyword extends ConsumerWidget {
       appBar: AppBar(
         leading: Padding(
           padding: EdgeInsets.all(10.0),
-          child: Image.asset('assets/images/greenlogo_fix.png', width: 40.w),
+          child: Image.asset(
+            'assets/images/greenlogo_fix.png',
+            width: 40.w,
+            color: scheme.primary,
+          ),
         ),
         title: Text(
           '키워드',
