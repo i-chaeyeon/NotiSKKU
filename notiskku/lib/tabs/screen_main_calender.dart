@@ -55,6 +55,8 @@ class _ScreenMainCalenderState extends State<ScreenMainCalender> {
   List<Appointment> _appointments = [];
   List<Appointment> _selectedDayEvents = [];
 
+  double _sheetExtent = 0.0; // ← ✅ 시트 현재 비율 (0.0 ~ 0.8)
+
   @override
   void initState() {
     super.initState();
@@ -108,6 +110,9 @@ class _ScreenMainCalenderState extends State<ScreenMainCalender> {
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
 
+    final size = MediaQuery.of(context).size;
+
+    final double calendarBottomInset = _collapsed ? size.height * 0.3195 : 0.0;
     return Scaffold(
       appBar: const _CalendarAppBar(),
       body:
@@ -115,8 +120,12 @@ class _ScreenMainCalenderState extends State<ScreenMainCalender> {
               ? const Center(child: CircularProgressIndicator())
               : Stack(
                 children: [
-                  // ① 달력 뷰
-                  Positioned.fill(
+                  // ① 달력 뷰 (시트 높이만큼 bottom inset 주기)
+                  Positioned(
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: calendarBottomInset, // ✅ 고정 50%
                     child: _CalendarMonthView(
                       appointments: _appointments,
                       collapsed: _collapsed,
@@ -143,7 +152,17 @@ class _ScreenMainCalenderState extends State<ScreenMainCalender> {
                       child: _EventBottomSheet(
                         selectedDate: _selectedDate!,
                         events: _selectedDayEvents,
-                        onMinExtentClose: _closeSheet,
+                        onMinExtentClose: () {
+                          setState(() {
+                            _sheetExtent = 0.0; // ← ✅ 닫힐 때 캘린더 높이 원복
+                          });
+                          _closeSheet();
+                        },
+                        onExtentChanged: (extent) {
+                          // ← ✅ 변화 시마다 갱신
+                          if (!mounted) return;
+                          setState(() => _sheetExtent = extent);
+                        },
                       ),
                     ),
                 ],
@@ -341,11 +360,13 @@ class _EventBottomSheet extends StatefulWidget {
     required this.selectedDate,
     required this.events,
     required this.onMinExtentClose,
+    required this.onExtentChanged,
   });
 
   final DateTime selectedDate;
   final List<Appointment> events;
   final VoidCallback onMinExtentClose;
+  final ValueChanged<double> onExtentChanged;
 
   @override
   State<_EventBottomSheet> createState() => _EventBottomSheetState();
@@ -360,6 +381,12 @@ class _EventBottomSheetState extends State<_EventBottomSheet> {
   void initState() {
     super.initState();
     // 처음 등장 시 0.0 → 0.4로 부드럽게 열림
+
+    // 컨트롤러 변화 → 부모에 extent 전달
+    _dragCtrl.addListener(() {
+      if (!mounted) return;
+      widget.onExtentChanged(_dragCtrl.size); // ← ✅ 실시간 전달
+    });
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       try {
         _isAnimating = true;
@@ -368,6 +395,7 @@ class _EventBottomSheetState extends State<_EventBottomSheet> {
           duration: const Duration(milliseconds: 220),
           curve: Curves.easeOutCubic,
         );
+        if (mounted) widget.onExtentChanged(_dragCtrl.size);
       } finally {
         if (mounted) _isAnimating = false;
       }
@@ -381,9 +409,10 @@ class _EventBottomSheetState extends State<_EventBottomSheet> {
       // 0.0까지 스르륵
       await _dragCtrl.animateTo(
         0.0,
-        duration: const Duration(milliseconds: 200),
+        duration: const Duration(milliseconds: 150),
         curve: Curves.easeOutCubic,
       );
+      if (mounted) widget.onExtentChanged(0.0);
     } finally {
       if (!mounted) return;
       _isAnimating = false;
@@ -400,20 +429,21 @@ class _EventBottomSheetState extends State<_EventBottomSheet> {
 
     return NotificationListener<DraggableScrollableNotification>(
       onNotification: (notification) {
+        widget.onExtentChanged(notification.extent);
         // 40% 이하로 내려가면 부드럽게 닫힘
-        if (notification.extent <= 0.4 && !_isAnimating) {
+        if (notification.extent <= 0.40 && !_isAnimating) {
           _animateCloseAndNotify();
         }
         return true;
       },
       child: DraggableScrollableSheet(
-        controller: _dragCtrl, // ← ✅ 컨트롤러로 열림/닫힘 애니메이션 제어
+        controller: _dragCtrl,
         expand: false,
-        initialChildSize: 0.0, // ← ✅ 0에서 시작해서 위에서 0.4로 애니메이션
+        initialChildSize: 0.4,
         minChildSize: 0.0,
         maxChildSize: 0.8,
         builder: (ctx, scrollCtrl) {
-          // 핸들/헤더도 드래그 가능하도록 전체를 ListView로 구성
+          final scheme = Theme.of(ctx).colorScheme;
           return Container(
             decoration: BoxDecoration(
               color: scheme.secondary,
@@ -424,7 +454,7 @@ class _EventBottomSheetState extends State<_EventBottomSheet> {
             child: SafeArea(
               top: false,
               child: ListView(
-                controller: scrollCtrl, // ← ✅ 시트 전체(핸들/헤더/콘텐츠)에서 드래그
+                controller: scrollCtrl, // ← ✅ 시트 전체(핸들/헤더/콘텐츠) 스크롤/드래그
                 padding: EdgeInsets.zero,
                 children: [
                   // 핸들
@@ -440,7 +470,7 @@ class _EventBottomSheetState extends State<_EventBottomSheet> {
                     ),
                   ),
 
-                  // 날짜 타이틀
+                  // 헤더
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 16.w),
                     child: Text(
@@ -460,7 +490,7 @@ class _EventBottomSheetState extends State<_EventBottomSheet> {
                   Divider(color: scheme.outline, thickness: 1.5, height: 1),
                   SizedBox(height: 8.h),
 
-                  // 일정 리스트 (스크롤은 바깥 ListView가 담당)
+                  // 일정 리스트(바깥 ListView가 스크롤 담당)
                   ListView.separated(
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
