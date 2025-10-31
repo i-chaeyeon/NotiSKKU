@@ -56,6 +56,18 @@ class _ScreenMainCalenderState extends State<ScreenMainCalender> {
   List<Appointment> _selectedDayEvents = [];
 
   double _sheetExtent = 0.0; // ← ✅ 시트 현재 비율 (0.0 ~ 0.8)
+  // 날짜 이동: deltaDays(좌우 스와이프) 반영
+  void _shiftSelectedDate(int deltaDays) {
+    if (_selectedDate == null || deltaDays == 0) return;
+    final newDay = _selectedDate!.add(Duration(days: deltaDays));
+    final start = DateTime(newDay.year, newDay.month, newDay.day);
+    final end = DateTime(newDay.year, newDay.month, newDay.day, 23, 59, 59);
+    final events = _eventsInRange(_appointments, start, end);
+    setState(() {
+      _selectedDate = start;
+      _selectedDayEvents = events;
+    });
+  }
 
   @override
   void initState() {
@@ -163,6 +175,7 @@ class _ScreenMainCalenderState extends State<ScreenMainCalender> {
                           if (!mounted) return;
                           setState(() => _sheetExtent = extent);
                         },
+                        onSwipeDay: _shiftSelectedDate,
                       ),
                     ),
                 ],
@@ -354,12 +367,14 @@ class _EventBottomSheet extends StatefulWidget {
     required this.events,
     required this.onMinExtentClose,
     required this.onExtentChanged,
+    required this.onSwipeDay,
   });
 
   final DateTime selectedDate;
   final List<Appointment> events;
   final VoidCallback onMinExtentClose;
   final ValueChanged<double> onExtentChanged;
+  final ValueChanged<int> onSwipeDay;
 
   @override
   State<_EventBottomSheet> createState() => _EventBottomSheetState();
@@ -369,6 +384,8 @@ class _EventBottomSheetState extends State<_EventBottomSheet> {
   final DraggableScrollableController _dragCtrl =
       DraggableScrollableController();
   bool _isAnimating = false; // 중복 애니메이션 방지
+
+  double _accumDx = 0; // ✅ 수평 이동 누적
 
   @override
   void initState() {
@@ -484,17 +501,31 @@ class _EventBottomSheetState extends State<_EventBottomSheet> {
                   SizedBox(height: 8.h),
 
                   // 일정 리스트(바깥 ListView가 스크롤 담당)
-                  ListView.separated(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: widget.events.length,
-                    separatorBuilder:
-                        (_, __) => Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 16.w),
-                          child: Divider(color: scheme.surface, thickness: 0.5),
-                        ),
-                    itemBuilder:
-                        (_, i) => _EventListTile(event: widget.events[i]),
+                  GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onHorizontalDragStart: (_) => _accumDx = 0,
+                    onHorizontalDragUpdate: (d) => _accumDx += d.delta.dx,
+                    onHorizontalDragEnd: (_) {
+                      // 80px 당 하루 이동, 반올림. 왼쪽(음수 dx) ⇒ +일
+                      final steps = -(_accumDx / 80.0).round();
+                      if (steps != 0) widget.onSwipeDay(steps);
+                      _accumDx = 0;
+                    },
+                    child: ListView.separated(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: widget.events.length,
+                      separatorBuilder:
+                          (_, __) => Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 16.w),
+                            child: Divider(
+                              color: scheme.surface,
+                              thickness: 0.5,
+                            ),
+                          ),
+                      itemBuilder:
+                          (_, i) => _EventListTile(event: widget.events[i]),
+                    ),
                   ),
 
                   SizedBox(height: 8.h),
