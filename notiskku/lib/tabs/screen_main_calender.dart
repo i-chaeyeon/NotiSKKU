@@ -332,12 +332,11 @@ class _MonthCell extends StatelessWidget {
     );
   }
 }
-
 // ─────────────────────────────────────────────────────────────────────────────
-// 바텀시트
+// 바텀시트 (부드러운 전환 + 핸들/헤더 드래그 가능)
 // ─────────────────────────────────────────────────────────────────────────────
 
-class _EventBottomSheet extends StatelessWidget {
+class _EventBottomSheet extends StatefulWidget {
   const _EventBottomSheet({
     required this.selectedDate,
     required this.events,
@@ -349,25 +348,72 @@ class _EventBottomSheet extends StatelessWidget {
   final VoidCallback onMinExtentClose;
 
   @override
+  State<_EventBottomSheet> createState() => _EventBottomSheetState();
+}
+
+class _EventBottomSheetState extends State<_EventBottomSheet> {
+  final DraggableScrollableController _dragCtrl =
+      DraggableScrollableController();
+  bool _isAnimating = false; // 중복 애니메이션 방지
+
+  @override
+  void initState() {
+    super.initState();
+    // 처음 등장 시 0.0 → 0.4로 부드럽게 열림
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      try {
+        _isAnimating = true;
+        await _dragCtrl.animateTo(
+          0.4,
+          duration: const Duration(milliseconds: 220),
+          curve: Curves.easeOutCubic,
+        );
+      } finally {
+        if (mounted) _isAnimating = false;
+      }
+    });
+  }
+
+  Future<void> _animateCloseAndNotify() async {
+    if (_isAnimating) return;
+    _isAnimating = true;
+    try {
+      // 0.0까지 스르륵
+      await _dragCtrl.animateTo(
+        0.0,
+        duration: const Duration(milliseconds: 200),
+        curve: Curves.easeOutCubic,
+      );
+    } finally {
+      if (!mounted) return;
+      _isAnimating = false;
+      // 부모에게 닫힘 알림
+      WidgetsBinding.instance.addPostFrameCallback(
+        (_) => widget.onMinExtentClose(),
+      );
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
 
     return NotificationListener<DraggableScrollableNotification>(
       onNotification: (notification) {
-        if (notification.extent <= notification.minExtent + 0.01) {
-          // 닫힘 시 부모에 클로즈 알림
-          WidgetsBinding.instance.addPostFrameCallback(
-            (_) => onMinExtentClose(),
-          );
+        // 40% 이하로 내려가면 부드럽게 닫힘
+        if (notification.extent <= 0.4 && !_isAnimating) {
+          _animateCloseAndNotify();
         }
         return true;
       },
       child: DraggableScrollableSheet(
+        controller: _dragCtrl, // ← ✅ 컨트롤러로 열림/닫힘 애니메이션 제어
         expand: false,
-        initialChildSize: 0.4,
+        initialChildSize: 0.0, // ← ✅ 0에서 시작해서 위에서 0.4로 애니메이션
         minChildSize: 0.0,
         maxChildSize: 0.8,
         builder: (ctx, scrollCtrl) {
+          // 핸들/헤더도 드래그 가능하도록 전체를 ListView로 구성
           return Container(
             decoration: BoxDecoration(
               color: scheme.secondary,
@@ -375,26 +421,33 @@ class _EventBottomSheet extends StatelessWidget {
                 top: Radius.circular(20),
               ),
             ),
-            child: Column(
-              children: [
-                // 핸들
-                Container(
-                  margin: EdgeInsets.symmetric(vertical: 10.h),
-                  width: 40.w,
-                  height: 4.h,
-                  decoration: BoxDecoration(
-                    color: scheme.outline,
-                    borderRadius: BorderRadius.circular(2.h),
+            child: SafeArea(
+              top: false,
+              child: ListView(
+                controller: scrollCtrl, // ← ✅ 시트 전체(핸들/헤더/콘텐츠)에서 드래그
+                padding: EdgeInsets.zero,
+                children: [
+                  // 핸들
+                  Center(
+                    child: Container(
+                      margin: EdgeInsets.symmetric(vertical: 10.h),
+                      width: 40.w,
+                      height: 4.h,
+                      decoration: BoxDecoration(
+                        color: scheme.outline,
+                        borderRadius: BorderRadius.circular(2.h),
+                      ),
+                    ),
                   ),
-                ),
 
-                // 날짜 타이틀
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Padding(
+                  // 날짜 타이틀
+                  Padding(
                     padding: EdgeInsets.symmetric(horizontal: 16.w),
                     child: Text(
-                      DateFormat('M월 d일 EEE요일', 'ko').format(selectedDate),
+                      DateFormat(
+                        'M월 d일 EEE요일',
+                        'ko',
+                      ).format(widget.selectedDate),
                       style: TextStyle(
                         color: scheme.onSurface,
                         fontSize: 18,
@@ -402,26 +455,28 @@ class _EventBottomSheet extends StatelessWidget {
                       ),
                     ),
                   ),
-                ),
 
-                SizedBox(height: 8.h),
-                Divider(color: scheme.outline, thickness: 1.5, height: 1),
-                SizedBox(height: 8.h),
+                  SizedBox(height: 8.h),
+                  Divider(color: scheme.outline, thickness: 1.5, height: 1),
+                  SizedBox(height: 8.h),
 
-                // 일정 리스트
-                Expanded(
-                  child: ListView.separated(
-                    controller: scrollCtrl,
-                    itemCount: events.length,
+                  // 일정 리스트 (스크롤은 바깥 ListView가 담당)
+                  ListView.separated(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: widget.events.length,
                     separatorBuilder:
                         (_, __) => Padding(
                           padding: EdgeInsets.symmetric(horizontal: 16.w),
                           child: Divider(color: scheme.surface, thickness: 0.5),
                         ),
-                    itemBuilder: (_, i) => _EventListTile(event: events[i]),
+                    itemBuilder:
+                        (_, i) => _EventListTile(event: widget.events[i]),
                   ),
-                ),
-              ],
+
+                  SizedBox(height: 8.h),
+                ],
+              ),
             ),
           );
         },
