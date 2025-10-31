@@ -56,6 +56,11 @@ class _ScreenMainCalenderState extends State<ScreenMainCalender> {
   List<Appointment> _selectedDayEvents = [];
 
   double _sheetExtent = 0.0; // ← ✅ 시트 현재 비율 (0.0 ~ 0.8)
+
+  final CalendarController _calCtrl = CalendarController();
+
+  bool _isSameMonth(DateTime a, DateTime b) =>
+      a.year == b.year && a.month == b.month;
   // 날짜 이동: deltaDays(좌우 스와이프) 반영
   void _shiftSelectedDate(int deltaDays) {
     if (_selectedDate == null || deltaDays == 0) return;
@@ -63,10 +68,19 @@ class _ScreenMainCalenderState extends State<ScreenMainCalender> {
     final start = DateTime(newDay.year, newDay.month, newDay.day);
     final end = DateTime(newDay.year, newDay.month, newDay.day, 23, 59, 59);
     final events = _eventsInRange(_appointments, start, end);
+
     setState(() {
       _selectedDate = start;
       _selectedDayEvents = events;
     });
+
+    // ✅ 캘린더 선택/뷰 동기화
+    _calCtrl.selectedDate = start;
+    // 월이 바뀌면 해당 월로 뷰 이동
+    final currDisplay = _calCtrl.displayDate ?? DateTime.now();
+    if (!_isSameMonth(currDisplay, start)) {
+      _calCtrl.displayDate = start;
+    }
   }
 
   @override
@@ -88,6 +102,12 @@ class _ScreenMainCalenderState extends State<ScreenMainCalender> {
       _selectedDate = start;
       _selectedDayEvents = events;
     });
+    // ✅ 캘린더 선택/뷰 동기화
+    _calCtrl.selectedDate = start;
+    final currDisplay = _calCtrl.displayDate ?? DateTime.now();
+    if (!_isSameMonth(currDisplay, start)) {
+      _calCtrl.displayDate = start;
+    }
   }
 
   void _closeSheet() {
@@ -96,6 +116,7 @@ class _ScreenMainCalenderState extends State<ScreenMainCalender> {
       _selectedDate = null;
       _selectedDayEvents = [];
     });
+    _calCtrl.selectedDate = null;
   }
 
   // SfCalendar onTap 대응
@@ -139,6 +160,7 @@ class _ScreenMainCalenderState extends State<ScreenMainCalender> {
                     right: 0,
                     bottom: calendarBottomInset, // ✅ 고정 50%
                     child: _CalendarMonthView(
+                      controller: _calCtrl,
                       appointments: _appointments,
                       collapsed: _collapsed,
                       onTap: _handleTap,
@@ -154,6 +176,7 @@ class _ScreenMainCalenderState extends State<ScreenMainCalender> {
                                   details.date,
                                 ).length,
                             collapsed: _collapsed,
+                            selectedDate: _selectedDate,
                           ),
                     ),
                   ),
@@ -218,6 +241,7 @@ class _CalendarAppBar extends StatelessWidget implements PreferredSizeWidget {
 
 class _CalendarMonthView extends StatelessWidget {
   const _CalendarMonthView({
+    required this.controller,
     required this.appointments,
     required this.collapsed,
     required this.onTap,
@@ -225,7 +249,7 @@ class _CalendarMonthView extends StatelessWidget {
     required this.onTapAppointmentPill,
     required this.monthCellBuilder,
   });
-
+  final CalendarController controller;
   final List<Appointment> appointments;
   final bool collapsed;
   final CalendarTapCallback onTap;
@@ -242,6 +266,7 @@ class _CalendarMonthView extends StatelessWidget {
     return GestureDetector(
       onVerticalDragUpdate: onVerticalDragUpdate,
       child: SfCalendar(
+        controller: controller,
         view: CalendarView.month,
         showNavigationArrow: true,
         headerHeight: 50,
@@ -273,31 +298,39 @@ class _CalendarMonthView extends StatelessWidget {
 // ─────────────────────────────────────────────────────────────────────────────
 // 월 셀 (일자 + 점 표시)
 // ─────────────────────────────────────────────────────────────────────────────
-
 class _MonthCell extends StatelessWidget {
   const _MonthCell({
     required this.day,
     required this.visibleDates,
     required this.totalEvents,
     required this.collapsed,
+    required this.selectedDate, // ✅ 추가
   });
 
   final DateTime day;
   final List<DateTime> visibleDates;
   final int totalEvents;
   final bool collapsed;
+  final DateTime? selectedDate; // ✅ 추가
+
+  bool _isSameDay(DateTime a, DateTime b) =>
+      a.year == b.year && a.month == b.month && a.day == b.day;
 
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
-
     final isThisMonth = day.month == visibleDates[15].month;
-    final textColor = isThisMonth ? scheme.onPrimary : scheme.secondary;
 
-    // ⬇️ 추가: 오늘 여부 판별
     final now = DateTime.now();
-    final isToday =
-        day.year == now.year && day.month == now.month && day.day == now.day;
+    final isToday = _isSameDay(day, now);
+    final isSelected = selectedDate != null && _isSameDay(day, selectedDate!);
+
+    // ✨ 텍스트 컬러: 선택일 > 오늘 > 기본
+    final textColor =
+        isSelected
+            ? scheme.onPrimary
+            : (isThisMonth ? scheme.onPrimary : scheme.secondary);
+
     return Container(
       decoration: BoxDecoration(
         border: Border.all(color: scheme.secondary, width: 0.5),
@@ -305,45 +338,48 @@ class _MonthCell extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          // 일자
           Padding(
             padding: EdgeInsets.only(top: 6.h),
-            child:
-                isToday
-                    // 오늘이면 배경 칩으로 강조
-                    ? Container(
-                      width: 24.w,
-                      child: AspectRatio(
-                        aspectRatio: 1 / 1,
-                        child: Container(
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                            color: scheme.primary.withAlpha(180),
-                            borderRadius: BorderRadius.circular(50),
-                          ),
-                          child: Text(
-                            '${day.day}',
-                            style: TextStyle(
-                              color: scheme.onPrimary,
-                              fontSize: 11.5.sp,
-                              fontWeight: FontWeight.w800,
-                            ),
+            child: Builder(
+              builder: (_) {
+                // ✅ 선택일이면 두꺼운 칩, 오늘이면 얇은 칩, 그 외엔 평문 숫자
+                if (isToday) {
+                  return Container(
+                    height: 16.h,
+                    child: AspectRatio(
+                      aspectRatio: 1,
+                      child: Container(
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          color: scheme.primary.withAlpha(180),
+                          borderRadius: BorderRadius.circular(50),
+                        ),
+                        child: Text(
+                          '${day.day}',
+                          style: TextStyle(
+                            color: scheme.onPrimary,
+                            fontSize: 11.5.sp,
+                            fontWeight: FontWeight.w700,
                           ),
                         ),
                       ),
-                    )
-                    // 일반 날짜
-                    : Text(
-                      '${day.day}',
-                      style: TextStyle(
-                        color: textColor,
-                        fontSize: 11.5.sp,
-                        fontWeight: FontWeight.w300,
-                      ),
                     ),
+                  );
+                } else {
+                  return Text(
+                    '${day.day}',
+                    style: TextStyle(
+                      color: textColor,
+                      fontSize: 11.5.sp,
+                      fontWeight: FontWeight.w300,
+                    ),
+                  );
+                }
+              },
+            ),
           ),
 
-          // 모달 열림 + 일정 존재 시 점 표시
+          // 바텀시트 열린 상태에서만 점 표시
           if (collapsed && totalEvents > 0)
             Padding(
               padding: EdgeInsets.only(top: 2.h),
@@ -357,6 +393,7 @@ class _MonthCell extends StatelessWidget {
     );
   }
 }
+
 // ─────────────────────────────────────────────────────────────────────────────
 // 바텀시트 (부드러운 전환 + 핸들/헤더 드래그 가능)
 // ─────────────────────────────────────────────────────────────────────────────
@@ -419,7 +456,7 @@ class _EventBottomSheetState extends State<_EventBottomSheet> {
       // 0.0까지 스르륵
       await _dragCtrl.animateTo(
         0.0,
-        duration: const Duration(milliseconds: 150),
+        duration: const Duration(milliseconds: 200),
         curve: Curves.easeOutCubic,
       );
       if (mounted) widget.onExtentChanged(0.0);
@@ -463,55 +500,58 @@ class _EventBottomSheetState extends State<_EventBottomSheet> {
             ),
             child: SafeArea(
               top: false,
-              child: ListView(
-                controller: scrollCtrl, // ← ✅ 시트 전체(핸들/헤더/콘텐츠) 스크롤/드래그
-                padding: EdgeInsets.zero,
-                children: [
-                  // 핸들
-                  Center(
-                    child: Container(
-                      margin: EdgeInsets.symmetric(vertical: 10.h),
-                      width: 40.w,
-                      height: 4.h,
-                      decoration: BoxDecoration(
-                        color: scheme.outline,
-                        borderRadius: BorderRadius.circular(2.h),
+              child: GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                onHorizontalDragStart: (_) => _accumDx = 0,
+                onHorizontalDragUpdate: (d) => _accumDx += d.delta.dx,
+                onHorizontalDragEnd: (_) {
+                  // 누적 이동 방향만 판단 → 하루만 이동
+                  if (_accumDx.abs() > 20) {
+                    // ← 너무 짧은 드래그는 무시 (약간의 감도 설정)
+                    final steps = _accumDx < 0 ? 1 : -1; // 왼쪽 → +1일, 오른쪽 → -1일
+                    widget.onSwipeDay(steps);
+                  }
+                  _accumDx = 0;
+                },
+                child: ListView(
+                  controller: scrollCtrl, // ← ✅ 시트 전체(핸들/헤더/콘텐츠) 스크롤/드래그
+                  padding: EdgeInsets.zero,
+                  children: [
+                    // 핸들
+                    Center(
+                      child: Container(
+                        margin: EdgeInsets.symmetric(vertical: 10.h),
+                        width: 40.w,
+                        height: 4.h,
+                        decoration: BoxDecoration(
+                          color: scheme.outline,
+                          borderRadius: BorderRadius.circular(2.h),
+                        ),
                       ),
                     ),
-                  ),
 
-                  // 헤더
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 16.w),
-                    child: Text(
-                      DateFormat(
-                        'M월 d일 EEE요일',
-                        'ko',
-                      ).format(widget.selectedDate),
-                      style: TextStyle(
-                        color: scheme.onSurface,
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
+                    // 헤더
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 16.w),
+                      child: Text(
+                        DateFormat(
+                          'M월 d일 EEE요일',
+                          'ko',
+                        ).format(widget.selectedDate),
+                        style: TextStyle(
+                          color: scheme.onSurface,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
-                  ),
 
-                  SizedBox(height: 8.h),
-                  Divider(color: scheme.outline, thickness: 1.5, height: 1),
-                  SizedBox(height: 8.h),
+                    SizedBox(height: 8.h),
+                    Divider(color: scheme.outline, thickness: 1.5, height: 1),
+                    SizedBox(height: 8.h),
 
-                  // 일정 리스트(바깥 ListView가 스크롤 담당)
-                  GestureDetector(
-                    behavior: HitTestBehavior.opaque,
-                    onHorizontalDragStart: (_) => _accumDx = 0,
-                    onHorizontalDragUpdate: (d) => _accumDx += d.delta.dx,
-                    onHorizontalDragEnd: (_) {
-                      // 80px 당 하루 이동, 반올림. 왼쪽(음수 dx) ⇒ +일
-                      final steps = -(_accumDx / 80.0).round();
-                      if (steps != 0) widget.onSwipeDay(steps);
-                      _accumDx = 0;
-                    },
-                    child: ListView.separated(
+                    // 일정 리스트(바깥 ListView가 스크롤 담당)
+                    ListView.separated(
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
                       itemCount: widget.events.length,
@@ -526,10 +566,10 @@ class _EventBottomSheetState extends State<_EventBottomSheet> {
                       itemBuilder:
                           (_, i) => _EventListTile(event: widget.events[i]),
                     ),
-                  ),
 
-                  SizedBox(height: 8.h),
-                ],
+                    SizedBox(height: 8.h),
+                  ],
+                ),
               ),
             ),
           );
