@@ -30,111 +30,6 @@ class _ScreenMainCalenderState extends State<ScreenMainCalender> {
     });
   }
 
-  Future<void> _openEventSheet() async {
-    if (!mounted || _selectedDate == null) return;
-
-    await showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      useSafeArea: true,
-      backgroundColor: Colors.transparent,
-      builder: (ctx) {
-        // 모달 내부에서 드래그 가능한 바텀시트: 초기/최소/최대 높이 지정
-        return DraggableScrollableSheet(
-          initialChildSize: 0.4, // ← 중간(초기) 높이
-          minChildSize: 0.25, // ← 최소 높이
-          maxChildSize: 0.8, // ← 최대 높이 (예전 maxChildSize와 동일)
-          builder: (context, scrollCtrl) {
-            return Container(
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-              ),
-              child: CustomScrollView(
-                controller: scrollCtrl, // 드래그 연동을 위해 반드시 사용
-                slivers: [
-                  // 상단 핸들 + 제목 영역
-                  SliverToBoxAdapter(
-                    child: Column(
-                      children: [
-                        SizedBox(height: 8.h),
-                        Container(
-                          width: 40.w,
-                          height: 4.h,
-                          decoration: BoxDecoration(
-                            color: Colors.grey[300],
-                            borderRadius: BorderRadius.circular(2.h),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(
-                            left: 16.w,
-                            right: 16.w,
-                            top: 6.h,
-                            bottom: 8.h,
-                          ),
-                          child: Text(
-                            DateFormat(
-                              'M월 d일 (EEE)',
-                              'ko',
-                            ).format(_selectedDate!),
-                            style: const TextStyle(
-                              color: Colors.black,
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-
-                  // 일정 리스트
-                  SliverList.separated(
-                    itemCount: _selectedDayEvents.length,
-                    separatorBuilder:
-                        (_, __) => const Divider(
-                          color: Color(0xFFD9D9D9),
-                          thickness: 1.5,
-                        ),
-                    itemBuilder: (_, i) {
-                      final ev = _selectedDayEvents[i];
-                      final time =
-                          ev.isAllDay
-                              ? ''
-                              : '${DateFormat.Hm().format(ev.startTime)} – ${DateFormat.Hm().format(ev.endTime)}';
-                      return ListTile(
-                        title: Text(
-                          ev.subject,
-                          style: const TextStyle(color: Colors.black),
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        subtitle: Text(
-                          time,
-                          style: const TextStyle(color: Colors.grey),
-                        ),
-                      );
-                    },
-                  ),
-                ],
-              ),
-            );
-          },
-        );
-      },
-    );
-
-    // 닫힐 때 상태 초기화
-    if (mounted) {
-      setState(() {
-        _collapsed = false;
-        _selectedDate = null;
-        _selectedDayEvents = [];
-      });
-    }
-  }
-
   void _handleTap(CalendarTapDetails details) {
     // 달력 셀 클릭 → 해당 날짜의 이벤트 수집 후 모달 오픈
     if (details.targetElement == CalendarElement.calendarCell &&
@@ -168,7 +63,6 @@ class _ScreenMainCalenderState extends State<ScreenMainCalender> {
         _selectedDate = dayStart;
         _selectedDayEvents = events;
       });
-      _openEventSheet(); // ← 모달 열기
       return;
     }
 
@@ -255,7 +149,6 @@ class _ScreenMainCalenderState extends State<ScreenMainCalender> {
                             _selectedDate = todayStart;
                             _selectedDayEvents = events;
                           });
-                          _openEventSheet(); // ← 모달 열기
                         }
                         // 아래로 드래그 → (모달은 스와이프로 닫힘) 내부 상태만 정리
                         else if (details.delta.dy > 5 && _collapsed) {
@@ -351,7 +244,6 @@ class _ScreenMainCalenderState extends State<ScreenMainCalender> {
                                           _selectedDate = dayStart;
                                           _selectedDayEvents = events;
                                         });
-                                        _openEventSheet(); // ← 모달 열기
                                       },
                                       child: Container(
                                         width: details.bounds.width,
@@ -385,13 +277,160 @@ class _ScreenMainCalenderState extends State<ScreenMainCalender> {
                                 },
 
                         // ───────── Month Cell Builder ─────────
-                        // 모달이 열린 상태에선 점만 표시, 닫혀 있으면 상세 표시
-                        monthCellBuilder: _collapsed ? _buildCustomCell : null,
+                        // 일관된 스타일 적용을 위해 항상 커스텀 셀 사용
+                        monthCellBuilder: _buildCustomCell,
                       ),
                     ),
                   ),
 
-                  // ✅ DraggableScrollableSheet 완전 제거
+                  // ② 바텀시트 (Stack 내부에서 부드럽게 애니메이션)
+                  if (_collapsed)
+                    Positioned.fill(
+                      child: NotificationListener<
+                        DraggableScrollableNotification
+                      >(
+                        onNotification: (notification) {
+                          if (notification.extent <=
+                              notification.minExtent + 0.01) {
+                            Future.microtask(() {
+                              if (mounted) {
+                                setState(() {
+                                  _collapsed = false;
+                                  _selectedDate = null;
+                                  _selectedDayEvents = [];
+                                });
+                              }
+                            });
+                          }
+                          return true;
+                        },
+                        child: DraggableScrollableSheet(
+                          expand: false,
+                          initialChildSize: 0.4,
+                          minChildSize: 0.0,
+                          maxChildSize: 0.8,
+                          builder: (ctx, scrollCtrl) {
+                            return Container(
+                              decoration: const BoxDecoration(
+                                color: Color(0xFFE8E8E8),
+                                borderRadius: BorderRadius.vertical(
+                                  top: Radius.circular(16),
+                                ),
+                              ),
+                              child: Column(
+                                children: [
+                                  Container(
+                                    margin: EdgeInsets.only(
+                                      top: 8.h,
+                                      bottom: 4.h,
+                                    ),
+                                    width: 40.w,
+                                    height: 4.h,
+                                    decoration: BoxDecoration(
+                                      color: Colors.grey[300],
+                                      borderRadius: BorderRadius.circular(2.h),
+                                    ),
+                                  ),
+                                  Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Padding(
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: 16.w,
+                                      ),
+                                      child: Text(
+                                        DateFormat(
+                                          'M월 d일 EEE요일',
+                                          'ko',
+                                        ).format(_selectedDate!),
+                                        style: const TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(height: 8.h),
+                                  Divider(
+                                    color: Color(0XFF979797),
+                                    thickness: 1.5,
+                                    height: 1,
+                                  ),
+                                  SizedBox(height: 8.h),
+                                  Expanded(
+                                    child: ListView.separated(
+                                      controller: scrollCtrl,
+                                      itemCount: _selectedDayEvents.length,
+                                      separatorBuilder:
+                                          (_, __) => Padding(
+                                            padding: EdgeInsets.symmetric(
+                                              horizontal: 16.w,
+                                            ),
+                                            child: Divider(
+                                              color: Color(0xFFD9D9D9),
+                                              thickness: 0.5,
+                                            ),
+                                          ),
+                                      itemBuilder: (_, i) {
+                                        final ev = _selectedDayEvents[i];
+
+                                        // 날짜 범위 포맷팅
+                                        final startDate = DateTime(
+                                          ev.startTime.year,
+                                          ev.startTime.month,
+                                          ev.startTime.day,
+                                        );
+                                        final endDate = DateTime(
+                                          ev.endTime.year,
+                                          ev.endTime.month,
+                                          ev.endTime.day,
+                                        );
+
+                                        final isSameDay =
+                                            startDate.year == endDate.year &&
+                                            startDate.month == endDate.month &&
+                                            startDate.day == endDate.day;
+
+                                        String dateRange;
+                                        if (isSameDay) {
+                                          // 하루짜리 이벤트
+                                          dateRange = DateFormat(
+                                            'M.d E',
+                                            'ko',
+                                          ).format(startDate);
+                                        } else {
+                                          // 여러 날 이벤트
+                                          dateRange =
+                                              '${DateFormat('M.d E', 'ko').format(startDate)} - '
+                                              '${DateFormat('M.d E', 'ko').format(endDate)}';
+                                        }
+
+                                        return ListTile(
+                                          title: Text(
+                                            ev.subject,
+                                            style: const TextStyle(
+                                              color: Colors.black,
+                                            ),
+                                            maxLines: 2,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                          subtitle: Text(
+                                            dateRange,
+                                            style: const TextStyle(
+                                              color: Colors.grey,
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    ),
                 ],
               ),
     );
@@ -442,134 +481,29 @@ class _ScreenMainCalenderState extends State<ScreenMainCalender> {
           // 일자 표시 영역
           Padding(
             // ← ✅ 상단 여백을 위해 Padding 추가
-            padding: EdgeInsets.only(top: 4.h), // 기본 셀과 비슷하게
+            padding: EdgeInsets.only(top: 6.h), // 기본 셀과 비슷하게
             child: Text(
               '${day.day}',
               style: TextStyle(
                 color: textColor,
-                fontSize: 12.sp,
-                fontWeight: FontWeight.w500,
+                fontSize: 11.5.sp,
+                fontWeight: FontWeight.w300,
               ),
             ),
           ),
 
-          // 일정 표시 영역
-          if (totalEvents > 0)
-            // 모달이 열린 상태면 점 하나만
-            if (_collapsed)
-              Padding(
-                padding: EdgeInsets.only(top: 2.h),
-                child: Text(
-                  '●',
-                  style: TextStyle(
-                    fontSize: 8.sp,
-                    color: scheme.primary.withAlpha(200),
-                  ),
-                ),
-              )
-            // 모달이 닫혀 있으면 이벤트 3개까지 미니바로 표시
-            else
-              Expanded(
-                child: Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 2.w,
-                    vertical: 0.5.h,
-                  ),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      ...eventsOnDay.take(3).map((event) {
-                        return Padding(
-                          padding: EdgeInsets.only(bottom: 0),
-                          child: GestureDetector(
-                            onTap: () {
-                              final dayStart = DateTime(
-                                day.year,
-                                day.month,
-                                day.day,
-                              );
-                              final dayEnd = DateTime(
-                                day.year,
-                                day.month,
-                                day.day,
-                                23,
-                                59,
-                                59,
-                              );
-
-                              final events =
-                                  _appointments.where((a) {
-                                    final eventStart = DateTime(
-                                      a.startTime.year,
-                                      a.startTime.month,
-                                      a.startTime.day,
-                                    );
-                                    final eventEnd = DateTime(
-                                      a.endTime.year,
-                                      a.endTime.month,
-                                      a.endTime.day,
-                                    );
-                                    return eventStart.isBefore(
-                                          dayEnd.add(
-                                            const Duration(milliseconds: 1),
-                                          ),
-                                        ) &&
-                                        eventEnd.isAfter(
-                                          dayStart.subtract(
-                                            const Duration(milliseconds: 1),
-                                          ),
-                                        );
-                                  }).toList();
-
-                              setState(() {
-                                _collapsed = true;
-                                _selectedDate = dayStart;
-                                _selectedDayEvents = events;
-                              });
-                              _openEventSheet(); // ← 모달 열기
-                            },
-                            child: Container(
-                              width: double.infinity,
-                              height: 12.h,
-                              decoration: BoxDecoration(
-                                color: Colors.green,
-                                borderRadius: BorderRadius.circular(2.h),
-                              ),
-                              child: Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 2.w),
-                                child: Text(
-                                  event.subject,
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 8.sp,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ),
-                            ),
-                          ),
-                        );
-                      }),
-                      if (totalEvents > 2)
-                        Container(
-                          width: double.infinity,
-                          height: 8.h,
-                          alignment: Alignment.center,
-                          child: Text(
-                            '●',
-                            style: TextStyle(
-                              fontSize: 8.sp,
-                              color: Colors.green,
-                            ),
-                          ),
-                        ),
-                    ],
-                  ),
+          // 바텀시트가 열려있을 때만 일정 있으면 점 표시
+          if (_collapsed && totalEvents > 0)
+            Padding(
+              padding: EdgeInsets.only(top: 2.h),
+              child: Text(
+                '●',
+                style: TextStyle(
+                  fontSize: 8.sp,
+                  color: const Color(0xB20B5B42),
                 ),
               ),
+            ),
         ],
       ),
     );

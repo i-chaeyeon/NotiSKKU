@@ -218,29 +218,10 @@ class ScreenMainNotice extends ConsumerWidget {
       final currentCategoryLabel = getCategory(currentCategory);
 
       final noScrapingMajors = {
-        '유학동양학과': 'https://confucian.skku.edu/confucian/index.do',
-        '미디어커뮤니케이션학과': 'https://mediacomm.skku.edu/mediacomm/index.do',
-        '소비자학과': 'https://consumer.skku.edu/consumer/index.do',
-        '글로벌경제학과': 'https://geco.skku.edu/geco/index.do',
-        '글로벌경영학과': 'https://gsb.skku.edu/gsb/index.do',
-        '반도체시스템공학과': 'https://semi.skku.edu/semi/index.do',
-        '반도체융합공학과': 'https://scse.skku.edu/scse/index.do',
-        '소재부품융합공학과': 'https://amse.skku.edu/amse/index.do',
-        '차세대반도체공학연계전공': 'https://semi.skku.edu/semi/index.do',
-        '글로벌융합학부 공통': 'https://ic.skku.edu/ic/index.do',
-        '데이터사이언스융합전공': 'https://ic.skku.edu/ic/index.do',
-        '인공지능융합전공': 'https://ic.skku.edu/ic/index.do',
-        '자기설계융합전공': 'https://ic.skku.edu/ic/index.do',
-        '지능형소프트웨어학과': 'https://sw.skku.edu/sw/index.do',
-        '컬쳐앤테크놀로지융합전공': 'https://ic.skku.edu/ic/index.do',
-        '건축학과(건축학계열)': 'https://arch.skku.edu/arch/index.do',
-        '나노공학과': 'https://saint.skku.edu/saint/index.do',
-        '바이오메카트로닉스학과': 'https://bme.skku.edu/bme/index.do',
-        '융합생명공학과': 'https://biotech.skku.edu/biotech/index.do',
-        '의학과': 'https://med.skku.edu/med/index.do',
-        '글로벌바이오메디컬공학과': 'https://gbme.skku.edu/gbme/index.do',
-        '에너지학과': 'https://energy.skku.edu/energy/index.do',
-        '응용AI융합학부': 'https://ai.skku.edu/ai/index.do',
+        "영상학과": "https://ott.skku.edu/ftm-skku-edu/notice",
+        "건설환경공학부": "https://cal.skku.edu/index.php?hCode=BOARD&bo_idx=17",
+        "나노공학과": "https://nano.skku.edu/bbs/board.php?tbl=bbs42",
+        "화학공학/고분자공학부": "https://cheme.skku.edu/notice/",
       };
 
       if ((type == Notices.dept || type == Notices.major) && major == '') {

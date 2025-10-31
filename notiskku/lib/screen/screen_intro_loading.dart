@@ -127,14 +127,14 @@ class _ScreenIntroLoadingState extends ConsumerState<ScreenIntroLoading> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Image.asset(
-                'assets/images/fourth_fix.png',
+                'assets/images/loadinglogo.png',
                 height: 170.h,
                 width: 170.h,
                 fit: BoxFit.contain,
               ),
               SizedBox(height: 23.h),
               Text(
-                '설정을 완료하는 중입니다!',
+                '설정을 완료하는 중이에요.',
                 style: TextStyle(
                   color: const Color(0xFF0B5B42),
                   fontSize: 20.sp,
@@ -142,6 +142,7 @@ class _ScreenIntroLoadingState extends ConsumerState<ScreenIntroLoading> {
                 ),
               ),
               SizedBox(height: 8.h),
+<<<<<<< HEAD
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -181,6 +182,18 @@ class _ScreenIntroLoadingState extends ConsumerState<ScreenIntroLoading> {
                   fontWeight: FontWeight.w400,
                 ),
               ),
+=======
+              Text(
+                '조금만 더 기다려주세요 :)',
+                style: TextStyle(
+                  color: spinnerColor,
+                  fontSize: 18.sp,
+                  fontFamily: 'Inter',
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              SizedBox(height: 5.h),
+>>>>>>> eeb0cff5082ee07654ca95a3bd2e82742cf20efd
             ],
           ),
         ),
