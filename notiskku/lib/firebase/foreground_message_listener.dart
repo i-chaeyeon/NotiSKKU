@@ -25,7 +25,7 @@ class _ForegroundMessageListenerState
   @override
   void initState() {
     super.initState();
-
+    debugPrint('👂 [ForegroundMessageListener] initState 실행됨');
     // initState에서의 구독은 listenManual로 관리
     _sub = ref.listenManual<NotificationProvider>(notificationProvider, (
       prev,
