@@ -46,6 +46,25 @@ class _NoticeTileState extends ConsumerState<NoticeTile> {
                 tempStarredNotices.contains(hash));
 
     final bool isMainHome = (currentTab == MAIN_HOME_TAB_INDEX);
+    // 한글 줄바꿈 개선 함수
+    String applyWordBreakFix(String text) {
+      final RegExp emoji = RegExp(
+        r'(\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])',
+      );
+      String fullText = '';
+      List<String> words = text.split(' ');
+      for (var i = 0; i < words.length; i++) {
+        fullText +=
+            emoji.hasMatch(words[i])
+                ? words[i]
+                : words[i].replaceAllMapped(
+                  RegExp(r'(\S)(?=\S)'),
+                  (m) => '${m[1]}\u200D',
+                );
+        if (i < words.length - 1) fullText += ' ';
+      }
+      return fullText;
+    }
 
     return Column(
       children: [
@@ -53,7 +72,7 @@ class _NoticeTileState extends ConsumerState<NoticeTile> {
           title: Padding(
             padding: const EdgeInsets.all(1.0),
             child: Text(
-              title,
+              applyWordBreakFix(title),
               style: TextStyle(height: 1.4, fontWeight: FontWeight.w700),
             ),
           ),

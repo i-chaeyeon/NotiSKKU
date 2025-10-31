@@ -344,7 +344,7 @@ class _MonthCell extends StatelessWidget {
               builder: (_) {
                 // ✅ 선택일이면 두꺼운 칩, 오늘이면 얇은 칩, 그 외엔 평문 숫자
                 if (isToday) {
-                  return Container(
+                  return SizedBox(
                     height: 16.h,
                     child: AspectRatio(
                       aspectRatio: 1,
@@ -393,9 +393,8 @@ class _MonthCell extends StatelessWidget {
     );
   }
 }
-
 // ─────────────────────────────────────────────────────────────────────────────
-// 바텀시트 (부드러운 전환 + 핸들/헤더 드래그 가능)
+// 바텀시트 (부드러운 전환 + 핸들/헤더 드래그 가능 + 반투명 시트에 단색 배경)
 // ─────────────────────────────────────────────────────────────────────────────
 
 class _EventBottomSheet extends StatefulWidget {
@@ -421,19 +420,19 @@ class _EventBottomSheetState extends State<_EventBottomSheet> {
   final DraggableScrollableController _dragCtrl =
       DraggableScrollableController();
   bool _isAnimating = false; // 중복 애니메이션 방지
-
-  double _accumDx = 0; // ✅ 수평 이동 누적
+  double _accumDx = 0; // 수평 이동 누적
 
   @override
   void initState() {
     super.initState();
-    // 처음 등장 시 0.0 → 0.4로 부드럽게 열림
 
-    // 컨트롤러 변화 → 부모에 extent 전달
+    // extent 실시간 전달
     _dragCtrl.addListener(() {
       if (!mounted) return;
-      widget.onExtentChanged(_dragCtrl.size); // ← ✅ 실시간 전달
+      widget.onExtentChanged(_dragCtrl.size);
     });
+
+    // 처음 등장 시 0.0 → 0.4로 부드럽게 열림
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       try {
         _isAnimating = true;
@@ -449,11 +448,16 @@ class _EventBottomSheetState extends State<_EventBottomSheet> {
     });
   }
 
+  @override
+  void dispose() {
+    _dragCtrl.dispose();
+    super.dispose();
+  }
+
   Future<void> _animateCloseAndNotify() async {
     if (_isAnimating) return;
     _isAnimating = true;
     try {
-      // 0.0까지 스르륵
       await _dragCtrl.animateTo(
         0.0,
         duration: const Duration(milliseconds: 200),
@@ -463,7 +467,7 @@ class _EventBottomSheetState extends State<_EventBottomSheet> {
     } finally {
       if (!mounted) return;
       _isAnimating = false;
-      // 부모에게 닫힘 알림
+      // 부모에게 닫힘 알림(프레임 뒤에 안전하게 호출)
       WidgetsBinding.instance.addPostFrameCallback(
         (_) => widget.onMinExtentClose(),
       );
@@ -472,8 +476,6 @@ class _EventBottomSheetState extends State<_EventBottomSheet> {
 
   @override
   Widget build(BuildContext context) {
-    // final scheme = Theme.of(context).colorScheme;
-
     return NotificationListener<DraggableScrollableNotification>(
       onNotification: (notification) {
         widget.onExtentChanged(notification.extent);
@@ -491,86 +493,109 @@ class _EventBottomSheetState extends State<_EventBottomSheet> {
         maxChildSize: 0.8,
         builder: (ctx, scrollCtrl) {
           final scheme = Theme.of(ctx).colorScheme;
-          return Container(
-            decoration: BoxDecoration(
-              color: scheme.secondary,
-              borderRadius: const BorderRadius.vertical(
-                top: Radius.circular(20),
-              ),
-            ),
-            child: SafeArea(
-              top: false,
-              child: GestureDetector(
-                behavior: HitTestBehavior.opaque,
-                onHorizontalDragStart: (_) => _accumDx = 0,
-                onHorizontalDragUpdate: (d) => _accumDx += d.delta.dx,
-                onHorizontalDragEnd: (_) {
-                  // 누적 이동 방향만 판단 → 하루만 이동
-                  if (_accumDx.abs() > 20) {
-                    // ← 너무 짧은 드래그는 무시 (약간의 감도 설정)
-                    final steps = _accumDx < 0 ? 1 : -1; // 왼쪽 → +1일, 오른쪽 → -1일
-                    widget.onSwipeDay(steps);
-                  }
-                  _accumDx = 0;
-                },
-                child: ListView(
-                  controller: scrollCtrl, // ← ✅ 시트 전체(핸들/헤더/콘텐츠) 스크롤/드래그
-                  padding: EdgeInsets.zero,
-                  children: [
-                    // 핸들
-                    Center(
-                      child: Container(
-                        margin: EdgeInsets.symmetric(vertical: 10.h),
-                        width: 40.w,
-                        height: 4.h,
-                        decoration: BoxDecoration(
-                          color: scheme.outline,
-                          borderRadius: BorderRadius.circular(2.h),
-                        ),
-                      ),
+
+          // 반투명 위에 단색 바닥을 깔기 위해 ClipRRect + Stack 사용
+          return ClipRRect(
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+            child: Stack(
+              children: [
+                // 1) 바닥 단색 배경 (뒤쪽에 깔림)
+                Positioned.fill(
+                  child: DecoratedBox(
+                    decoration: BoxDecoration(
+                      color: scheme.surface, // 기본 바닥색(테마 surface)
                     ),
-
-                    // 헤더
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 16.w),
-                      child: Text(
-                        DateFormat(
-                          'M월 d일 EEE요일',
-                          'ko',
-                        ).format(widget.selectedDate),
-                        style: TextStyle(
-                          color: scheme.onSurface,
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
+                  ),
+                ),
+                // 2) 반투명 틴트 레이어
+                Positioned.fill(
+                  child: DecoratedBox(
+                    decoration: BoxDecoration(
+                      color: scheme.secondary.withAlpha(80),
                     ),
-
-                    SizedBox(height: 8.h),
-                    Divider(color: scheme.outline, thickness: 1.5, height: 1),
-                    SizedBox(height: 8.h),
-
-                    // 일정 리스트(바깥 ListView가 스크롤 담당)
-                    ListView.separated(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemCount: widget.events.length,
-                      separatorBuilder:
-                          (_, __) => Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 8.w),
-                            child: Divider(
-                              color: scheme.outline.withAlpha(200),
-                              thickness: 0.5,
+                  ),
+                ),
+                // 3) 실제 콘텐츠
+                SafeArea(
+                  top: false,
+                  child: GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onHorizontalDragStart: (_) => _accumDx = 0,
+                    onHorizontalDragUpdate: (d) => _accumDx += d.delta.dx,
+                    onHorizontalDragEnd: (_) {
+                      // 누적 이동 방향만 판단 → 하루만 이동
+                      if (_accumDx.abs() > 20) {
+                        final steps =
+                            _accumDx < 0 ? 1 : -1; // 왼쪽 → +1일, 오른쪽 → -1일
+                        widget.onSwipeDay(steps);
+                      }
+                      _accumDx = 0;
+                    },
+                    child: ListView(
+                      controller: scrollCtrl, // 시트 전체(핸들/헤더/콘텐츠) 스크롤/드래그
+                      padding: EdgeInsets.zero,
+                      children: [
+                        // 핸들
+                        Center(
+                          child: Container(
+                            margin: EdgeInsets.symmetric(vertical: 5.h),
+                            width: 42.w,
+                            height: 3.h,
+                            decoration: BoxDecoration(
+                              color: scheme.secondary,
+                              borderRadius: BorderRadius.circular(2.h),
                             ),
                           ),
-                      itemBuilder:
-                          (_, i) => _EventListTile(event: widget.events[i]),
-                    ),
+                        ),
 
-                    SizedBox(height: 8.h),
-                  ],
+                        // 헤더
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 16.w),
+                          child: Text(
+                            DateFormat(
+                              'M월 d일 EEE요일',
+                              'ko',
+                            ).format(widget.selectedDate),
+                            style: TextStyle(
+                              color: scheme.onSurface,
+                              fontSize: 18.sp,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+
+                        SizedBox(height: 8.h),
+                        Divider(
+                          color: scheme.outline,
+                          thickness: 1.5,
+                          height: 1,
+                        ),
+                        SizedBox(height: 8.h),
+
+                        // 일정 리스트(바깥 ListView가 스크롤 담당)
+                        ListView.separated(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount: widget.events.length,
+                          separatorBuilder:
+                              (_, __) => Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 10.w),
+                                child: Divider(
+                                  color: scheme.outline.withAlpha(100),
+                                  thickness: 1,
+                                  height: 0.5,
+                                ),
+                              ),
+                          itemBuilder:
+                              (_, i) => _EventListTile(event: widget.events[i]),
+                        ),
+
+                        SizedBox(height: 8.h),
+                      ],
+                    ),
+                  ),
                 ),
-              ),
+              ],
             ),
           );
         },
@@ -613,15 +638,37 @@ class _EventListTile extends StatelessWidget {
         isSameDay
             ? DateFormat('M.d E', 'ko').format(startDate)
             : '${DateFormat('M.d E', 'ko').format(startDate)} - ${DateFormat('M.d E', 'ko').format(endDate)}';
+    // 한글 줄바꿈 개선 함수
+    String applyWordBreakFix(String text) {
+      final RegExp emoji = RegExp(
+        r'(\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])',
+      );
+      String fullText = '';
+      List<String> words = text.split(' ');
+      for (var i = 0; i < words.length; i++) {
+        fullText +=
+            emoji.hasMatch(words[i])
+                ? words[i]
+                : words[i].replaceAllMapped(
+                  RegExp(r'(\S)(?=\S)'),
+                  (m) => '${m[1]}\u200D',
+                );
+        if (i < words.length - 1) fullText += ' ';
+      }
+      return fullText;
+    }
 
     return ListTile(
       title: Text(
-        event.subject,
-        style: TextStyle(color: scheme.onSurface),
+        applyWordBreakFix(event.subject),
+        style: TextStyle(color: scheme.onSurface, fontSize: 15.sp),
         maxLines: 2,
         overflow: TextOverflow.ellipsis,
       ),
-      subtitle: Text(dateRange, style: TextStyle(color: scheme.outline)),
+      subtitle: Text(
+        dateRange,
+        style: TextStyle(color: scheme.outline, fontSize: 14.sp),
+      ),
     );
   }
 }
