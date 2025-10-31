@@ -116,85 +116,63 @@ class _ScreenIntroLoadingState extends ConsumerState<ScreenIntroLoading> {
 
   @override
   Widget build(BuildContext context) {
-    const spinnerColor = Color(0xFF979797);
+    final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
 
-    return Scaffold(
-      body: SafeArea(
-        child: Center(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Image.asset(
-                'assets/images/loadinglogo.png',
-                height: 170.h,
-                width: 170.h,
-                fit: BoxFit.contain,
-              ),
-              SizedBox(height: 23.h),
-              Text(
-                '설정을 완료하는 중이에요.',
-                style: TextStyle(
-                  color: const Color(0xFF0B5B42),
-                  fontSize: 20.sp,
-                  fontWeight: FontWeight.w700,
+    return PopScope(
+      canPop: false,
+      child: Scaffold(
+        body: SafeArea(
+          child: Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Image.asset(
+                  'assets/images/loadinglogo.png',
+                  height: 170.h,
+                  width: 170.h,
+                  fit: BoxFit.contain,
                 ),
-              ),
-              SizedBox(height: 8.h),
-<<<<<<< HEAD
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    '잠시만 기다려 주세요...',
-                    style: TextStyle(
-                      color: spinnerColor,
-                      fontSize: 18.sp,
-                      fontWeight: FontWeight.w500,
+                SizedBox(height: 23.h),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      '설정을 완료하는 중이에요.',
+                      style: TextStyle(
+                        color: scheme.primary,
+                        fontSize: 20.sp,
+                        fontWeight: FontWeight.w700,
+                      ),
                     ),
-                  ),
-                  SizedBox(width: 10.w),
-                  SizedBox(
-                    height: 16.w,
-                    width: 16.w,
-                    child: const CircularProgressIndicator(
-                      strokeWidth: 3.0,
-                      valueColor: AlwaysStoppedAnimation<Color>(spinnerColor),
+                    SizedBox(width: 10.w),
+                    SizedBox(
+                      height: 16.w,
+                      width: 16.w,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 3.0,
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                          scheme.primary,
+                        ),
+                      ),
                     ),
+                  ],
+                ),
+                SizedBox(height: 8.h),
+                Text(
+                  '조금만 더 기다려주세요 :)',
+                  style: TextStyle(
+                    color: scheme.outline,
+                    fontSize: 18.sp,
+                    fontFamily: 'Inter',
+                    fontWeight: FontWeight.w500,
                   ),
-                ],
-              ),
-              SizedBox(height: 5.h),
-              Text(
-                '이 작업은 몇 분 정도 걸릴 수 있습니다.',
-                style: TextStyle(
-                  color: spinnerColor,
-                  fontSize: 12.sp,
-                  fontWeight: FontWeight.w400,
                 ),
-              ),
-              Text(
-                '(인터넷 연결을 확인해주세요.)',
-                style: TextStyle(
-                  color: spinnerColor,
-                  fontSize: 10.sp,
-                  fontWeight: FontWeight.w400,
-                ),
-              ),
-=======
-              Text(
-                '조금만 더 기다려주세요 :)',
-                style: TextStyle(
-                  color: spinnerColor,
-                  fontSize: 18.sp,
-                  fontFamily: 'Inter',
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              SizedBox(height: 5.h),
->>>>>>> eeb0cff5082ee07654ca95a3bd2e82742cf20efd
-            ],
+                SizedBox(height: 5.h),
+              ],
+            ),
           ),
         ),
       ),
