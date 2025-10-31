@@ -108,7 +108,7 @@ class _ScreenMainCalenderState extends State<ScreenMainCalender> {
 
   @override
   Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
+    // final scheme = Theme.of(context).colorScheme;
 
     final size = MediaQuery.of(context).size;
 
@@ -185,11 +185,12 @@ class _CalendarAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
     return AppBar(
-      leading: const Padding(
+      leading: Padding(
         padding: EdgeInsets.all(10),
         child: Image(
           image: AssetImage('assets/images/greenlogo_fix.png'),
           width: 40,
+          color: scheme.primary,
         ),
       ),
       title: const Text('학사일정'),
@@ -248,44 +249,7 @@ class _CalendarMonthView extends StatelessWidget {
           appointmentDisplayCount: 3,
         ),
 
-        // Appointment builder (상단 바 pill)
-        appointmentBuilder:
-            collapsed
-                ? null
-                : (BuildContext context, CalendarAppointmentDetails details) {
-                  final appt = details.appointments.first as Appointment;
-                  final double barHeight = 10.h;
-
-                  return Align(
-                    alignment: Alignment.topLeft,
-                    child: GestureDetector(
-                      onTap: () => onTapAppointmentPill(appt.startTime),
-                      child: Container(
-                        width: details.bounds.width,
-                        height: barHeight,
-                        margin: EdgeInsets.only(
-                          bottom: details.bounds.height - barHeight,
-                        ),
-                        padding: EdgeInsets.symmetric(horizontal: 4.w),
-                        decoration: BoxDecoration(
-                          color: scheme.primary.withAlpha(200),
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                        child: Text(
-                          appt.subject,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            color: scheme.surface,
-                            fontSize: 8.sp,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ),
-                    ),
-                  );
-                },
-
+        appointmentBuilder: null,
         // Month cell builder (항상 커스텀)
         monthCellBuilder: monthCellBuilder,
       ),
@@ -317,6 +281,10 @@ class _MonthCell extends StatelessWidget {
     final isThisMonth = day.month == visibleDates[15].month;
     final textColor = isThisMonth ? scheme.onPrimary : scheme.secondary;
 
+    // ⬇️ 추가: 오늘 여부 판별
+    final now = DateTime.now();
+    final isToday =
+        day.year == now.year && day.month == now.month && day.day == now.day;
     return Container(
       decoration: BoxDecoration(
         border: Border.all(color: scheme.secondary, width: 0.5),
@@ -327,14 +295,39 @@ class _MonthCell extends StatelessWidget {
           // 일자
           Padding(
             padding: EdgeInsets.only(top: 6.h),
-            child: Text(
-              '${day.day}',
-              style: TextStyle(
-                color: textColor,
-                fontSize: 11.5.sp,
-                fontWeight: FontWeight.w300,
-              ),
-            ),
+            child:
+                isToday
+                    // 오늘이면 배경 칩으로 강조
+                    ? Container(
+                      width: 24.w,
+                      child: AspectRatio(
+                        aspectRatio: 1 / 1,
+                        child: Container(
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            color: scheme.primary.withAlpha(180),
+                            borderRadius: BorderRadius.circular(50),
+                          ),
+                          child: Text(
+                            '${day.day}',
+                            style: TextStyle(
+                              color: scheme.onPrimary,
+                              fontSize: 11.5.sp,
+                              fontWeight: FontWeight.w800,
+                            ),
+                          ),
+                        ),
+                      ),
+                    )
+                    // 일반 날짜
+                    : Text(
+                      '${day.day}',
+                      style: TextStyle(
+                        color: textColor,
+                        fontSize: 11.5.sp,
+                        fontWeight: FontWeight.w300,
+                      ),
+                    ),
           ),
 
           // 모달 열림 + 일정 존재 시 점 표시
@@ -425,7 +418,7 @@ class _EventBottomSheetState extends State<_EventBottomSheet> {
 
   @override
   Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
+    // final scheme = Theme.of(context).colorScheme;
 
     return NotificationListener<DraggableScrollableNotification>(
       onNotification: (notification) {
