@@ -158,7 +158,7 @@ class _ScreenMainBoxEditState extends ConsumerState<ScreenMainBoxEdit> {
                                 '$date | 조회수: $views',
                                 style: TextStyle(
                                   fontSize: 14.sp,
-                                  color: Colors.grey,
+                                  color: scheme.outline,
                                 ),
                               ),
                               trailing: Icon(

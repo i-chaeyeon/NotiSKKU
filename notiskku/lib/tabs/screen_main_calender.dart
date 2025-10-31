@@ -311,23 +311,22 @@ class _ScreenMainCalenderState extends State<ScreenMainCalender> {
                           maxChildSize: 0.8,
                           builder: (ctx, scrollCtrl) {
                             return Container(
-                              decoration: const BoxDecoration(
-                                color: Color(0xFFE8E8E8),
+                              decoration: BoxDecoration(
+                                color: scheme.secondary,
                                 borderRadius: BorderRadius.vertical(
-                                  top: Radius.circular(16),
+                                  top: Radius.circular(20),
                                 ),
                               ),
                               child: Column(
                                 children: [
                                   Container(
-                                    margin: EdgeInsets.only(
-                                      top: 8.h,
-                                      bottom: 4.h,
+                                    margin: EdgeInsets.symmetric(
+                                      vertical: 10.h,
                                     ),
                                     width: 40.w,
                                     height: 4.h,
                                     decoration: BoxDecoration(
-                                      color: Colors.grey[300],
+                                      color: scheme.outline, // 바텀시트 핸들
                                       borderRadius: BorderRadius.circular(2.h),
                                     ),
                                   ),
@@ -342,8 +341,8 @@ class _ScreenMainCalenderState extends State<ScreenMainCalender> {
                                           'M월 d일 EEE요일',
                                           'ko',
                                         ).format(_selectedDate!),
-                                        style: const TextStyle(
-                                          color: Colors.black,
+                                        style: TextStyle(
+                                          color: scheme.onSurface,
                                           fontSize: 18,
                                           fontWeight: FontWeight.bold,
                                         ),
@@ -352,7 +351,7 @@ class _ScreenMainCalenderState extends State<ScreenMainCalender> {
                                   ),
                                   SizedBox(height: 8.h),
                                   Divider(
-                                    color: Color(0XFF979797),
+                                    color: scheme.outline,
                                     thickness: 1.5,
                                     height: 1,
                                   ),
@@ -367,7 +366,7 @@ class _ScreenMainCalenderState extends State<ScreenMainCalender> {
                                               horizontal: 16.w,
                                             ),
                                             child: Divider(
-                                              color: Color(0xFFD9D9D9),
+                                              color: scheme.surface,
                                               thickness: 0.5,
                                             ),
                                           ),
@@ -408,16 +407,16 @@ class _ScreenMainCalenderState extends State<ScreenMainCalender> {
                                         return ListTile(
                                           title: Text(
                                             ev.subject,
-                                            style: const TextStyle(
-                                              color: Colors.black,
+                                            style: TextStyle(
+                                              color: scheme.onSurface,
                                             ),
                                             maxLines: 2,
                                             overflow: TextOverflow.ellipsis,
                                           ),
                                           subtitle: Text(
                                             dateRange,
-                                            style: const TextStyle(
-                                              color: Colors.grey,
+                                            style: TextStyle(
+                                              color: scheme.outline,
                                             ),
                                           ),
                                         );
@@ -498,10 +497,7 @@ class _ScreenMainCalenderState extends State<ScreenMainCalender> {
               padding: EdgeInsets.only(top: 2.h),
               child: Text(
                 '●',
-                style: TextStyle(
-                  fontSize: 8.sp,
-                  color: const Color(0xB20B5B42),
-                ),
+                style: TextStyle(fontSize: 8.sp, color: scheme.primary),
               ),
             ),
         ],

@@ -82,7 +82,6 @@ class _ScreenMainMajorEditState extends ConsumerState<ScreenMainMajorEdit> {
           ),
           title: Text('학과 선택 편집'),
           centerTitle: true,
-          iconTheme: const IconThemeData(color: Colors.black),
         ),
         body: Column(
           children: [
