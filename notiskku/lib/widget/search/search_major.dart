@@ -34,10 +34,10 @@ class _SearchMajorState extends ConsumerState<SearchMajor> {
           borderRadius: BorderRadius.circular(10.r),
         ),
         child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Expanded(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 5.0),
+              child: Center(
                 child: TextField(
                   controller: _controller,
                   maxLength: 50,

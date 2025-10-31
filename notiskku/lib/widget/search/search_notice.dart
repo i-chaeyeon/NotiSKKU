@@ -65,10 +65,10 @@ class _SearchNoticeState extends ConsumerState<SearchNotice> {
           borderRadius: BorderRadius.circular(10.r),
         ),
         child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Expanded(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 5.0),
+              child: Center(
                 child: TextField(
                   controller: _titleController,
                   maxLength: 50,
