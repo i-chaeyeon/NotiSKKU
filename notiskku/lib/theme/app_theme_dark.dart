@@ -5,10 +5,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 class DarkPalette {
   static const greenBackground = Color(0xFF17171B); // 배경
   static const textPrimary = Color(0xFFFAFAF8); // 일반 텍스트
-  static const lineGray = Color(0xFFACACAC); // 구분선, 회색 텍스트
+  static const lineGray = Color(0xFFD9D9D9); // 구분선, 회색 텍스트
   static const gray = Color(0xFF555555); // 회색 보조
 
-  static const mainGreen = Color(0xFF0ADE9C); // 메인 초록 (버튼/포커스)
+  static const mainGreen = Color(0xFF14DF8E); // 메인 초록 (버튼/포커스)
   static const subGreen = Color(0xFF0B5B42); // 서브 초록 (링크/포인트)
 
   static const mainRed = Color(0xFFC94848); // 삭제/에러
