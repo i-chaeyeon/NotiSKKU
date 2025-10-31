@@ -69,7 +69,6 @@ class _ScreenIntroLoadingState extends ConsumerState<ScreenIntroLoading> {
         keywords: user.selectedKeywords,
       );
 
-      await AppPreferences.setFirstLaunch();
       if (!mounted) return;
 
       _showSnack('알림 구독이 완료되었습니다.');
@@ -85,7 +84,6 @@ class _ScreenIntroLoadingState extends ConsumerState<ScreenIntroLoading> {
         context,
       ).pushReplacement(MaterialPageRoute(builder: (_) => next));
     } catch (e) {
-      await AppPreferences.setFirstLaunch();
       if (!mounted) return;
 
       _showSnack('알림 구독에 실패했습니다: $e', isError: true);

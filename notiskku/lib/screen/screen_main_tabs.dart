@@ -14,6 +14,8 @@ import 'package:notiskku/tabs/screen_main_others.dart';
 import 'package:notiskku/screen/screen_intro_alarm.dart';
 import 'package:notiskku/widget/dialog/dialog_set_alarm_info.dart';
 
+import 'package:notiskku/services/preferences_app.dart';
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:notiskku/screen/screen_main_tabs.dart';
 import 'package:notiskku/widget/button/wide_green.dart';
+import 'package:notiskku/services/preferences_app.dart';
 
 class ScreenIntroReady extends StatelessWidget {
   const ScreenIntroReady({super.key});
@@ -44,8 +45,9 @@ class ScreenIntroReady extends StatelessWidget {
               padding: EdgeInsets.symmetric(vertical: 20.h),
               child: WideGreen(
                 text: '나의 공지 보러가기',
-                onPressed: () {
-                  Navigator.push(
+                onPressed: () async {
+                  await AppPreferences.setFirstLaunch();
+                  Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
                       builder: (context) => const ScreenMainTabs(),
