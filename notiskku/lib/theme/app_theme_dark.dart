@@ -48,7 +48,7 @@ TextTheme darkTextTheme(String fontFamily) => TextTheme(
     fontWeight: FontWeight.w100,
     fontSize: 13.sp,
     // 살짝 투명도로 보조 톤
-    color: DarkPalette.textPrimary.withOpacity(0.8),
+    color: DarkPalette.textPrimary.withAlpha(200),
   ),
 );
 
