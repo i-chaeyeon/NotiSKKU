@@ -8,6 +8,40 @@ import 'package:intl/intl.dart';
 import 'package:notiskku/services/calendar_service.dart'; // loadAppointments()
 import 'package:notiskku/data/event_data_source.dart'; // EventDataSource
 
+// ─────────────────────────────────────────────────────────────────────────────
+// 유틸: 날짜 범위 겹침/필터 공통 로직
+// ─────────────────────────────────────────────────────────────────────────────
+
+bool _isOverlap(Appointment a, DateTime start, DateTime end) {
+  final eventStart = DateTime(
+    a.startTime.year,
+    a.startTime.month,
+    a.startTime.day,
+  );
+  final eventEnd = DateTime(a.endTime.year, a.endTime.month, a.endTime.day);
+  // [start, end] 와 [eventStart, eventEnd]의 교집합 여부 판단
+  return eventStart.isBefore(end.add(const Duration(milliseconds: 1))) &&
+      eventEnd.isAfter(start.subtract(const Duration(milliseconds: 1)));
+}
+
+List<Appointment> _eventsInRange(
+  List<Appointment> all,
+  DateTime start,
+  DateTime end,
+) {
+  return all.where((a) => _isOverlap(a, start, end)).toList();
+}
+
+List<Appointment> _eventsOnDay(List<Appointment> all, DateTime day) {
+  final dayStart = DateTime(day.year, day.month, day.day);
+  final dayEnd = DateTime(day.year, day.month, day.day, 23, 59, 59);
+  return _eventsInRange(all, dayStart, dayEnd);
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// 메인 화면
+// ─────────────────────────────────────────────────────────────────────────────
+
 class ScreenMainCalender extends StatefulWidget {
   const ScreenMainCalender({super.key});
 
@@ -16,10 +50,10 @@ class ScreenMainCalender extends StatefulWidget {
 }
 
 class _ScreenMainCalenderState extends State<ScreenMainCalender> {
-  bool _collapsed = false; // 달력이 축소된 상태인지 (모달이 열렸을 때 true)
-  DateTime? _selectedDate; // 탭된 날짜
-  List<Appointment> _appointments = []; // 전체 일정
-  List<Appointment> _selectedDayEvents = []; // 탭된 날짜의 일정들
+  bool _collapsed = false;
+  DateTime? _selectedDate;
+  List<Appointment> _appointments = [];
+  List<Appointment> _selectedDayEvents = [];
 
   @override
   void initState() {
@@ -30,444 +64,238 @@ class _ScreenMainCalenderState extends State<ScreenMainCalender> {
     });
   }
 
+  // 날짜 오픈/닫기 공통 핸들러
+  void _openForDate(DateTime day) {
+    final start = DateTime(day.year, day.month, day.day);
+    final end = DateTime(day.year, day.month, day.day, 23, 59, 59);
+    final events = _eventsInRange(_appointments, start, end);
+    setState(() {
+      _collapsed = true;
+      _selectedDate = start;
+      _selectedDayEvents = events;
+    });
+  }
+
+  void _closeSheet() {
+    setState(() {
+      _collapsed = false;
+      _selectedDate = null;
+      _selectedDayEvents = [];
+    });
+  }
+
+  // SfCalendar onTap 대응
   void _handleTap(CalendarTapDetails details) {
-    // 달력 셀 클릭 → 해당 날짜의 이벤트 수집 후 모달 오픈
     if (details.targetElement == CalendarElement.calendarCell &&
         details.date != null) {
-      final day = details.date!;
-      final dayStart = DateTime(day.year, day.month, day.day);
-      final dayEnd = DateTime(day.year, day.month, day.day, 23, 59, 59);
-
-      final events =
-          _appointments.where((a) {
-            final eventStart = DateTime(
-              a.startTime.year,
-              a.startTime.month,
-              a.startTime.day,
-            );
-            final eventEnd = DateTime(
-              a.endTime.year,
-              a.endTime.month,
-              a.endTime.day,
-            );
-            return eventStart.isBefore(
-                  dayEnd.add(const Duration(milliseconds: 1)),
-                ) &&
-                eventEnd.isAfter(
-                  dayStart.subtract(const Duration(milliseconds: 1)),
-                );
-          }).toList();
-
-      setState(() {
-        _collapsed = true;
-        _selectedDate = dayStart;
-        _selectedDayEvents = events;
-      });
+      _openForDate(details.date!);
       return;
     }
+    if (_collapsed) _closeSheet();
+  }
 
-    // 다른 영역 클릭 시: 모달형으로 바뀌었으므로 즉시 닫기만 처리
-    if (_collapsed) {
-      setState(() {
-        _collapsed = false;
-        _selectedDate = null;
-        _selectedDayEvents = [];
-      });
+  // 상/하 드래그 제스처 대응
+  void _handleVerticalDrag(DragUpdateDetails details) {
+    if (details.delta.dy < -5 && !_collapsed) {
+      final today = DateTime.now();
+      _openForDate(today);
+    } else if (details.delta.dy > 5 && _collapsed) {
+      _closeSheet();
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final textTheme = theme.textTheme;
-    final scheme = theme.colorScheme;
+    final scheme = Theme.of(context).colorScheme;
 
     return Scaffold(
-      appBar: AppBar(
-        leading: Padding(
-          padding: EdgeInsets.all(10),
-          child: Image(
-            image: AssetImage('assets/images/greenlogo_fix.png'),
-            width: 40,
-            color: scheme.primary,
-          ),
-        ),
-        title: Text('학사일정'),
-      ),
+      appBar: const _CalendarAppBar(),
       body:
           _appointments.isEmpty
               ? const Center(child: CircularProgressIndicator())
               : Stack(
                 children: [
-                  // 달력 영역 제스처(위/아래 드래그)
+                  // ① 달력 뷰
                   Positioned.fill(
-                    child: GestureDetector(
-                      onVerticalDragUpdate: (details) {
-                        // 위로 드래그 → 오늘 일정으로 모달 열기
-                        if (details.delta.dy < -5 && !_collapsed) {
-                          final today = DateTime.now();
-                          final todayStart = DateTime(
-                            today.year,
-                            today.month,
-                            today.day,
-                          );
-                          final todayEnd = DateTime(
-                            today.year,
-                            today.month,
-                            today.day,
-                            23,
-                            59,
-                            59,
-                          );
-
-                          final events =
-                              _appointments.where((a) {
-                                final eventStart = DateTime(
-                                  a.startTime.year,
-                                  a.startTime.month,
-                                  a.startTime.day,
-                                );
-                                final eventEnd = DateTime(
-                                  a.endTime.year,
-                                  a.endTime.month,
-                                  a.endTime.day,
-                                );
-                                return eventStart.isBefore(
-                                      todayEnd.add(
-                                        const Duration(milliseconds: 1),
-                                      ),
-                                    ) &&
-                                    eventEnd.isAfter(
-                                      todayStart.subtract(
-                                        const Duration(milliseconds: 1),
-                                      ),
-                                    );
-                              }).toList();
-
-                          setState(() {
-                            _collapsed = true;
-                            _selectedDate = todayStart;
-                            _selectedDayEvents = events;
-                          });
-                        }
-                        // 아래로 드래그 → (모달은 스와이프로 닫힘) 내부 상태만 정리
-                        else if (details.delta.dy > 5 && _collapsed) {
-                          setState(() {
-                            _collapsed = false;
-                            _selectedDate = null;
-                            _selectedDayEvents = [];
-                          });
-                        }
-                      },
-                      child: SfCalendar(
-                        view: CalendarView.month,
-                        showNavigationArrow: true,
-                        headerHeight: 50,
-                        headerStyle: CalendarHeaderStyle(
-                          backgroundColor: scheme.surface,
-                          textAlign: TextAlign.center,
-                          textStyle: textTheme.headlineMedium,
-                        ),
-                        dataSource: EventDataSource(_appointments),
-                        onTap: _handleTap,
-
-                        // ───────── MonthViewSettings ─────────
-                        monthViewSettings: MonthViewSettings(
-                          appointmentDisplayMode:
-                              _collapsed
-                                  ? MonthAppointmentDisplayMode.none
-                                  : MonthAppointmentDisplayMode.appointment,
-                          appointmentDisplayCount: 3,
-                        ),
-
-                        // ───────── Appointment Builder ─────────
-                        // 모달이 닫혀 있을 때만 셀 위 바(멀티데이) 보여주기
-                        appointmentBuilder:
-                            _collapsed
-                                ? null
-                                : (
-                                  BuildContext context,
-                                  CalendarAppointmentDetails details,
-                                ) {
-                                  final appt =
-                                      details.appointments.first as Appointment;
-                                  final double barHeight = 10.h; // 원하는 높이
-                                  return Align(
-                                    alignment: Alignment.topLeft,
-                                    child: GestureDetector(
-                                      onTap: () {
-                                        final day = appt.startTime;
-                                        final dayStart = DateTime(
-                                          day.year,
-                                          day.month,
-                                          day.day,
-                                        );
-                                        final dayEnd = DateTime(
-                                          day.year,
-                                          day.month,
-                                          day.day,
-                                          23,
-                                          59,
-                                          59,
-                                        );
-
-                                        final events =
-                                            _appointments.where((a) {
-                                              final eventStart = DateTime(
-                                                a.startTime.year,
-                                                a.startTime.month,
-                                                a.startTime.day,
-                                              );
-                                              final eventEnd = DateTime(
-                                                a.endTime.year,
-                                                a.endTime.month,
-                                                a.endTime.day,
-                                              );
-                                              return eventStart.isBefore(
-                                                    dayEnd.add(
-                                                      const Duration(
-                                                        milliseconds: 1,
-                                                      ),
-                                                    ),
-                                                  ) &&
-                                                  eventEnd.isAfter(
-                                                    dayStart.subtract(
-                                                      const Duration(
-                                                        milliseconds: 1,
-                                                      ),
-                                                    ),
-                                                  );
-                                            }).toList();
-
-                                        setState(() {
-                                          _collapsed = true;
-                                          _selectedDate = dayStart;
-                                          _selectedDayEvents = events;
-                                        });
-                                      },
-                                      child: Container(
-                                        width: details.bounds.width,
-                                        height: barHeight,
-                                        margin: EdgeInsets.only(
-                                          bottom:
-                                              details.bounds.height - barHeight,
-                                        ),
-                                        padding: EdgeInsets.symmetric(
-                                          horizontal: 4.w,
-                                        ),
-                                        decoration: BoxDecoration(
-                                          color: scheme.primary.withAlpha(200),
-                                          borderRadius: BorderRadius.circular(
-                                            4,
-                                          ),
-                                        ),
-                                        child: Text(
-                                          appt.subject,
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: TextStyle(
-                                            color: scheme.surface,
-                                            fontSize: 8.sp,
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  );
-                                },
-
-                        // ───────── Month Cell Builder ─────────
-                        // 일관된 스타일 적용을 위해 항상 커스텀 셀 사용
-                        monthCellBuilder: _buildCustomCell,
-                      ),
+                    child: _CalendarMonthView(
+                      appointments: _appointments,
+                      collapsed: _collapsed,
+                      onTap: _handleTap,
+                      onVerticalDragUpdate: _handleVerticalDrag,
+                      onTapAppointmentPill: (DateTime day) => _openForDate(day),
+                      monthCellBuilder:
+                          (ctx, details) => _MonthCell(
+                            day: details.date,
+                            visibleDates: details.visibleDates,
+                            totalEvents:
+                                _eventsOnDay(
+                                  _appointments,
+                                  details.date,
+                                ).length,
+                            collapsed: _collapsed,
+                          ),
                     ),
                   ),
 
-                  // ② 바텀시트 (Stack 내부에서 부드럽게 애니메이션)
+                  // ② 바텀시트
                   if (_collapsed)
                     Positioned.fill(
-                      child: NotificationListener<
-                        DraggableScrollableNotification
-                      >(
-                        onNotification: (notification) {
-                          if (notification.extent <=
-                              notification.minExtent + 0.01) {
-                            Future.microtask(() {
-                              if (mounted) {
-                                setState(() {
-                                  _collapsed = false;
-                                  _selectedDate = null;
-                                  _selectedDayEvents = [];
-                                });
-                              }
-                            });
-                          }
-                          return true;
-                        },
-                        child: DraggableScrollableSheet(
-                          expand: false,
-                          initialChildSize: 0.4,
-                          minChildSize: 0.0,
-                          maxChildSize: 0.8,
-                          builder: (ctx, scrollCtrl) {
-                            return Container(
-                              decoration: BoxDecoration(
-                                color: scheme.secondary,
-                                borderRadius: BorderRadius.vertical(
-                                  top: Radius.circular(20),
-                                ),
-                              ),
-                              child: Column(
-                                children: [
-                                  Container(
-                                    margin: EdgeInsets.symmetric(
-                                      vertical: 10.h,
-                                    ),
-                                    width: 40.w,
-                                    height: 4.h,
-                                    decoration: BoxDecoration(
-                                      color: scheme.outline, // 바텀시트 핸들
-                                      borderRadius: BorderRadius.circular(2.h),
-                                    ),
-                                  ),
-                                  Align(
-                                    alignment: Alignment.centerLeft,
-                                    child: Padding(
-                                      padding: EdgeInsets.symmetric(
-                                        horizontal: 16.w,
-                                      ),
-                                      child: Text(
-                                        DateFormat(
-                                          'M월 d일 EEE요일',
-                                          'ko',
-                                        ).format(_selectedDate!),
-                                        style: TextStyle(
-                                          color: scheme.onSurface,
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  SizedBox(height: 8.h),
-                                  Divider(
-                                    color: scheme.outline,
-                                    thickness: 1.5,
-                                    height: 1,
-                                  ),
-                                  SizedBox(height: 8.h),
-                                  Expanded(
-                                    child: ListView.separated(
-                                      controller: scrollCtrl,
-                                      itemCount: _selectedDayEvents.length,
-                                      separatorBuilder:
-                                          (_, __) => Padding(
-                                            padding: EdgeInsets.symmetric(
-                                              horizontal: 16.w,
-                                            ),
-                                            child: Divider(
-                                              color: scheme.surface,
-                                              thickness: 0.5,
-                                            ),
-                                          ),
-                                      itemBuilder: (_, i) {
-                                        final ev = _selectedDayEvents[i];
-
-                                        // 날짜 범위 포맷팅
-                                        final startDate = DateTime(
-                                          ev.startTime.year,
-                                          ev.startTime.month,
-                                          ev.startTime.day,
-                                        );
-                                        final endDate = DateTime(
-                                          ev.endTime.year,
-                                          ev.endTime.month,
-                                          ev.endTime.day,
-                                        );
-
-                                        final isSameDay =
-                                            startDate.year == endDate.year &&
-                                            startDate.month == endDate.month &&
-                                            startDate.day == endDate.day;
-
-                                        String dateRange;
-                                        if (isSameDay) {
-                                          // 하루짜리 이벤트
-                                          dateRange = DateFormat(
-                                            'M.d E',
-                                            'ko',
-                                          ).format(startDate);
-                                        } else {
-                                          // 여러 날 이벤트
-                                          dateRange =
-                                              '${DateFormat('M.d E', 'ko').format(startDate)} - '
-                                              '${DateFormat('M.d E', 'ko').format(endDate)}';
-                                        }
-
-                                        return ListTile(
-                                          title: Text(
-                                            ev.subject,
-                                            style: TextStyle(
-                                              color: scheme.onSurface,
-                                            ),
-                                            maxLines: 2,
-                                            overflow: TextOverflow.ellipsis,
-                                          ),
-                                          subtitle: Text(
-                                            dateRange,
-                                            style: TextStyle(
-                                              color: scheme.outline,
-                                            ),
-                                          ),
-                                        );
-                                      },
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            );
-                          },
-                        ),
+                      child: _EventBottomSheet(
+                        selectedDate: _selectedDate!,
+                        events: _selectedDayEvents,
+                        onMinExtentClose: _closeSheet,
                       ),
                     ),
                 ],
               ),
     );
   }
+}
 
-  Widget _buildCustomCell(BuildContext context, MonthCellDetails details) {
+// ─────────────────────────────────────────────────────────────────────────────
+// 앱바
+// ─────────────────────────────────────────────────────────────────────────────
+
+class _CalendarAppBar extends StatelessWidget implements PreferredSizeWidget {
+  const _CalendarAppBar();
+
+  @override
+  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    return AppBar(
+      leading: const Padding(
+        padding: EdgeInsets.all(10),
+        child: Image(
+          image: AssetImage('assets/images/greenlogo_fix.png'),
+          width: 40,
+        ),
+      ),
+      title: const Text('학사일정'),
+      iconTheme: IconThemeData(color: scheme.primary),
+    );
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// 달력 MonthView 래퍼
+// ─────────────────────────────────────────────────────────────────────────────
+
+class _CalendarMonthView extends StatelessWidget {
+  const _CalendarMonthView({
+    required this.appointments,
+    required this.collapsed,
+    required this.onTap,
+    required this.onVerticalDragUpdate,
+    required this.onTapAppointmentPill,
+    required this.monthCellBuilder,
+  });
+
+  final List<Appointment> appointments;
+  final bool collapsed;
+  final CalendarTapCallback onTap;
+  final GestureDragUpdateCallback onVerticalDragUpdate;
+  final void Function(DateTime day) onTapAppointmentPill;
+  final Widget Function(BuildContext, MonthCellDetails) monthCellBuilder;
+
+  @override
+  Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final textTheme = theme.textTheme;
     final scheme = theme.colorScheme;
+    final text = theme.textTheme;
 
-    final day = details.date;
+    return GestureDetector(
+      onVerticalDragUpdate: onVerticalDragUpdate,
+      child: SfCalendar(
+        view: CalendarView.month,
+        showNavigationArrow: true,
+        headerHeight: 50,
+        headerStyle: CalendarHeaderStyle(
+          backgroundColor: scheme.surface,
+          textAlign: TextAlign.center,
+          textStyle: text.headlineMedium,
+        ),
+        dataSource: EventDataSource(appointments),
+        onTap: onTap,
 
-    // 해당 날짜의 이벤트 수집
-    final eventsOnDay =
-        _appointments.where((a) {
-          final dayStart = DateTime(day.year, day.month, day.day);
-          final dayEnd = DateTime(day.year, day.month, day.day, 23, 59, 59);
-          final eventStart = DateTime(
-            a.startTime.year,
-            a.startTime.month,
-            a.startTime.day,
-          );
-          final eventEnd = DateTime(
-            a.endTime.year,
-            a.endTime.month,
-            a.endTime.day,
-          );
+        // MonthViewSettings
+        monthViewSettings: MonthViewSettings(
+          appointmentDisplayMode:
+              collapsed
+                  ? MonthAppointmentDisplayMode.none
+                  : MonthAppointmentDisplayMode.appointment,
+          appointmentDisplayCount: 3,
+        ),
 
-          return eventStart.isBefore(
-                dayEnd.add(const Duration(milliseconds: 1)),
-              ) &&
-              eventEnd.isAfter(
-                dayStart.subtract(const Duration(milliseconds: 1)),
-              );
-        }).toList();
+        // Appointment builder (상단 바 pill)
+        appointmentBuilder:
+            collapsed
+                ? null
+                : (BuildContext context, CalendarAppointmentDetails details) {
+                  final appt = details.appointments.first as Appointment;
+                  final double barHeight = 10.h;
 
-    final totalEvents = eventsOnDay.length;
-    final isThisMonth = day.month == details.visibleDates[15].month;
+                  return Align(
+                    alignment: Alignment.topLeft,
+                    child: GestureDetector(
+                      onTap: () => onTapAppointmentPill(appt.startTime),
+                      child: Container(
+                        width: details.bounds.width,
+                        height: barHeight,
+                        margin: EdgeInsets.only(
+                          bottom: details.bounds.height - barHeight,
+                        ),
+                        padding: EdgeInsets.symmetric(horizontal: 4.w),
+                        decoration: BoxDecoration(
+                          color: scheme.primary.withAlpha(200),
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        child: Text(
+                          appt.subject,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            color: scheme.surface,
+                            fontSize: 8.sp,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                    ),
+                  );
+                },
+
+        // Month cell builder (항상 커스텀)
+        monthCellBuilder: monthCellBuilder,
+      ),
+    );
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// 월 셀 (일자 + 점 표시)
+// ─────────────────────────────────────────────────────────────────────────────
+
+class _MonthCell extends StatelessWidget {
+  const _MonthCell({
+    required this.day,
+    required this.visibleDates,
+    required this.totalEvents,
+    required this.collapsed,
+  });
+
+  final DateTime day;
+  final List<DateTime> visibleDates;
+  final int totalEvents;
+  final bool collapsed;
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+
+    final isThisMonth = day.month == visibleDates[15].month;
     final textColor = isThisMonth ? scheme.onPrimary : scheme.secondary;
 
     return Container(
@@ -477,10 +305,9 @@ class _ScreenMainCalenderState extends State<ScreenMainCalender> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          // 일자 표시 영역
+          // 일자
           Padding(
-            // ← ✅ 상단 여백을 위해 Padding 추가
-            padding: EdgeInsets.only(top: 6.h), // 기본 셀과 비슷하게
+            padding: EdgeInsets.only(top: 6.h),
             child: Text(
               '${day.day}',
               style: TextStyle(
@@ -491,8 +318,8 @@ class _ScreenMainCalenderState extends State<ScreenMainCalender> {
             ),
           ),
 
-          // 바텀시트가 열려있을 때만 일정 있으면 점 표시
-          if (_collapsed && totalEvents > 0)
+          // 모달 열림 + 일정 존재 시 점 표시
+          if (collapsed && totalEvents > 0)
             Padding(
               padding: EdgeInsets.only(top: 2.h),
               child: Text(
@@ -502,6 +329,150 @@ class _ScreenMainCalenderState extends State<ScreenMainCalender> {
             ),
         ],
       ),
+    );
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// 바텀시트
+// ─────────────────────────────────────────────────────────────────────────────
+
+class _EventBottomSheet extends StatelessWidget {
+  const _EventBottomSheet({
+    required this.selectedDate,
+    required this.events,
+    required this.onMinExtentClose,
+  });
+
+  final DateTime selectedDate;
+  final List<Appointment> events;
+  final VoidCallback onMinExtentClose;
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+
+    return NotificationListener<DraggableScrollableNotification>(
+      onNotification: (notification) {
+        if (notification.extent <= notification.minExtent + 0.01) {
+          // 닫힘 시 부모에 클로즈 알림
+          WidgetsBinding.instance.addPostFrameCallback(
+            (_) => onMinExtentClose(),
+          );
+        }
+        return true;
+      },
+      child: DraggableScrollableSheet(
+        expand: false,
+        initialChildSize: 0.4,
+        minChildSize: 0.0,
+        maxChildSize: 0.8,
+        builder: (ctx, scrollCtrl) {
+          return Container(
+            decoration: BoxDecoration(
+              color: scheme.secondary,
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(20),
+              ),
+            ),
+            child: Column(
+              children: [
+                // 핸들
+                Container(
+                  margin: EdgeInsets.symmetric(vertical: 10.h),
+                  width: 40.w,
+                  height: 4.h,
+                  decoration: BoxDecoration(
+                    color: scheme.outline,
+                    borderRadius: BorderRadius.circular(2.h),
+                  ),
+                ),
+
+                // 날짜 타이틀
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 16.w),
+                    child: Text(
+                      DateFormat('M월 d일 EEE요일', 'ko').format(selectedDate),
+                      style: TextStyle(
+                        color: scheme.onSurface,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+
+                SizedBox(height: 8.h),
+                Divider(color: scheme.outline, thickness: 1.5, height: 1),
+                SizedBox(height: 8.h),
+
+                // 일정 리스트
+                Expanded(
+                  child: ListView.separated(
+                    controller: scrollCtrl,
+                    itemCount: events.length,
+                    separatorBuilder:
+                        (_, __) => Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 16.w),
+                          child: Divider(color: scheme.surface, thickness: 0.5),
+                        ),
+                    itemBuilder: (_, i) => _EventListTile(event: events[i]),
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// 일정 타일
+// ─────────────────────────────────────────────────────────────────────────────
+
+class _EventListTile extends StatelessWidget {
+  const _EventListTile({required this.event});
+
+  final Appointment event;
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+
+    // 날짜 범위 포맷
+    final startDate = DateTime(
+      event.startTime.year,
+      event.startTime.month,
+      event.startTime.day,
+    );
+    final endDate = DateTime(
+      event.endTime.year,
+      event.endTime.month,
+      event.endTime.day,
+    );
+
+    final isSameDay =
+        startDate.year == endDate.year &&
+        startDate.month == endDate.month &&
+        startDate.day == endDate.day;
+
+    final String dateRange =
+        isSameDay
+            ? DateFormat('M.d E', 'ko').format(startDate)
+            : '${DateFormat('M.d E', 'ko').format(startDate)} - ${DateFormat('M.d E', 'ko').format(endDate)}';
+
+    return ListTile(
+      title: Text(
+        event.subject,
+        style: TextStyle(color: scheme.onSurface),
+        maxLines: 2,
+        overflow: TextOverflow.ellipsis,
+      ),
+      subtitle: Text(dateRange, style: TextStyle(color: scheme.outline)),
     );
   }
 }
