@@ -74,7 +74,7 @@ class NotificationProvider extends ChangeNotifier {
     if (nav == null) return;
 
     final data = _message?.data ?? {};
-    final url = data['link'];
+    final url = data['url'];
 
     if (url != null && url.isNotEmpty) {
       final launchUrlService = LaunchUrlService();
