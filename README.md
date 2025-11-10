@@ -45,7 +45,7 @@ _본 레포지토리는 NotiSKKU 프로젝트의 프론트엔드 및 푸시알�
 ## 🏛️ 시스템 아키텍처
 
 <p align="center">
-  <img src="screenshots/Development Architecture - Edited.jpg" width="100%"/>
+  <img src="screenshots/Development Architecture - Edited.png" width="100%"/>
 </p>
 
 NotiSKKU는 **Flutter 기반**으로 구현되었으며, Firebase를 메인으로 Playwright과 Github Actions를 활용합니다.
