@@ -14,30 +14,30 @@ _본 레포지토리는 NotiSKKU 프로젝트의 프론트엔드 및 푸시알�
 
 ### 맞춤형 키워드 및 알림 설정하기!
 <p align="center">
-  <img src="screenshots/Key Features 1.jpg" width="100%"/>
+  <img src="screenshots/Key Features 1 - Edited.jpg" width="100%"/>
 </p>
 
-관심 있는 키워드를 설정하고 해당 키워드가 포함된 공지사항을 실시간으로 받아보세요.
+관심 있는 키워드를 설정하고 해당 키워드가 포함된 공지사항을 실시간으로 받아보세요.   
 푸시 알림 설정으로 중요한 공지를 놓치지 마세요!
 
 ---
 
 ### 원하는 공지는 즐겨찾기로 간편하게!
 <p align="center">
-  <img src="screenshots/Key Features 2.jpg" width="100%"/>
+  <img src="screenshots/Key Features 2 - Edited.jpg" width="100%"/>
 </p>
 
-중요한 공지사항을 별표로 저장하고 즐겨찾기 탭에서 한눈에 모아보세요.
+중요한 공지사항을 별표로 저장하고 공지보관함 탭에서 한눈에 모아보세요.   
 편집 모드로 여러 공지를 한 번에 관리할 수 있습니다.
 
 ---
 
-### 학사일정을 한눈에!
+### 학사일정도 한눈에!
 <p align="center">
-  <img src="screenshots/Key Features 3.jpg" width="100%"/>
+  <img src="screenshots/Key Features 3 - Edited.jpg" width="100%"/>
 </p>
 
-성균관대학교의 모든 학사일정을 캘린더로 확인하세요.
+성균관대학교의 모든 학사일정을 캘린더로 확인하세요.   
 날짜를 탭하면 해당 일의 상세 일정을 바로 볼 수 있습니다.
 
 <br/>
@@ -45,14 +45,14 @@ _본 레포지토리는 NotiSKKU 프로젝트의 프론트엔드 및 푸시알�
 ## 🏛️ 시스템 아키텍처
 
 <p align="center">
-  <img src="screenshots/system_architecture.jpg" width="100%"/>
+  <img src="screenshots/Development Architecture - Edited.jpg" width="100%"/>
 </p>
 
-NotiSKKU는 **Flutter 기반**으로 구현되었으며, Firebase와 Google Sheets API를 활용합니다.
+NotiSKKU는 **Flutter 기반**으로 구현되었으며, Firebase를 메인으로 Playwright과 Github Actions를 활용합니다.
 
 ### 주요 구성 요소
 - **Frontend**: Flutter (Dart) + Riverpod 상태 관리
-- **Backend**: Firebase (Firestore, FCM) + Google Sheets API
+- **Backend**: Firebase (Firestore, FCM) + Playwright(Python based) + Github Actions
 - **Local Storage**: SharedPreferences
 - **Architecture Pattern**: MVVM + Repository Pattern
 
@@ -92,10 +92,6 @@ notiskku/
 - `google-services.json` (Android)
 - `GoogleService-Info.plist` (iOS)
 
-### Google Sheets API 설정 (선택)
-- Google Cloud Console에서 서비스 계정 생성
-- `assets/credentials.json` 파일 추가
-
 <br/>
 
 ## 📦 설치
@@ -121,7 +117,7 @@ flutterfire configure
 ```
 
 4. **환경 파일 설정**
-- `assets/credentials.json` 추가 (Google Sheets API 사용 시)
+- `assets/credentials.json` 추가 
 - Firebase 설정 파일 추가 (`google-services.json`, `GoogleService-Info.plist`)
 
 <br/>
