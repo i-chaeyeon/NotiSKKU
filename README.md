@@ -6,7 +6,7 @@
 _본 레포지토리는 NotiSKKU 프로젝트의 프론트엔드 및 푸시알림 레포지토리입니다._    
 → [NotiSKKU Backend Repository 바로가기](https://github.com/Team-Notiskku/backend)
 
-<img src="screenshots/app_overview_ver2.png"/>
+<img src="screenshots/app_overview_logo_edited.png"/>
 
 <br/>
 
