@@ -53,10 +53,10 @@ class _NoticeAppBar extends ConsumerWidget implements PreferredSizeWidget {
 
     return AppBar(
       leading: Padding(
-        padding: EdgeInsets.all(10.0),
+        padding: EdgeInsets.all(15.0),
         child: Image.asset(
-          'assets/images/greenlogo_fix.png',
-          width: 40,
+          'assets/images/green_logo_2025.png',
+          width: 28.w,
           color: scheme.primary,
         ),
       ),

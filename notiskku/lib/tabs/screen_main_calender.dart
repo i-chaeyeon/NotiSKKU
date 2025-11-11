@@ -222,10 +222,10 @@ class _CalendarAppBar extends StatelessWidget implements PreferredSizeWidget {
     final scheme = Theme.of(context).colorScheme;
     return AppBar(
       leading: Padding(
-        padding: EdgeInsets.all(10),
+        padding: EdgeInsets.all(15.0),
         child: Image(
-          image: AssetImage('assets/images/greenlogo_fix.png'),
-          width: 40,
+          image: AssetImage('assets/images/green_logo_2025.png'),
+          width: 28,
           color: scheme.primary,
         ),
       ),

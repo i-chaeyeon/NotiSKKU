@@ -44,15 +44,14 @@ class ScreenMainOthers extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         leading: Padding(
-          padding: const EdgeInsets.all(10.0),
+          padding: const EdgeInsets.all(15.0),
           child: Image.asset(
-            'assets/images/greenlogo_fix.png',
-            width: 40.w,
+            'assets/images/green_logo_2025.png',
+            width: 28.w,
             color: scheme.primary,
           ),
         ),
         title: Text('더보기'),
-        centerTitle: true, // 타이틀 중앙 정렬
       ),
       body: Column(
         children: [

@@ -49,17 +49,14 @@ class ScreenMainKeyword extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         leading: Padding(
-          padding: EdgeInsets.all(10.0),
+          padding: EdgeInsets.all(15.0),
           child: Image.asset(
-            'assets/images/greenlogo_fix.png',
-            width: 40.w,
+            'assets/images/green_logo_2025.png',
+            width: 28.w,
             color: scheme.primary,
           ),
         ),
-        title: Text(
-          '키워드',
-          style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.bold),
-        ),
+        title: Text('키워드'),
         centerTitle: true,
       ),
       body: Column(

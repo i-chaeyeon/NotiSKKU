@@ -50,17 +50,14 @@ class _ScreenMainBoxState extends ConsumerState<ScreenMainBox> {
                   ),
                 )
                 : Padding(
-                  padding: EdgeInsets.all(10.0),
+                  padding: EdgeInsets.all(15.0),
                   child: Image.asset(
-                    'assets/images/greenlogo_fix.png',
-                    width: 40,
+                    'assets/images/green_logo_2025.png',
+                    width: 28,
                     color: scheme.primary,
                   ),
                 ),
-        title: Text(
-          '즐겨찾기',
-          style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.bold),
-        ),
+        title: Text('즐겨찾기'),
         centerTitle: true,
         actions: [
           Padding(
