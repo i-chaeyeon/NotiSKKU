@@ -73,7 +73,7 @@ class _NoticeTileState extends ConsumerState<NoticeTile> {
             padding: const EdgeInsets.all(1.0),
             child: Text(
               applyWordBreakFix(title),
-              style: TextStyle(height: 1.4, fontWeight: FontWeight.w700),
+              style: textTheme.headlineMedium?.copyWith(fontSize: 12.sp),
             ),
           ),
           subtitle: Padding(
@@ -81,7 +81,7 @@ class _NoticeTileState extends ConsumerState<NoticeTile> {
             child: Text(
               views == 'null' ? '$date | 조회수: -' : '$date | 조회수: $views',
               style: textTheme.labelSmall?.copyWith(
-                fontSize: 12.sp,
+                fontSize: 10.sp,
                 fontWeight: FontWeight.w400,
               ),
             ),

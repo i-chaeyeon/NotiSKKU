@@ -558,7 +558,7 @@ class _EventBottomSheetState extends State<_EventBottomSheet> {
                             ).format(widget.selectedDate),
                             style: TextStyle(
                               color: scheme.onSurface,
-                              fontSize: 18.sp,
+                              fontSize: 16.sp,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
@@ -589,7 +589,6 @@ class _EventBottomSheetState extends State<_EventBottomSheet> {
                           itemBuilder:
                               (_, i) => _EventListTile(event: widget.events[i]),
                         ),
-
                         SizedBox(height: 8.h),
                       ],
                     ),
@@ -661,13 +660,13 @@ class _EventListTile extends StatelessWidget {
     return ListTile(
       title: Text(
         applyWordBreakFix(event.subject),
-        style: TextStyle(color: scheme.onSurface, fontSize: 15.sp),
+        style: TextStyle(color: scheme.onSurface, fontSize: 13.sp),
         maxLines: 2,
         overflow: TextOverflow.ellipsis,
       ),
       subtitle: Text(
         dateRange,
-        style: TextStyle(color: scheme.outline, fontSize: 14.sp),
+        style: TextStyle(color: scheme.outline, fontSize: 12.sp),
       ),
     );
   }

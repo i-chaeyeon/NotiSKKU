@@ -117,16 +117,19 @@ class _ScreenMainTabsState extends ConsumerState<ScreenMainTabs> {
 
     return Scaffold(
       body: _pages[currentIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        elevation: 0,
-        items: _navItems,
-        currentIndex: currentIndex,
-        selectedItemColor: scheme.primary,
-        unselectedItemColor: scheme.outline,
-        selectedFontSize: 14.sp,
-        unselectedFontSize: 14.sp,
-        onTap: _onItemTapped,
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 5),
+        child: BottomNavigationBar(
+          type: BottomNavigationBarType.fixed,
+          elevation: 0,
+          items: _navItems,
+          currentIndex: currentIndex,
+          selectedItemColor: scheme.primary,
+          unselectedItemColor: scheme.outline,
+          selectedFontSize: 11.sp,
+          unselectedFontSize: 11.sp,
+          onTap: _onItemTapped,
+        ),
       ),
     );
   }

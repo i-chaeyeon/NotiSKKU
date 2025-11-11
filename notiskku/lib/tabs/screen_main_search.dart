@@ -30,6 +30,9 @@ class ScreenMainSearchState extends ConsumerState<ScreenMainSearch> {
 
   @override
   Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+
     final typeState = ref.watch(barNoticesProvider);
     final userState = ref.watch(userProvider);
     final majorIndex = ref.watch(selectedMajorIndexProvider);
@@ -103,9 +106,8 @@ class ScreenMainSearchState extends ConsumerState<ScreenMainSearch> {
                       alignment: Alignment.centerLeft,
                       child: Text(
                         isSearched ? "‘$searchText’에 대한 검색 결과" : '최근 검색 내역',
-                        style: TextStyle(
-                          fontSize: 18.sp,
-                          fontWeight: FontWeight.w600,
+                        style: textTheme.headlineMedium?.copyWith(
+                          fontSize: 15.sp,
                         ),
                       ),
                     ),
@@ -141,11 +143,7 @@ class ScreenMainSearchState extends ConsumerState<ScreenMainSearch> {
         icon: Icon(Icons.arrow_back_ios, color: scheme.outline),
         onPressed: () => Navigator.pop(context),
       ),
-      title: Text(
-        '검색',
-        textAlign: TextAlign.center,
-        style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.bold),
-      ),
+      title: Text('검색'),
       centerTitle: true,
       actions: [SizedBox(width: 40.w)],
     );

@@ -28,13 +28,13 @@ TextTheme darkTextTheme(String fontFamily) => TextTheme(
   headlineMedium: TextStyle(
     fontFamily: fontFamily,
     fontWeight: FontWeight.w700,
-    fontSize: 18.sp,
+    fontSize: 16.sp,
     color: DarkPalette.textPrimary,
   ),
   headlineSmall: TextStyle(
     fontFamily: fontFamily,
     fontWeight: FontWeight.w400,
-    fontSize: 14.sp,
+    fontSize: 12.sp,
     color: DarkPalette.textPrimary,
   ),
 
@@ -47,7 +47,7 @@ TextTheme darkTextTheme(String fontFamily) => TextTheme(
   labelSmall: TextStyle(
     fontFamily: fontFamily,
     fontWeight: FontWeight.w100,
-    fontSize: 13.sp,
+    fontSize: 12.sp,
     // 살짝 투명도로 보조 톤
     color: DarkPalette.textPrimary.withAlpha(200),
   ),

@@ -27,13 +27,13 @@ TextTheme lightTextTheme(String fontFamily) => TextTheme(
   headlineMedium: TextStyle(
     fontFamily: fontFamily,
     fontWeight: FontWeight.w700,
-    fontSize: 18.sp,
+    fontSize: 16.sp,
     color: LightPalette.textPrimary,
   ),
   headlineSmall: TextStyle(
     fontFamily: fontFamily,
     fontWeight: FontWeight.w400,
-    fontSize: 14.sp,
+    fontSize: 12.sp,
     color: LightPalette.textPrimary,
   ),
 
@@ -46,7 +46,7 @@ TextTheme lightTextTheme(String fontFamily) => TextTheme(
   labelSmall: TextStyle(
     fontFamily: fontFamily,
     fontWeight: FontWeight.w100,
-    fontSize: 13.sp,
+    fontSize: 12.sp,
     color: LightPalette.textPrimary.withAlpha(200),
   ),
 );
