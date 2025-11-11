@@ -41,9 +41,9 @@
     </queries>
 
     <application
-        android:label="notiskku"
+        android:label="NotiSKKU"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/launcher_icon">
 
         <!-- (선택 권장) FCM 기본 알림 설정 -->
         <meta-data
@@ -68,7 +68,7 @@
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
             android:hardwareAccelerated="true"
             android:windowSoftInputMode="adjustResize"
-            android:showWhenLocked="true"
+            android:showWhenLocked="false"
             android:turnScreenOn="true">
 
             <!-- Flutter UI 초기 테마 -->
