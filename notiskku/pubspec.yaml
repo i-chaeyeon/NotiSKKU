@@ -110,7 +110,7 @@ flutter:
     - assets/images/notiskku_logo.png
     - assets/images/no_major_exception.png
     - assets/images/loadinglogo.png
-    - assets/images/splash_logo_2025.svg
+    - assets/images/splash_logo_2025.png
     - assets/data/academic_calendar.json
 
   #   - images/a_dot_burr.jpeg

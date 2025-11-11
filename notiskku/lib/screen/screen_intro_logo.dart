@@ -50,27 +50,18 @@ class _ScreenLogoIntroState extends State<ScreenLogoIntro> {
     return Scaffold(
       backgroundColor: const Color(0xff0b5b42),
       body: Center(
-        child: Column(
+        child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
           children: [
             SizedBox(
-              width: 280.w,
+              width: 265.w,
               child: Image.asset(
-                'assets/images/splash_logo_2025.svg',
+                'assets/images/splash_logo_2025.png',
                 fit: BoxFit.contain,
               ),
             ),
-            // SizedBox(
-            //   child: Text(s
-            //     'NotiSKKU',
-            //     style: TextStyle(
-            //       fontSize: 44.sp, // 반응형 폰트 크기
-            //       color: Colors.white,
-            //       fontWeight: FontWeight.w400,
-            //     ),
-            //   ),
-            // ),
+            SizedBox(width: 15.w),
           ],
         ),
       ),
