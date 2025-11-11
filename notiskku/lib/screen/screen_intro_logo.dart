@@ -55,24 +55,22 @@ class _ScreenLogoIntroState extends State<ScreenLogoIntro> {
           mainAxisSize: MainAxisSize.min,
           children: [
             SizedBox(
-              width: 195.w,
+              width: 280.w,
               child: Image.asset(
-                'assets/images/whitelogo_fix.png',
-                width: 110.w, // 반응형 너비
-                height: 130.h, // 반응형 높이
+                'assets/images/splash_logo_2025.svg',
                 fit: BoxFit.contain,
               ),
             ),
-            SizedBox(
-              child: Text(
-                'NotiSKKU',
-                style: TextStyle(
-                  fontSize: 44.sp, // 반응형 폰트 크기
-                  color: Colors.white,
-                  fontWeight: FontWeight.w400,
-                ),
-              ),
-            ),
+            // SizedBox(
+            //   child: Text(s
+            //     'NotiSKKU',
+            //     style: TextStyle(
+            //       fontSize: 44.sp, // 반응형 폰트 크기
+            //       color: Colors.white,
+            //       fontWeight: FontWeight.w400,
+            //     ),
+            //   ),
+            // ),
           ],
         ),
       ),
