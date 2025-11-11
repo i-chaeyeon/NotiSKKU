@@ -218,6 +218,7 @@ class ScreenMainNotice extends ConsumerWidget {
       final currentCategoryLabel = getCategory(currentCategory);
 
       final noScrapingMajors = {
+        "인공지능융합전공": "https://sco.skku.edu/sco/community/major_info.do",
         "영상학과": "https://ott.skku.edu/ftm-skku-edu/notice",
         "건설환경공학부": "https://cal.skku.edu/index.php?hCode=BOARD&bo_idx=17",
         "나노공학과": "https://nano.skku.edu/bbs/board.php?tbl=bbs42",
