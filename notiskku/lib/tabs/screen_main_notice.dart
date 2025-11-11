@@ -38,6 +38,8 @@ class _NoticeAppBar extends ConsumerWidget implements PreferredSizeWidget {
 
     final userState = ref.watch(userProvider);
     final majorIndex = ref.watch(selectedMajorIndexProvider);
+    final typeState = ref.watch(barNoticesProvider); // ✅ 추가
+    final isCommon = typeState == Notices.common; // ✅ 추가
 
     // currentMajor에 현재 화면에 렌더링 되는 학과가 선택됨
     String currentMajor = '';
@@ -60,67 +62,68 @@ class _NoticeAppBar extends ConsumerWidget implements PreferredSizeWidget {
           color: scheme.primary,
         ),
       ),
-      title: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          // 좌측 화살표
-          userState.selectedMajors.length > 1
-              ? IconButton(
-                icon: Icon(Icons.chevron_left, size: 24.w),
-                onPressed: () {
-                  _updateMajorIndex(ref, true, userState.selectedMajors.length);
-                  ref
-                      .read(userProvider.notifier)
-                      .saveTempStarred(tempStarredNotices);
-                },
-                // splashRadius: 20.r, // 터치 효과 반경 조정 (선택사항임)
-              )
-              : const SizedBox.shrink(),
-          // 학과 명
-          userState.selectedMajors.isEmpty
-              ? Flexible(
-                child: FittedBox(
-                  fit: BoxFit.scaleDown,
-                  child: Text(
-                    '학과를 선택해 주세요',
-                    style: TextStyle(
-                      fontSize: 15.sp,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              )
-              : Flexible(
-                child: FittedBox(
-                  fit: BoxFit.scaleDown,
-                  child: Text(
-                    currentMajor,
-                    style: TextStyle(
-                      fontSize: 18.sp,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
+      title:
+          isCommon
+              ? Text('성균관대학교')
+              : Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // 좌측 화살표
+                  userState.selectedMajors.length > 1
+                      ? IconButton(
+                        icon: Icon(Icons.chevron_left, size: 24.w),
+                        onPressed: () {
+                          _updateMajorIndex(
+                            ref,
+                            true,
+                            userState.selectedMajors.length,
+                          );
+                          ref
+                              .read(userProvider.notifier)
+                              .saveTempStarred(tempStarredNotices);
+                        },
+                        // splashRadius: 20.r, // 터치 효과 반경 조정 (선택사항임)
+                      )
+                      : const SizedBox.shrink(),
+                  // 학과 명
+                  userState.selectedMajors.isEmpty
+                      ? Flexible(
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Text(
+                            '학과를 선택해 주세요',
+                            style: TextStyle(
+                              fontSize: 15.sp,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      )
+                      : Flexible(
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Text(currentMajor),
+                        ),
+                      ),
+                  // 우측 화살표
+                  userState.selectedMajors.length > 1
+                      ? IconButton(
+                        icon: Icon(Icons.chevron_right, size: 24.w),
+                        onPressed: () {
+                          _updateMajorIndex(
+                            ref,
+                            false,
+                            userState.selectedMajors.length,
+                          );
+                          ref
+                              .read(userProvider.notifier)
+                              .saveTempStarred(tempStarredNotices);
+                        },
+                        // splashRadius: 20.r,
+                      )
+                      : const SizedBox.shrink(),
+                ],
               ),
-          // 우측 화살표
-          userState.selectedMajors.length > 1
-              ? IconButton(
-                icon: Icon(Icons.chevron_right, size: 24.w),
-                onPressed: () {
-                  _updateMajorIndex(
-                    ref,
-                    false,
-                    userState.selectedMajors.length,
-                  );
-                  ref
-                      .read(userProvider.notifier)
-                      .saveTempStarred(tempStarredNotices);
-                },
-                // splashRadius: 20.r,
-              )
-              : const SizedBox.shrink(),
-        ],
-      ),
       actions: [
         Padding(
           padding: EdgeInsets.all(15.0),
