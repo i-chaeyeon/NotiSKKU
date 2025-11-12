@@ -48,11 +48,11 @@
         <!-- (선택 권장) FCM 기본 알림 설정 -->
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
-            android:resource="@drawable/ic_launcher_monochrome" />
+            android:resource="@mipmap/launcher_icon" />
         <!-- @color/notification_color는 프로젝트에 직접 추가하세요 -->
-        <!-- <meta-data
+        <meta-data
             android:name="com.google.firebase.messaging.default_notification_color"
-            android:resource="@color/notification_color" /> -->
+            android:resource="@color/notification_color" />
 
         <!-- (선택) 기본 채널 ID 지정: 런타임에서 동일 ID 채널을 생성해야 함 -->
         <!-- <meta-data
