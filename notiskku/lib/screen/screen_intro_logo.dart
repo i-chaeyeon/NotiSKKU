@@ -49,21 +49,41 @@ class _ScreenLogoIntroState extends State<ScreenLogoIntro> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xff0b5b42),
-      body: Center(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            SizedBox(
-              width: 265.w,
+      body: Column(
+        children: [
+          // 🔼 가운데: 기존 초록 로고
+          Expanded(
+            child: Center(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  SizedBox(
+                    width: 265.w,
+                    child: Image.asset(
+                      'assets/images/splash_logo_2025.png',
+                      fit: BoxFit.contain,
+                    ),
+                  ),
+                  SizedBox(width: 15.w),
+                ],
+              ),
+            ),
+          ),
+
+          // 🔽 하단 중앙: team_notiskku_2025 로고
+          Padding(
+            padding: EdgeInsets.only(bottom: 24.h),
+            child: Center(
               child: Image.asset(
-                'assets/images/splash_logo_2025.png',
+                'assets/images/team_notiskku_2025.png',
+                width: 96.w,
+                height: 12.h,
                 fit: BoxFit.contain,
               ),
             ),
-            SizedBox(width: 15.w),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
