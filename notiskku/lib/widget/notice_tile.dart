@@ -126,8 +126,8 @@ class _NoticeTileState extends ConsumerState<NoticeTile> {
                       tempStarredNotices.contains(hash))
                   ? 'assets/images/fullstar_fix.png'
                   : 'assets/images/emptystar_fix.png',
-              width: 26.w,
-              height: 26.h,
+              width: 23.w,
+              height: 23.h,
               color: scheme.primary,
             ),
           ),

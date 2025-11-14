@@ -43,7 +43,7 @@ class ListRecentSearchState extends ConsumerState<ListRecentSearch> {
                 children: [
                   Text(
                     searchedTexts[reversedIndex],
-                    style: textTheme.bodyMedium?.copyWith(fontSize: 15.sp),
+                    style: textTheme.bodyMedium?.copyWith(fontSize: 13.sp),
                   ),
                   GestureDetector(
                     onTap: () {
