@@ -70,7 +70,12 @@ class _NoticeTileState extends ConsumerState<NoticeTile> {
       children: [
         ListTile(
           title: Padding(
-            padding: const EdgeInsets.all(1.0),
+            padding: const EdgeInsets.only(
+              left: 1.0,
+              right: 1.0,
+              top: 4.0,
+              bottom: 3.0,
+            ),
             child: Text(
               applyWordBreakFix(title),
               style: textTheme.headlineMedium?.copyWith(fontSize: 12.sp),
