@@ -43,15 +43,17 @@ class _NoticeAppBar extends ConsumerWidget implements PreferredSizeWidget {
 
     // currentMajor에 현재 화면에 렌더링 되는 학과가 선택됨
     String currentMajor = '';
-    userState.selectedMajors.isEmpty
-        ? currentMajor = ' '
-        : currentMajor =
-            userState
-                .selectedMajors[majorIndex.clamp(
-                  0,
-                  userState.selectedMajors.length - 1,
-                )]
-                .major;
+    String currentDepartment = '';
+
+    if (userState.selectedMajors.isNotEmpty) {
+      final selected =
+          userState.selectedMajors[majorIndex.clamp(
+            0,
+            userState.selectedMajors.length - 1,
+          )];
+      currentMajor = selected.major;
+      currentDepartment = selected.department;
+    }
 
     return AppBar(
       leading: Padding(
@@ -102,7 +104,11 @@ class _NoticeAppBar extends ConsumerWidget implements PreferredSizeWidget {
                       : Flexible(
                         child: FittedBox(
                           fit: BoxFit.scaleDown,
-                          child: Text(currentMajor),
+                          child: Text(
+                            typeState == Notices.dept
+                                ? currentDepartment // 단과대 공지 → 학과대학 이름 표시
+                                : currentMajor, // 학과 공지 → 학과 이름 표시
+                          ),
                         ),
                       ),
                   // 우측 화살표
